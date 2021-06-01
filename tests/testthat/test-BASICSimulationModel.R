@@ -1,0 +1,107 @@
+test_that("run_simulation() works", {
+
+  tf <- tempfile()
+  cat('<model>
+        <metadata>
+          <stninfo>
+            <nettype>HCN</nettype>
+            <stnname>WILLIAMSPORT</stnname>
+            <stnid/>
+            <stnelev>158.0</stnelev>
+            <stateprov>PA</stateprov>
+            <country>US</country>
+          </stninfo>
+          <mlra>
+            <mlraname/>
+            <mlraid>0</mlraid>
+          </mlra>
+          <cntinfo>
+            <cntper>
+              <firstname>FirstName</firstname>
+              <lastname>LastName</lastname>
+              <title>Researcher</title>
+            </cntper>
+            <cntorg>My Organization</cntorg>
+            <cntaddr>
+              <address/>
+              <city/>
+              <stateprov/>
+              <postal/>
+              <country/>
+            </cntaddr>
+            <cntemail/>
+            <cntphone/>
+          </cntinfo>
+          <notes>
+            <note>gaps filled by interpolation of neighboring stations</note>
+          </notes>
+          <rundate>20111020</rundate>
+          <nsmver>1.5.0</nsmver>
+          <srcunitsys>english</srcunitsys>
+        </metadata>
+        <input>
+          <location>
+            <lat>41.24</lat>
+            <lon>-76.92</lon>
+            <usercoordfmt>DD</usercoordfmt>
+          </location>
+          <recordpd>
+            <pdtype>normal</pdtype>
+            <pdbegin>1930</pdbegin>
+            <pdend>1930</pdend>
+          </recordpd>
+          <precips>
+            <precip id="Jan">44.2</precip>
+            <precip id="Feb">40.39</precip>
+            <precip id="Mar">113.54</precip>
+            <precip id="Apr">96.77</precip>
+            <precip id="May">95.0</precip>
+            <precip id="Jun">98.55</precip>
+            <precip id="Jul">66.04</precip>
+            <precip id="Aug">13.46</precip>
+            <precip id="Sep">54.86</precip>
+            <precip id="Oct">6.35</precip>
+            <precip id="Nov">17.53</precip>
+            <precip id="Dec">56.39</precip>
+          </precips>
+          <airtemps>
+            <airtemp id="Jan">-2.17</airtemp>
+            <airtemp id="Feb">0.89</airtemp>
+            <airtemp id="Mar">3.72</airtemp>
+            <airtemp id="Apr">9.11</airtemp>
+            <airtemp id="May">16.28</airtemp>
+            <airtemp id="Jun">21.11</airtemp>
+            <airtemp id="Jul">22.83</airtemp>
+            <airtemp id="Aug">21.94</airtemp>
+            <airtemp id="Sep">19.78</airtemp>
+            <airtemp id="Oct">10.5</airtemp>
+            <airtemp id="Nov">5.33</airtemp>
+            <airtemp id="Dec">-1.06</airtemp>
+          </airtemps>
+          <smcsawc>200.0</smcsawc>
+          <soilairrel>
+            <ampltd>0.66</ampltd>
+            <maatmast>1.2</maatmast>
+          </soilairrel>
+        </input>
+      </model>
+      ', file=tf)
+
+  # read single-station XML file
+  input <- NewhallDatasetFromPath(tf)
+  expect_true(inherits(input, 'jobjRef'))
+
+  # run model
+  output <- run_simulation(input)
+  expect_true(inherits(output, 'jobjRef'))
+
+  # XML string is a character
+  expect_true(is.character(newhall_XML_string_export(input, output)))
+
+  # write XML results to file
+  newhall_XML_export(tempfile(), input, output)
+
+  ## TODO: create single or multi-station data from an R data.frame (equivalent to batch CSV)
+  # input <- NewhallDataset(data)
+
+})
