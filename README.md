@@ -18,14 +18,30 @@ remotes::install_github('brownag/jNSMR')
 ```r
 library(jNSMR)
 
-# read single-station XML file
-input <- NewhallDatasetFromPath("misc/WILLIAMSPORT_1930_1930_input.xml")
+# read single-station XML (or CSV) file
+input_xml <- NewhallDatasetFromPath("misc/WILLIAMSPORT_1930_1930_input.xml")
+
+# input_csv <- NewhallDatasetFromPath("misc/WILLIAMSPORT_1930_1930_input.csv", .parser = CSVFileParser)
+
+# or specify inputs directly to the constructor
+input_direct <- NewhallDataset(stationName = "WILLIAMSPORT",
+                               country = "US",
+                               lat = 41.24,
+                               lon = -76.92,
+                               nsHemisphere = 'N',
+                               ewHemisphere = 'W',
+                               stationElevation = 158.0,
+                               allPrecipsDbl = c(44.2,40.39,113.54,96.77,95.0,98.55,66.04,13.46,54.86,6.35,17.53,56.39),
+                               allAirTempsDbl = c(-2.17,0.89,3.72,9.11,16.28,21.11,22.83,21.94,19.78,10.5,5.33,-1.06),
+                               pdbegin = 1930,
+                               pdend = 1930,
+                               smcsawc = 200.0)
 
 # run model
-output <- run_simulation(input)
+output <- run_simulation(input_direct)
 
-# inspect results as string
-cat(newhall_XML_string_export(input, output))
+# inspect results as string (requires the metadata specified in XML)
+cat(newhall_XML_string_export(input_xml, output))
 #> <?xml version="1.0" encoding="UTF-8"?>
 #> <model>
 #>   <metadata>
@@ -197,7 +213,7 @@ cat(newhall_XML_string_export(input, output))
 #> 
 
 # write XML results to file
-newhall_XML_export("WILLIAMSPORT_1930_1930_export.xml", input, output)
+newhall_XML_export("WILLIAMSPORT_1930_1930_export.xml", input_direct, output)
 
 # convenience method to open GUI
 openJAR()

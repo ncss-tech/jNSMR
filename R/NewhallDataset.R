@@ -38,13 +38,56 @@ NewhallDatasetFromPath <- function(pathname, .parser = XMLFileParser) {
 #' @param nsHemisphere character (length 1);`'N'` OR `'S'`
 #' @param ewHemisphere character (length 1); `'E'` OR `'W'`
 #' @param stationElevation double; station elevation
-#' @param allPrecipsDbl `java.util.List<Double>` precipitation, monthly
-#' @param allAirTempsDbl `java.util.List<Double>` precipitation, monthly
+#' @param allPrecipsDbl precipitation, monthly
+#' @param allAirTempsDbl precipitation, monthly
 #' @param pdbegin beginning year
 #' @param pdend ending year
 #' @param smcsawc soil moisture control section available water capacity
 #' @export
-#' @importFrom rJava .jcall
+#' @importFrom rJava .jnew .jchar .jcast
+#'
+#' @examples
+#' input_direct <- NewhallDataset(
+#'   stationName = "WILLIAMSPORT",
+#'   country = "US",
+#'   lat = 41.24,
+#'   lon = -76.92,
+#'   nsHemisphere = 'N',
+#'   ewHemisphere = 'W',
+#'   stationElevation = 158.0,
+#'   allPrecipsDbl = c(
+#'     44.2,
+#'     40.39,
+#'     113.54,
+#'     96.77,
+#'     95.0,
+#'     98.55,
+#'     66.04,
+#'     13.46,
+#'     54.86,
+#'     6.35,
+#'     17.53,
+#'     56.39
+#'   ),
+#'   allAirTempsDbl = c(
+#'     -2.17,
+#'     0.89,
+#'     3.72,
+#'     9.11,
+#'     16.28,
+#'     21.11,
+#'     22.83,
+#'     21.94,
+#'     19.78,
+#'     10.5,
+#'     5.33,
+#'     -1.06
+#'   ),
+#'   pdbegin = 1930,
+#'   pdend = 1930,
+#'   smcsawc = 200.0
+#' )
+#'
 NewhallDataset <-
   function(stationName,
            country,
@@ -59,55 +102,26 @@ NewhallDataset <-
            pdend,
            smcsawc) {
 
-    stationName = "A"
-    country = "US"
-    lat = 0.0
-    lon = 0.0
-    nsHemisphere = 'N'
-    ewHemisphere = 'W'
-    stationElevation = 100.1
-    allPrecipsDbl = 1:12
-    allAirTempsDbl = 1:12
-    pdbegin = 2020
-    pdend = 2020
-    isMetric = TRUE
-    smcsawc = 20
-
-
-  obj <- rJava::.jcall(
-                      obj = "org/psu/newhall/sim/NewhallDataset",
-                      returnSig = "Lorg/psu/newhall/sim/NewhallDataset;",
-                      method = "NewhallDataset",
-                      stationName,
-                      country,
-                      lat,
-                      lon,
-                      nsHemisphere,
-                      ewHemisphere,
-                      stationElevation,
-                      allPrecipsDbl,
-                      allAirTempsDbl,
-                      pdbegin,
-                      pdend,
-                      TRUE,
-                      smcsawc)
-
-  rJava::.jcall(
-    obj = "org/psu/newhall/sim/NewhallDataset",
-    returnSig = "Lorg/psu/newhall/sim/NewhallDataset;",
-    method = "NewhallDataset",
-    stationName,
-    country,
-    lat,
-    lon,
-    nsHemisphere,
-    ewHemisphere,
-    stationElevation,
-    allPrecipsDbl,
-    allAirTempsDbl,
-    pdbegin,
-    pdend,
-    TRUE,
-    smcsawc
-  )
+    rJava::.jnew(
+      "org/psu/newhall/sim/NewhallDataset",
+      as.character(stationName),
+      as.character(country),
+      as.double(lat),
+      as.double(lon),
+      rJava::.jchar(nsHemisphere),
+      rJava::.jchar(ewHemisphere),
+      as.double(stationElevation),
+      rJava::.jcast(
+        .rvec2jarraylist(as.double(allPrecipsDbl), "java/lang/Double"),
+        "java/util/List"
+      ),
+      rJava::.jcast(
+        .rvec2jarraylist(as.double(allAirTempsDbl), "java/lang/Double"),
+        "java/util/List"
+      ),
+      as.integer(pdbegin),
+      as.integer(pdend),
+      TRUE,
+      as.double(smcsawc)
+    )
 }

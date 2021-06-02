@@ -38,6 +38,7 @@ newhall_XML_export <- function(pathname, dataset, results) {
 #'
 #' @return an XML file written to specified path
 #' @export
+#' @importFrom rJava .jcall
 newhall_XML_string_export <- function(dataset, results) {
   # "inst/extdata/WILLIAMSPORT_1930_1930_export.xml"
   rJava::.jcall(XMLStringResultsExporter(), "S", "export", results, dataset)
@@ -61,6 +62,7 @@ CSVResultsExporter <- function(pathname) {
 #'
 #' @return an CSV file written to specified path
 #' @export
+#' @importFrom rJava .jcall
 newhall_CSV_export <- function(pathname, dataset, results) {
   rJava::.jcall(CSVResultsExporter(pathname), "export", results, dataset)
 }
