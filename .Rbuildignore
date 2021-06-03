@@ -1,3 +1,5 @@
 ^jNSMR\.Rproj$
 ^\.Rproj\.user$
 ^codecov\.yml$
+^docs$
+^misc$

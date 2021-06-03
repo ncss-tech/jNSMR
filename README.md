@@ -55,7 +55,7 @@ The jNSM has a defined CSV (comma-separated value) batch file format. Examples o
 Selected example input files have been inclided in `inst/extdata` directory of this package.
 
 ```r
-pathname <- system.file("extdata/All PA jNSM Example Batch Metric.csv", package = "jNSMR")[1]
+pathname <- system.file("extdata/All_PA_jNSM_Example_Batch_Metric.csv", package = "jNSMR")[1]
 
 res <- newhall_batch(pathname = pathname)
 

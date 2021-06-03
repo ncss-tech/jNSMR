@@ -9,9 +9,12 @@
 #' @importFrom data.table data.table
 newhall_batch <- function(.data = NULL, pathname = NULL, verbose = TRUE) {
 
+   # for NSE in data.table / R CMD check
+allAirTempsDbl <- NULL; allPrecipsDbl <- NULL; awc <- NULL; cntryCode <- NULL; dataset <- NULL; elev <- NULL; latDD <- NULL; lonDD <- NULL; pApr <- NULL; pAug <- NULL; pDec <- NULL; pFeb <- NULL; pJan <- NULL; pJul <- NULL; pJun <- NULL; pMar <- NULL; pMay <- NULL; pNov <- NULL; pOct <- NULL; pSep <- NULL; pdEndYr <- NULL; pdStartYr <- NULL; results <- NULL; stationName <- NULL; tApr <- NULL; tAug <- NULL; tDec <- NULL; tFeb <- NULL; tJan <- NULL; tJul <- NULL; tJun <- NULL; tMar <- NULL; tMay <- NULL; tNov <- NULL; tOct<- NULL; tSep <- NULL
+
   if (is.null(.data)) {
     stopifnot(!is.null(pathname) && is.null(.data))
-    .data <- jNSMR:::csv_readNewhallBatch(pathname)
+    .data <- csv_readNewhallBatch(pathname)
   } else {
     # minimum dataset includes all of the codes specified in colnames of batch file template
     stopifnot(all(.colnamesNewhallBatch() %in% colnames(.data)))
