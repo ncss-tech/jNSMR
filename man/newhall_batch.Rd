@@ -4,10 +4,14 @@
 \alias{newhall_batch}
 \title{Run a Newhall simulation for each row in a CSV file}
 \usage{
-newhall_batch(pathname)
+newhall_batch(.data = NULL, pathname = NULL, verbose = TRUE)
 }
 \arguments{
+\item{.data}{a data.frame}
+
 \item{pathname}{path to CSV file with Newhall batch format and required columns}
+
+\item{verbose}{print message about number of simulations and elapsed time}
 }
 \value{
 a \code{data.frame} containing list columns with Java Objects for \emph{NewhallDataset}, \emph{NewhallResults}, and the column \code{output} which is \emph{character} containing the \code{toString()} output from \emph{NewhallResults}

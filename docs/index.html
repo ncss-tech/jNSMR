@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">jNSMR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9001</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9002</span>
       </span>
     </div>
 
@@ -72,14 +72,18 @@
 <code class="sourceCode R"><span class="co"># install.packages('remotes')</span>
 <span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">'brownag/jNSMR'</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="basic-functions" class="section level2">
+<div id="basic-functionality" class="section level2">
 <h2 class="hasAnchor">
-<a href="#basic-functions" class="anchor"></a>Basic functions</h2>
+<a href="#basic-functionality" class="anchor"></a>Basic functionality</h2>
+<div id="run-the-basic-simulation-model" class="section level3">
+<h3 class="hasAnchor">
+<a href="#run-the-basic-simulation-model" class="anchor"></a>Run the BASIC simulation model</h3>
+<p>Create a <em>NewhallDataset</em> with <code><a href="reference/NewhallDatasetFromPath.html">xml_NewhallDataset()</a></code> or <code><a href="reference/NewhallDataset.html">NewhallDataset()</a></code> then run a single simulation with <code><a href="reference/newhall_simulation.html">newhall_simulation()</a></code></p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">jNSMR</span><span class="op">)</span>
 
-<span class="co"># read single-station XML  file</span>
-<span class="va">input_xml</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/NewhallDatasetFromPath.html">xml_NewhallDataset</a></span><span class="op">(</span><span class="st">"misc/WILLIAMSPORT_1930_1930_input.xml"</span><span class="op">)</span>
+<span class="co"># read single-station XML file</span>
+<span class="va">input_xml</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/NewhallDatasetFromPath.html">xml_NewhallDataset</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata/WILLIAMSPORT_1930_1930_input.xml"</span>, package <span class="op">=</span> <span class="st">"jNSMR"</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span>
 
 <span class="co"># or specify inputs directly to the constructor</span>
 <span class="va">input_direct</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/NewhallDataset.html">NewhallDataset</a></span><span class="op">(</span>stationName <span class="op">=</span> <span class="st">"WILLIAMSPORT"</span>,
@@ -95,10 +99,30 @@
                                pdend <span class="op">=</span> <span class="fl">1930</span>,
                                smcsawc <span class="op">=</span> <span class="fl">200.0</span><span class="op">)</span>
 
-<span class="co"># run model</span>
-<span class="va">output</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/newhall_simulation.html">newhall_simulation</a></span><span class="op">(</span><span class="va">input_direct</span><span class="op">)</span>
+<span class="co"># run single model from XML file</span>
+<span class="va">output_xml</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/newhall_simulation.html">newhall_simulation</a></span><span class="op">(</span><span class="va">input_xml</span><span class="op">)</span>
 
-<span class="co"># inspect results as string (requires the metadata specified in XML)</span>
+<span class="co"># run single model from direct input</span>
+<span class="va">output</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/newhall_simulation.html">newhall_simulation</a></span><span class="op">(</span><span class="va">input_direct</span><span class="op">)</span></code></pre></div>
+</div>
+<div id="run-batch-sets-of-models" class="section level3">
+<h3 class="hasAnchor">
+<a href="#run-batch-sets-of-models" class="anchor"></a>Run batch sets of models</h3>
+<p>The jNSM has a defined CSV (comma-separated value) batch file format. Examples of that setup are included in the official download. The batching in the {jNSMR} package is handled by R code, not Java. The main interface to batching is <code><a href="reference/newhall_batch.html">newhall_batch()</a></code>.</p>
+<p><code><a href="reference/newhall_batch.html">newhall_batch()</a></code> takes either a <code>pathname</code> argument, or you can specify <code>data</code> as a <em>data.frame</em> directly.</p>
+<p>Selected example input files have been inclided in <code>inst/extdata</code> directory of this package.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">pathname</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata/All PA jNSM Example Batch Metric.csv"</span>, package <span class="op">=</span> <span class="st">"jNSMR"</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>
+
+<span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/newhall_batch.html">newhall_batch</a></span><span class="op">(</span>pathname <span class="op">=</span> <span class="va">pathname</span><span class="op">)</span>
+
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></code></pre></div>
+</div>
+<div id="support-for-newhall-xml-format-for-input-and-output" class="section level3">
+<h3 class="hasAnchor">
+<a href="#support-for-newhall-xml-format-for-input-and-output" class="anchor"></a>Support for Newhall XML format for input and output</h3>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># inspect XML result format</span>
 <span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="fu"><a href="reference/newhall_XMLStringResultsExporter.html">newhall_XMLStringResultsExporter</a></span><span class="op">(</span><span class="va">input_xml</span>, <span class="va">output</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; &lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
 <span class="co">#&gt; &lt;model&gt;</span>
@@ -268,15 +292,26 @@
 <span class="co">#&gt;     &lt;/calendars&gt;</span>
 <span class="co">#&gt;   &lt;/output&gt;</span>
 <span class="co">#&gt; &lt;/model&gt;</span>
-<span class="co">#&gt; </span>
-
-<span class="co"># write XML results to file</span>
+<span class="co">#&gt; </span></code></pre></div>
+</div>
+<div id="xml-file-output" class="section level3">
+<h3 class="hasAnchor">
+<a href="#xml-file-output" class="anchor"></a>XML File Output</h3>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># write XML results to file</span>
 <span class="fu"><a href="reference/newhall_XMLResultsExporter.html">newhall_XMLResultsExporter</a></span><span class="op">(</span>dataset <span class="op">=</span> <span class="va">input_direct</span>, 
                            result <span class="op">=</span> <span class="va">output</span>, 
-                           pathname <span class="op">=</span> <span class="st">"misc/WILLIAMSPORT_1930_1930_export.xml"</span><span class="op">)</span>
+                           pathname <span class="op">=</span> <span class="st">"misc/WILLIAMSPORT_1930_1930_export.xml"</span><span class="op">)</span></code></pre></div>
+</div>
+<div id="graphical-user-interface-for-individual-runs-of-newhall-161jar" class="section level3">
+<h3 class="hasAnchor">
+<a href="#graphical-user-interface-for-individual-runs-of-newhall-161jar" class="anchor"></a>Graphical User Interface for individual runs of <em>newhall-1.6.1.jar</em>
+</h3>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># convenience method to open GUI with the R packag</span>
 
-<span class="co"># convenience method to open GUI</span>
 <span class="fu"><a href="reference/newhall_GUI.html">newhall_GUI</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+</div>
 </div>
 <div id="license-information" class="section level2">
 <h2 class="hasAnchor">
@@ -294,14 +329,13 @@
 <h2 class="hasAnchor">
 <a href="#system-requirements" class="anchor"></a>System requirements</h2>
 <p>The system requirements of the extraction and installation tools (Windows .EXE archive) at the above link may not be met on your system but the core Java class files are stored in a platform-independent format (in <em>newhall-1.6.1.jar</em>) which is a core dependency in this package. Therefore, as long as you have a modern Java Runtime Environment (you probably do), you will be able to run jNSM via this package with only minimal setup.</p>
-<div id="set-up-path-to-contain-java" class="section level3">
-<h3 class="hasAnchor">
-<a href="#set-up-path-to-contain-java" class="anchor"></a>Set up <code>PATH</code> to contain <code>java</code>
-</h3>
-</div>
 <div id="rjava" class="section level3">
 <h3 class="hasAnchor">
 <a href="#rjava" class="anchor"></a>{rJava}</h3>
+</div>
+<div id="set-up-path-to-contain-java-for-newhall_gui" class="section level3">
+<h3 class="hasAnchor">
+<a href="#set-up-path-to-contain-java-for-newhall_gui" class="anchor"></a>Set up <code>PATH</code> to contain <code>java</code> (for <code>newhall_GUI()</code>)</h3>
 </div>
 </div>
 </div>

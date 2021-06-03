@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Create an instance of XMLResultsExporter — XMLResultsExporter • jNSMR</title>
+<title>Run a Newhall simulation for each row in a CSV file — newhall_batch • jNSMR</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Create an instance of XMLResultsExporter — XMLResultsExporter" />
-<meta property="og:description" content="Create an instance of XMLResultsExporter" />
+<meta property="og:title" content="Run a Newhall simulation for each row in a CSV file — newhall_batch" />
+<meta property="og:description" content="Run a Newhall simulation for each row in a CSV file" />
 
 
 
@@ -103,29 +103,40 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Create an instance of <em>XMLResultsExporter</em></h1>
+    <h1>Run a Newhall simulation for each row in a CSV file</h1>
     
-    <div class="hidden name"><code>XMLResultsExporter.Rd</code></div>
+    <div class="hidden name"><code>newhall_batch.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Create an instance of <em>XMLResultsExporter</em></p>
+    <p>Run a Newhall simulation for each row in a CSV file</p>
     </div>
 
-    <pre class="usage"><span class='fu'>XMLResultsExporter</span><span class='op'>(</span><span class='va'>pathname</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>newhall_batch</span><span class='op'>(</span>.data <span class='op'>=</span> <span class='cn'>NULL</span>, pathname <span class='op'>=</span> <span class='cn'>NULL</span>, verbose <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
+      <th>.data</th>
+      <td><p>a data.frame</p></td>
+    </tr>
+    <tr>
       <th>pathname</th>
-      <td><p>character; output path</p></td>
+      <td><p>path to CSV file with Newhall batch format and required columns</p></td>
+    </tr>
+    <tr>
+      <th>verbose</th>
+      <td><p>print message about number of simulations and elapsed time</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>an instance of <em>XMLResultsExporter</em> class</p>
+    <p>a <code>data.frame</code> containing list columns with Java Objects for <em>NewhallDataset</em>, <em>NewhallResults</em>, and the column <code>output</code> which is <em>character</em> containing the <code><a href='https://rdrr.io/r/base/toString.html'>toString()</a></code> output from <em>NewhallResults</em></p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p>csv_writeNewhallBatch</p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
