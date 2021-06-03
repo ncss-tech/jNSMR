@@ -127,8 +127,8 @@ NewhallDataset <-
       as.character(country),
       as.double(lat),
       as.double(lon),
-      rJava::.jchar(nsHemisphere),
-      rJava::.jchar(ewHemisphere),
+      rJava::.jchar(strtoi(charToRaw(substr(nsHemisphere, 1, 1)), 16L)),
+      rJava::.jchar(strtoi(charToRaw(substr(ewHemisphere, 1, 1)), 16L)),
       as.double(stationElevation),
       rJava::.jcast(
         .rvec2jarraylist(as.double(allPrecipsDbl), "java/lang/Double"),
