@@ -2,7 +2,7 @@
 % Please edit documentation in R/NewhallResults.R
 \name{newhall_CSVResultsExporter}
 \alias{newhall_CSVResultsExporter}
-\title{Export Newhall Results, Data and Metadata to CSV file}
+\title{Export Newhall Results, Data and Metadata to CSV file with \emph{CSVResultsExporter}}
 \usage{
 newhall_CSVResultsExporter(dataset, results, pathname)
 }
@@ -17,5 +17,5 @@ newhall_CSVResultsExporter(dataset, results, pathname)
 a CSV file written to specified path
 }
 \description{
-Export Newhall Results, Data and Metadata to CSV file
+Export Newhall Results, Data and Metadata to CSV file with \emph{CSVResultsExporter}
 }

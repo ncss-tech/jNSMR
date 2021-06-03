@@ -1,6 +1,8 @@
-#' Create an instance of XMLFileParser
-#' @param pathname a character containing pathname
-#' @return an instance of XMLFileParser class
+# tools for creating _NewhallDataset_ from file or R objects
+
+#' Create an instance of _XMLFileParser_
+#' @param pathname _character_ containing `pathname`
+#' @return an instance of _XMLFileParser_ class
 #' @export
 #' @importFrom rJava .jnew
 XMLFileParser <- function(pathname) {
@@ -8,9 +10,9 @@ XMLFileParser <- function(pathname) {
                  rJava::.jnew("java/io/File", pathname))
 }
 
-#' Create an instance of CSVFileParser
-#' @param pathname a character containing pathname
-#' @return an instance of CSVFileParser class
+#' Create an instance of _CSVFileParser_
+#' @param pathname _character_ containing `pathname`
+#' @return an instance of _CSVFileParser_ class
 #' @export
 #' @importFrom rJava .jnew
 CSVFileParser <- function(pathname) {
@@ -18,10 +20,11 @@ CSVFileParser <- function(pathname) {
                rJava::.jnew("java/io/File", pathname))
 }
 
-#' Create an instance of NewhallDataset from XML file
-#' @param pathname a character containing pathname
+#' Create an instance of _NewhallDataset_ from XML or CSV file
+#' @param pathname _character_ containing `pathname`
 #' @param .parser either `XMLFileParser` or `CSVFileParser`
 #' @export
+#' @aliases xml_NewhallDataset csv_NewhallDataset
 #' @importFrom rJava .jcall
 NewhallDatasetFromPath <- function(pathname, .parser = XMLFileParser) {
   rJava::.jcall(obj = .parser(pathname),
@@ -29,22 +32,37 @@ NewhallDatasetFromPath <- function(pathname, .parser = XMLFileParser) {
                 method = "getDataset")
 }
 
-#' Create an instance of NewhallDataset
+# convenience methods supply .parser argument
+
+#' @export
+#' @rdname NewhallDatasetFromPath
+xml_NewhallDataset <- function(pathname) {
+  NewhallDatasetFromPath(pathname = pathname, .parser = XMLFileParser)
+}
+
+#' @export
+#' @rdname NewhallDatasetFromPath
+csv_NewhallDataset <- function(pathname) {
+  NewhallDatasetFromPath(pathname = pathname, .parser = CSVFileParser)
+}
+
+#' Create an instance of _NewhallDataset_
 #'
-#' @param stationName character; station name
-#' @param country character; country
-#' @param lat double; latitude
-#' @param lon double; longitude
-#' @param nsHemisphere character (length 1);`'N'` OR `'S'`
-#' @param ewHemisphere character (length 1); `'E'` OR `'W'`
-#' @param stationElevation double; station elevation
-#' @param allPrecipsDbl precipitation, monthly
-#' @param allAirTempsDbl precipitation, monthly
-#' @param pdbegin beginning year
-#' @param pdend ending year
-#' @param smcsawc soil moisture control section available water capacity
+#' @param stationName _character_; station name
+#' @param country _character_; country
+#' @param lat _double_; latitude decimal degrees
+#' @param lon _double_; longitude decimal degrees
+#' @param nsHemisphere _character_ (length `1`);`'N'` OR `'S'`
+#' @param ewHemisphere _character_ (length `1`); `'E'` OR `'W'`
+#' @param stationElevation _double_; station elevation
+#' @param allPrecipsDbl _double_; length `12` precipitation, monthly
+#' @param allAirTempsDbl _double_; length `12` air temperature, monthly
+#' @param pdbegin _integer_; beginning year
+#' @param pdend _integer_; ending year
+#' @param smcsawc _double_; soil moisture control section available water capacity
 #' @export
 #' @importFrom rJava .jnew .jchar .jcast
+#' @return an instance of _NewhallDataset_
 #'
 #' @examples
 #' input_direct <- NewhallDataset(
@@ -89,18 +107,19 @@ NewhallDatasetFromPath <- function(pathname, .parser = XMLFileParser) {
 #' )
 #'
 NewhallDataset <-
-  function(stationName,
-           country,
-           lat,
-           lon,
-           nsHemisphere,
-           ewHemisphere,
-           stationElevation,
-           allPrecipsDbl,
-           allAirTempsDbl,
-           pdbegin,
-           pdend,
-           smcsawc) {
+  function(stationName, # String
+           country, # String
+           lat, # double
+           lon, # double
+           nsHemisphere, # char
+           ewHemisphere, # char
+           stationElevation, # double
+           allPrecipsDbl, # List<Double>
+           allAirTempsDbl, # List<Double>
+           pdbegin, # integer
+           pdend, # integer
+           smcsawc # double
+          ) {
 
     rJava::.jnew(
       "org/psu/newhall/sim/NewhallDataset",

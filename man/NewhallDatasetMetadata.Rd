@@ -2,7 +2,7 @@
 % Please edit documentation in R/NewhallDatasetMetadata.R
 \name{NewhallDatasetMetadata}
 \alias{NewhallDatasetMetadata}
-\title{Create an instance of NewhallDatasetMetadata}
+\title{Create an instance of \emph{NewhallDatasetMetadata}}
 \usage{
 NewhallDatasetMetadata(
   stationName,
@@ -33,59 +33,59 @@ NewhallDatasetMetadata(
 )
 }
 \arguments{
-\item{stationName}{character; station name}
+\item{stationName}{\emph{character}; station name}
 
-\item{stationId}{character; station ID}
+\item{stationId}{\emph{character}; station ID}
 
-\item{stationElevation}{double; station elevation}
+\item{stationElevation}{\emph{double}; station elevation}
 
-\item{stationStateProvidence}{character; station state / providence}
+\item{stationStateProvidence}{\emph{character}; station state / providence}
 
-\item{stationCountry}{character; station country}
+\item{stationCountry}{\emph{character}; station country}
 
-\item{mlraName}{character; Major Land Resource Area (MLRA) name}
+\item{mlraName}{\emph{character}; Major Land Resource Area (MLRA) name}
 
-\item{mlraId}{integer; Major Land Resource Area ID}
+\item{mlraId}{\emph{integer}; Major Land Resource Area ID}
 
-\item{contribFirstName}{character; contributor first name}
+\item{contribFirstName}{\emph{character}; contributor first name}
 
-\item{contribLastName}{character; contributor last name}
+\item{contribLastName}{\emph{character}; contributor last name}
 
-\item{contribTitle}{character; contributor title}
+\item{contribTitle}{\emph{character}; contributor title}
 
-\item{contribOrg}{character; contributor organization}
+\item{contribOrg}{\emph{character}; contributor organization}
 
-\item{contribAddress}{character; contributor address}
+\item{contribAddress}{\emph{character}; contributor address}
 
-\item{contribCity}{character; contributor city}
+\item{contribCity}{\emph{character}; contributor city}
 
-\item{contribStateProvidence}{character; contributor state / providence}
+\item{contribStateProvidence}{\emph{character}; contributor state / providence}
 
-\item{contribPostal}{character; contributor postal code}
+\item{contribPostal}{\emph{character}; contributor postal code}
 
-\item{contribCountry}{character; contributor country}
+\item{contribCountry}{\emph{character}; contributor country}
 
-\item{contribEmail}{character; contributor email}
+\item{contribEmail}{\emph{character}; contributor email}
 
-\item{contribPhone}{character; contributor phone}
+\item{contribPhone}{\emph{character}; contributor phone}
 
-\item{notes}{character (may have length >1); notes}
+\item{notes}{\emph{character} (may have length >1); notes}
 
-\item{runDate}{character; run date}
+\item{runDate}{\emph{character}; run date}
 
-\item{modelVersion}{character; model version}
+\item{modelVersion}{\emph{character}; model version}
 
-\item{unitSystem}{character; unit system either "cm" or "in"}
+\item{unitSystem}{\emph{character}; unit system either "cm" or "in"}
 
-\item{soilAirOffset}{double; soil-air temperature offset}
+\item{soilAirOffset}{\emph{double}; soil-air temperature offset}
 
-\item{amplitude}{double; soil-air temperature amplitude}
+\item{amplitude}{\emph{double}; soil-air temperature amplitude}
 
-\item{network}{character; network}
+\item{network}{\emph{character}; network}
 }
 \value{
-an instance of NewhallDatasetMetadata
+an instance of \emph{NewhallDatasetMetadata}
 }
 \description{
-Create an instance of NewhallDatasetMetadata
+Create an instance of \emph{NewhallDatasetMetadata}
 }

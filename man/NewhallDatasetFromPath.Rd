@@ -4,15 +4,19 @@
 \alias{NewhallDatasetFromPath}
 \alias{xml_NewhallDataset}
 \alias{csv_NewhallDataset}
-\title{Create an instance of NewhallDataset from XML file}
+\title{Create an instance of \emph{NewhallDataset} from XML or CSV file}
 \usage{
 NewhallDatasetFromPath(pathname, .parser = XMLFileParser)
+
+xml_NewhallDataset(pathname)
+
+csv_NewhallDataset(pathname)
 }
 \arguments{
-\item{pathname}{a character containing pathname}
+\item{pathname}{\emph{character} containing \code{pathname}}
 
 \item{.parser}{either \code{XMLFileParser} or \code{CSVFileParser}}
 }
 \description{
-Create an instance of NewhallDataset from XML file
+Create an instance of \emph{NewhallDataset} from XML or CSV file
 }

@@ -2,16 +2,16 @@
 % Please edit documentation in R/NewhallDataset.R
 \name{XMLFileParser}
 \alias{XMLFileParser}
-\title{Create an instance of XMLFileParser}
+\title{Create an instance of \emph{XMLFileParser}}
 \usage{
 XMLFileParser(pathname)
 }
 \arguments{
-\item{pathname}{a character containing pathname}
+\item{pathname}{\emph{character} containing \code{pathname}}
 }
 \value{
-an instance of XMLFileParser class
+an instance of \emph{XMLFileParser} class
 }
 \description{
-Create an instance of XMLFileParser
+Create an instance of \emph{XMLFileParser}
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/NewhallDataset.R
 \name{NewhallDataset}
 \alias{NewhallDataset}
-\title{Create an instance of NewhallDataset}
+\title{Create an instance of \emph{NewhallDataset}}
 \usage{
 NewhallDataset(
   stationName,
@@ -20,32 +20,35 @@ NewhallDataset(
 )
 }
 \arguments{
-\item{stationName}{character; station name}
+\item{stationName}{\emph{character}; station name}
 
-\item{country}{character; country}
+\item{country}{\emph{character}; country}
 
-\item{lat}{double; latitude}
+\item{lat}{\emph{double}; latitude decimal degrees}
 
-\item{lon}{double; longitude}
+\item{lon}{\emph{double}; longitude decimal degrees}
 
-\item{nsHemisphere}{character (length 1);\code{'N'} OR \code{'S'}}
+\item{nsHemisphere}{\emph{character} (length \code{1});\code{'N'} OR \code{'S'}}
 
-\item{ewHemisphere}{character (length 1); \code{'E'} OR \code{'W'}}
+\item{ewHemisphere}{\emph{character} (length \code{1}); \code{'E'} OR \code{'W'}}
 
-\item{stationElevation}{double; station elevation}
+\item{stationElevation}{\emph{double}; station elevation}
 
-\item{allPrecipsDbl}{precipitation, monthly}
+\item{allPrecipsDbl}{\emph{double}; length \code{12} precipitation, monthly}
 
-\item{allAirTempsDbl}{precipitation, monthly}
+\item{allAirTempsDbl}{\emph{double}; length \code{12} air temperature, monthly}
 
-\item{pdbegin}{beginning year}
+\item{pdbegin}{\emph{integer}; beginning year}
 
-\item{pdend}{ending year}
+\item{pdend}{\emph{integer}; ending year}
 
-\item{smcsawc}{soil moisture control section available water capacity}
+\item{smcsawc}{\emph{double}; soil moisture control section available water capacity}
+}
+\value{
+an instance of \emph{NewhallDataset}
 }
 \description{
-Create an instance of NewhallDataset
+Create an instance of \emph{NewhallDataset}
 }
 \examples{
 input_direct <- NewhallDataset(

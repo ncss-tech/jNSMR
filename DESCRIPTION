@@ -13,5 +13,8 @@ RoxygenNote: 7.1.1.9001
 License: BSD_3_clause + file LICENSE
 SystemRequirements: Java
 Imports: rJava
-Suggests: covr, testthat (>= 3.0.0)
+Suggests: 
+    covr,
+    testthat (>= 3.0.0)
 Config/testthat/edition: 3
+Language: en-US

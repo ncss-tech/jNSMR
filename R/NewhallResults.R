@@ -1,6 +1,7 @@
-#' Create an instance of XMLResultsExporter
-#' @param pathname a character containing pathname
-#' @return an instance of XMLResultsExporter class
+
+#' Create an instance of _XMLResultsExporter_
+#' @param pathname character; output path
+#' @return an instance of _XMLResultsExporter_ class
 #' @export
 #' @importFrom rJava .jnew
 XMLResultsExporter <- function(pathname) {
@@ -8,45 +9,40 @@ XMLResultsExporter <- function(pathname) {
                rJava::.jnew("java/io/File", pathname))
 }
 
-#' Create an instance of XMLStringResultsExporter
-#' @param pathname a character containing pathname
-#' @return an instance of XMLStringResultsExporter class
+#' Create an instance of _XMLStringResultsExporter_
+#' @return an instance of _XMLStringResultsExporter_ class
 #' @export
 #' @importFrom rJava .jnew
-XMLStringResultsExporter <- function(pathname) {
+XMLStringResultsExporter <- function() {
   rJava::.jnew("org/psu/newhall/util/XMLStringResultsExporter")
 }
 
-#' Export Newhall Results, Data and Metadata to XML file
+#' Export Newhall Results, Data and Metadata to XML file with _XMLResultsExporter_
 #'
-#' @param pathname output XML file path
 #' @param dataset _NewhallDataset_ `jobjRef`
 #' @param results _NewhallResults_ `jobjRef`
-#'
-#' @return an XML file written to specified path
+#' @param pathname output XML file path
+#' @return an XML file written to pathname
 #' @export
-newhall_XML_export <- function(pathname, dataset, results) {
-  # "inst/extdata/WILLIAMSPORT_1930_1930_export.xml"
+newhall_XMLResultsExporter <- function(dataset, results, pathname) {
   rJava::.jcall(XMLResultsExporter(pathname), "V", "export", results, dataset)
 }
 
-#' Export Newhall Results, Data and Metadata to XML string
+#' Export Newhall Results, Data and Metadata to XML string with _XMLStringResultsExporter_
 #'
-#' @param pathname output XML file path
 #' @param dataset _NewhallDataset_ `jobjRef`
 #' @param results _NewhallResults_ `jobjRef`
 #'
-#' @return an XML file written to specified path
+#' @return _character_ containing XML string
 #' @export
 #' @importFrom rJava .jcall
-newhall_XML_string_export <- function(dataset, results) {
-  # "inst/extdata/WILLIAMSPORT_1930_1930_export.xml"
+newhall_XMLStringResultsExporter <- function(dataset, results) {
   rJava::.jcall(XMLStringResultsExporter(), "S", "export", results, dataset)
 }
 
-#' Create an instance of CSVResultsExporter
+#' Create an instance of _CSVResultsExporter_
 #' @param pathname a character containing pathname
-#' @return an instance of CSVResultsExporter class
+#' @return an instance of _CSVResultsExporter_ class
 #' @export
 #' @importFrom rJava .jnew
 CSVResultsExporter <- function(pathname) {
@@ -54,16 +50,16 @@ CSVResultsExporter <- function(pathname) {
                rJava::.jnew("java/io/File", pathname))
 }
 
-#' Export Newhall Results, Data and Metadata to CSV file
+#' Export Newhall Results, Data and Metadata to CSV file with _CSVResultsExporter_
 #'
-#' @param pathname output CSV file path
 #' @param dataset _NewhallDataset_ `jobjRef`
 #' @param results _NewhallResults_ `jobjRef`
+#' @param pathname output CSV file path; default: `NULL`
 #'
-#' @return an CSV file written to specified path
+#' @return a CSV file written to specified path
 #' @export
 #' @importFrom rJava .jcall
-newhall_CSV_export <- function(pathname, dataset, results) {
+newhall_CSVResultsExporter <- function(dataset, results, pathname) {
   rJava::.jcall(CSVResultsExporter(pathname), "export", results, dataset)
 }
 

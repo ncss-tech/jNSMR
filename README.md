@@ -18,10 +18,8 @@ remotes::install_github('brownag/jNSMR')
 ```r
 library(jNSMR)
 
-# read single-station XML (or CSV) file
-input_xml <- NewhallDatasetFromPath("misc/WILLIAMSPORT_1930_1930_input.xml")
-
-# input_csv <- NewhallDatasetFromPath("misc/WILLIAMSPORT_1930_1930_input.csv", .parser = CSVFileParser)
+# read single-station XML  file
+input_xml <- xml_NewhallDataset("misc/WILLIAMSPORT_1930_1930_input.xml")
 
 # or specify inputs directly to the constructor
 input_direct <- NewhallDataset(stationName = "WILLIAMSPORT",
@@ -38,10 +36,10 @@ input_direct <- NewhallDataset(stationName = "WILLIAMSPORT",
                                smcsawc = 200.0)
 
 # run model
-output <- run_simulation(input_direct)
+output <- newhall_simulation(input_direct)
 
 # inspect results as string (requires the metadata specified in XML)
-cat(newhall_XML_string_export(input_xml, output))
+cat(newhall_XMLStringResultsExporter(input_xml, output))
 #> <?xml version="1.0" encoding="UTF-8"?>
 #> <model>
 #>   <metadata>
@@ -213,15 +211,17 @@ cat(newhall_XML_string_export(input_xml, output))
 #> 
 
 # write XML results to file
-newhall_XML_export("WILLIAMSPORT_1930_1930_export.xml", input_direct, output)
+newhall_XMLResultsExporter(dataset = input_direct, 
+                           result = output, 
+                           pathname = "WILLIAMSPORT_1930_1930_export.xml")
 
 # convenience method to open GUI
-openJAR()
+newhall_GUI()
 ```
 
 ## License information
 
-**Currently this package uses version 1.6.1 (released 2016/02/10) of the jNSM (official download here: https://www.nrcs.usda.gov/wps/portal/nrcs/detail/?cid=nrcs142p2_053559)**. The compiled JAR and source code are distributed in this R package under the "New" (3-Clause) BSD License. See _LICENSE_ for more information.
+**This package uses version 1.6.1 (released 2016/02/10) of the jNSM (official download here: https://www.nrcs.usda.gov/wps/portal/nrcs/detail/?cid=nrcs142p2_053559)**. The compiled JAR and source code are distributed in this R package under the "New" (3-Clause) BSD License. See _LICENSE_ for more information.
 
 > Newhall 1.6.1, Copyright (C) 2010-2011 
 > United States Department of Agriculture - Natural Resources Conservation Service, 

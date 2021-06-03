@@ -1,31 +1,41 @@
-#' Test using BASICSimulationModel class from newhall-1.6.1.jar
+#' Run _BASICSimulationModel_ simulation with newhall-1.6.1.jar
+#'
 #' @param dataset a _NewhallDataset_ `jobjRef`
-#' @param bsm a _BASICSimulationModel_ `jobjRef`; default: `BASICSimulationModel()`
-#' @return _NewhallResult_ `jobjRef`
+#' @param waterHoldingCapacity Default: `200`
+#' @param fc Default: `2.5`
+#' @param fcd Default: `0.66`
+#' @param bsm `jobjRef` for _BASICSimulationModel_; Default: `BASICSimulationModel()`
+#' @param toString logical; return _NewhallResults_ (Default: `FALSE`), or if `TRUE` call `result.toString()` to get formatted standard output as _character_?
+#'
+#' @return _NewhallResults_ `jobjRef`
 #' @export
 #' @importFrom rJava .jcall
-run_simulation <- function(dataset,
-                           waterHoldingCapacity = 200,
-                           fc = 2.5,
-                           fcd = 0.66,
-                           bsm = BASICSimulationModel(),
-                           toString = FALSE) {
+newhall_simulation <- function(
+                            dataset, # NewhallDataset
+                            waterHoldingCapacity = 200.0, # double
+                            fc = 2.5, # double
+                            fcd = 0.66, # double
+                            bsm = BASICSimulationModel(), # BASICSimulationModel
+                            toString = FALSE
+                           ) {
 
-    res <- rJava::.jcall(bsm,
-                         returnSig = "Lorg/psu/newhall/sim/NewhallResults;",
-                         method =  "runSimulation",
-                         dataset,
-                         waterHoldingCapacity,
-                         fc,
-                         fcd)
+    res <- rJava::.jcall(
+                          bsm, # BASICSimulationModel
+                          returnSig = "Lorg/psu/newhall/sim/NewhallResults;",
+                          method =  "runSimulation",
+                          dataset, # NewhallDataset
+                          waterHoldingCapacity, # double
+                          fc, # double
+                          fcd # double
+                        )
     if (toString)
       return(rJava::.jcall(res, returnSig = "S", method = "toString"))
     res
 }
 
-#' Create an instance of BASICSimulationModel
+#' Create an instance of _BASICSimulationModel_
 #'
-#' @return an instance of BASICSimulationModel class
+#' @return an instance of _BASICSimulationModel_ class
 #' @export
 #' @importFrom rJava .jnew
 BASICSimulationModel <- function() {

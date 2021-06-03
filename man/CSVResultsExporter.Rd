@@ -2,7 +2,7 @@
 % Please edit documentation in R/NewhallResults.R
 \name{CSVResultsExporter}
 \alias{CSVResultsExporter}
-\title{Create an instance of CSVResultsExporter}
+\title{Create an instance of \emph{CSVResultsExporter}}
 \usage{
 CSVResultsExporter(pathname)
 }
@@ -10,8 +10,8 @@ CSVResultsExporter(pathname)
 \item{pathname}{a character containing pathname}
 }
 \value{
-an instance of CSVResultsExporter class
+an instance of \emph{CSVResultsExporter} class
 }
 \description{
-Create an instance of CSVResultsExporter
+Create an instance of \emph{CSVResultsExporter}
 }

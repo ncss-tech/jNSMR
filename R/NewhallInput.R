@@ -1,19 +1,23 @@
 # NewhallInput.R
 
-#' Create batch input CSV file for Newhall model
-#'
-#' @param pathname path to CSV file to create/append
-#' @param append append to CSV? Default: `FALSE`
-#'
-#' @return a file written to specified `pathname` containing a sample station ID, `0` for numeric values and `""` for character values
-#' @export
-#'
-newhall_input_csv_batch <- function(pathname, append = FALSE) {
-  write.csv(.newhall_csv_template_batch(stationName = "Site #1"), file = pathname, append = append)
+# Create batch input CSV file for Newhall model
+#
+# @param stationName _character_ equal in length to number of rows in resulting batch table
+# @param ... additional column names and values as specified in the Details section
+# @param pathname path to CSV file to create/append
+# @param append append to CSV? Default: `FALSE`
+# @details additional column names (other than `stationName`) and values for batch file may be specified from this list: "netType", "latDD", "lonDD", "elev", "tJan", "tFeb", "tMar", "tApr", "tMay", "tJun", "tJul", "tAug", "tSep", "tOct", "tNov", "tDec", "pJan", "pFeb", "pMar", "pApr", "pMay", "pJun", "pJul", "pAug", "pSep", "pOct", "pNov", "pDec", "pdType", "pdStartYr", "pdEndYr", "awc", "maatmast", "cntryCode", "stProvCode", "notes", "stationID". Values should have length `1` or length equal to length of `stationName`.
+# @return a file written to specified `pathname` containing a sample station ID, `0` for numeric values and `""` for character values
+# @export
+#' @importFrom utils write.csv
+csv_createNewhallBatch <- function(pathname, stationName = "", ..., append = FALSE) {
+  write.csv(.newhall_batch_template(stationName = stationName, ...),
+            file = pathname,
+            append = append)
 }
 
-.newhall_csv_template_batch <-
-  function(stationName = character(0),
+.newhall_batch_template <-
+  function(stationName = as.character(stationName),
            netType = character(length(stationName)),
            latDD = numeric(length(stationName)),
            lonDD = numeric(length(stationName)),

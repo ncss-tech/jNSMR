@@ -2,16 +2,16 @@
 % Please edit documentation in R/NewhallDataset.R
 \name{CSVFileParser}
 \alias{CSVFileParser}
-\title{Create an instance of CSVFileParser}
+\title{Create an instance of \emph{CSVFileParser}}
 \usage{
 CSVFileParser(pathname)
 }
 \arguments{
-\item{pathname}{a character containing pathname}
+\item{pathname}{\emph{character} containing \code{pathname}}
 }
 \value{
-an instance of CSVFileParser class
+an instance of \emph{CSVFileParser} class
 }
 \description{
-Create an instance of CSVFileParser
+Create an instance of \emph{CSVFileParser}
 }

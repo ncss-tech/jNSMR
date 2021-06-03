@@ -2,7 +2,7 @@
 % Please edit documentation in R/NewhallResults.R
 \name{XMLResultsExporter}
 \alias{XMLResultsExporter}
-\title{Create an instance of XMLResultsExporter}
+\title{Create an instance of \emph{XMLResultsExporter}}
 \usage{
 XMLResultsExporter(pathname)
 }
@@ -10,8 +10,8 @@ XMLResultsExporter(pathname)
 \item{pathname}{character; output path}
 }
 \value{
-an instance of XMLResultsExporter class
+an instance of \emph{XMLResultsExporter} class
 }
 \description{
-Create an instance of XMLResultsExporter
+Create an instance of \emph{XMLResultsExporter}
 }

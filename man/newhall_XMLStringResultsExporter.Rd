@@ -2,7 +2,7 @@
 % Please edit documentation in R/NewhallResults.R
 \name{newhall_XMLStringResultsExporter}
 \alias{newhall_XMLStringResultsExporter}
-\title{Export Newhall Input and Output with XMLStringResultsExporter}
+\title{Export Newhall Results, Data and Metadata to XML string with \emph{XMLStringResultsExporter}}
 \usage{
 newhall_XMLStringResultsExporter(dataset, results)
 }
@@ -15,5 +15,5 @@ newhall_XMLStringResultsExporter(dataset, results)
 \emph{character} containing XML string
 }
 \description{
-Export Newhall Input and Output with XMLStringResultsExporter
+Export Newhall Results, Data and Metadata to XML string with \emph{XMLStringResultsExporter}
 }

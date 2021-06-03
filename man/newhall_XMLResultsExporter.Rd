@@ -2,7 +2,7 @@
 % Please edit documentation in R/NewhallResults.R
 \name{newhall_XMLResultsExporter}
 \alias{newhall_XMLResultsExporter}
-\title{Export Newhall Input and Output with XMLResultsExporter}
+\title{Export Newhall Results, Data and Metadata to XML file with \emph{XMLResultsExporter}}
 \usage{
 newhall_XMLResultsExporter(dataset, results, pathname)
 }
@@ -17,5 +17,5 @@ newhall_XMLResultsExporter(dataset, results, pathname)
 an XML file written to pathname
 }
 \description{
-Export Newhall Input and Output with XMLResultsExporter
+Export Newhall Results, Data and Metadata to XML file with \emph{XMLResultsExporter}
 }

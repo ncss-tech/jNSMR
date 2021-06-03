@@ -1,35 +1,35 @@
 # NewhallDatasetMetadata
 
 
-#' Create an instance of NewhallDatasetMetadata
+#' Create an instance of _NewhallDatasetMetadata_
 #'
-#' @param stationName character; station name
-#' @param stationId character; station ID
-#' @param stationElevation double; station elevation
-#' @param stationStateProvidence character; station state / providence
-#' @param stationCountry character; station country
-#' @param mlraName character; Major Land Resource Area (MLRA) name
-#' @param mlraId integer; Major Land Resource Area ID
-#' @param contribFirstName character; contributor first name
-#' @param contribLastName character; contributor last name
-#' @param contribTitle character; contributor title
-#' @param contribOrg character; contributor organization
-#' @param contribAddress character; contributor address
-#' @param contribCity character; contributor city
-#' @param contribStateProvidence character; contributor state / providence
-#' @param contribPostal character; contributor postal code
-#' @param contribCountry character; contributor country
-#' @param contribEmail character; contributor email
-#' @param contribPhone character; contributor phone
-#' @param notes character (may have length >1); notes
-#' @param runDate character; run date
-#' @param modelVersion character; model version
-#' @param unitSystem character; unit system either "cm" or "in"
-#' @param soilAirOffset double; soil-air temperature offset
-#' @param amplitude double; soil-air temperature amplitude
-#' @param network character; network
+#' @param stationName _character_; station name
+#' @param stationId _character_; station ID
+#' @param stationElevation _double_; station elevation
+#' @param stationStateProvidence _character_; station state / providence
+#' @param stationCountry _character_; station country
+#' @param mlraName _character_; Major Land Resource Area (MLRA) name
+#' @param mlraId _integer_; Major Land Resource Area ID
+#' @param contribFirstName _character_; contributor first name
+#' @param contribLastName _character_; contributor last name
+#' @param contribTitle _character_; contributor title
+#' @param contribOrg _character_; contributor organization
+#' @param contribAddress _character_; contributor address
+#' @param contribCity _character_; contributor city
+#' @param contribStateProvidence _character_; contributor state / providence
+#' @param contribPostal _character_; contributor postal code
+#' @param contribCountry _character_; contributor country
+#' @param contribEmail _character_; contributor email
+#' @param contribPhone _character_; contributor phone
+#' @param notes _character_ (may have length >1); notes
+#' @param runDate _character_; run date
+#' @param modelVersion _character_; model version
+#' @param unitSystem _character_; unit system either "cm" or "in"
+#' @param soilAirOffset _double_; soil-air temperature offset
+#' @param amplitude _double_; soil-air temperature amplitude
+#' @param network _character_; network
 #'
-#' @return an instance of NewhallDatasetMetadata
+#' @return an instance of _NewhallDatasetMetadata_
 #' @export
 #'
 NewhallDatasetMetadata <- function(

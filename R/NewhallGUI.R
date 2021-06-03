@@ -5,15 +5,11 @@
 #'
 #' @return If `intern=TRUE` (default), the output of the command, one line per character string. `0` if successful. If the command could not be run for any reason, the value is 127 and a warning is issued.
 #'
-#' @details See documentation for `system()` return resut for limitations on line length, error conditions, etc.
+#' @details See documentation for `system()` return result for limitations on line length, error conditions, etc.
 #'
 #' @export
-#'
-#' @examples
-#' \donttest{
-#' # openJAR()
-#' }
-openJAR <- function(intern = FALSE, wait = FALSE) {
+newhall_GUI <- function(intern = FALSE, wait = FALSE) {
+
 
   # TODO: look for JAVA_HOME
 

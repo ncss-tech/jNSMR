@@ -2,13 +2,13 @@
 % Please edit documentation in R/NewhallResults.R
 \name{XMLStringResultsExporter}
 \alias{XMLStringResultsExporter}
-\title{Create an instance of XMLStringResultsExporter}
+\title{Create an instance of \emph{XMLStringResultsExporter}}
 \usage{
 XMLStringResultsExporter()
 }
 \value{
-an instance of XMLStringResultsExporter class
+an instance of \emph{XMLStringResultsExporter} class
 }
 \description{
-Create an instance of XMLStringResultsExporter
+Create an instance of \emph{XMLStringResultsExporter}
 }

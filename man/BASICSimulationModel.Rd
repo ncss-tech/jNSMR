@@ -2,13 +2,13 @@
 % Please edit documentation in R/BASICSimulationModel.R
 \name{BASICSimulationModel}
 \alias{BASICSimulationModel}
-\title{Create an instance of BASICSimulationModel}
+\title{Create an instance of \emph{BASICSimulationModel}}
 \usage{
 BASICSimulationModel()
 }
 \value{
-an instance of BASICSimulationModel class
+an instance of \emph{BASICSimulationModel} class
 }
 \description{
-Create an instance of BASICSimulationModel
+Create an instance of \emph{BASICSimulationModel}
 }
