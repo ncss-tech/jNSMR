@@ -10,7 +10,7 @@ First, install the development version of the R package. This will install the l
 
 ```r
 # install.packages('remotes')
-remotes::install_github('brownag/jNSMR')
+remotes::install_github('ncss-tech/jNSMR')
 ```
 
 ## Basic functionality 
