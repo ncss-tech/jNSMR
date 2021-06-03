@@ -50,9 +50,9 @@ output <- newhall_simulation(input_direct)
 
 The jNSM has a defined CSV (comma-separated value) batch file format. Examples of that setup are included in the official download. The batching in the {jNSMR} package is handled by R code, not Java. The main interface to batching is `newhall_batch()`. 
 
-`newhall_batch()` takes either a `pathname` argument, or you can specify `data` as a _data.frame_ directly.
+`newhall_batch()` takes either a `pathname` argument, or you can specify `.data` as a _data.frame_ directly.
 
-Selected example input files have been inclided in `inst/extdata` directory of this package.
+Selected example input files have been included in `inst/extdata` directory of this package.
 
 ```r
 pathname <- system.file("extdata/All_PA_jNSM_Example_Batch_Metric.csv", package = "jNSMR")[1]
@@ -250,7 +250,7 @@ newhall_XMLResultsExporter(dataset = input_direct,
 ### Graphical User Interface for individual runs of _newhall-1.6.1.jar_
 
 ```r
-# convenience method to open GUI with the R packag
+# convenience method to open GUI with the R package
 
 newhall_GUI()
 ```

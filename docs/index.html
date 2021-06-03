@@ -112,8 +112,8 @@
 <h3 class="hasAnchor">
 <a href="#run-batch-sets-of-models" class="anchor"></a>Run batch sets of models</h3>
 <p>The jNSM has a defined CSV (comma-separated value) batch file format. Examples of that setup are included in the official download. The batching in the {jNSMR} package is handled by R code, not Java. The main interface to batching is <code><a href="reference/newhall_batch.html">newhall_batch()</a></code>.</p>
-<p><code><a href="reference/newhall_batch.html">newhall_batch()</a></code> takes either a <code>pathname</code> argument, or you can specify <code>data</code> as a <em>data.frame</em> directly.</p>
-<p>Selected example input files have been inclided in <code>inst/extdata</code> directory of this package.</p>
+<p><code><a href="reference/newhall_batch.html">newhall_batch()</a></code> takes either a <code>pathname</code> argument, or you can specify <code>.data</code> as a <em>data.frame</em> directly.</p>
+<p>Selected example input files have been included in <code>inst/extdata</code> directory of this package.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">pathname</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata/All_PA_jNSM_Example_Batch_Metric.csv"</span>, package <span class="op">=</span> <span class="st">"jNSMR"</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>
 
@@ -311,7 +311,7 @@
 <a href="#graphical-user-interface-for-individual-runs-of-newhall-161jar" class="anchor"></a>Graphical User Interface for individual runs of <em>newhall-1.6.1.jar</em>
 </h3>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># convenience method to open GUI with the R packag</span>
+<code class="sourceCode R"><span class="co"># convenience method to open GUI with the R package</span>
 
 <span class="fu"><a href="reference/newhall_GUI.html">newhall_GUI</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 </div>
