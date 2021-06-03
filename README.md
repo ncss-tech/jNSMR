@@ -213,7 +213,7 @@ cat(newhall_XMLStringResultsExporter(input_xml, output))
 # write XML results to file
 newhall_XMLResultsExporter(dataset = input_direct, 
                            result = output, 
-                           pathname = "WILLIAMSPORT_1930_1930_export.xml")
+                           pathname = "misc/WILLIAMSPORT_1930_1930_export.xml")
 
 # convenience method to open GUI
 newhall_GUI()
