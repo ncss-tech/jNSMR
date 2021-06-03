@@ -7,14 +7,14 @@
 newhall_batch(.data = NULL, pathname = NULL, verbose = TRUE)
 }
 \arguments{
-\item{.data}{a data.frame}
+\item{.data}{a \emph{data.frame} or \emph{character} vector of paths (used as \code{pathname})}
 
-\item{pathname}{path to CSV file with Newhall batch format and required columns}
+\item{pathname}{paths to CSV file with Newhall batch format and required columns; default \code{NULL}}
 
 \item{verbose}{print message about number of simulations and elapsed time}
 }
 \value{
-a \code{data.frame} containing list columns with Java Objects for \emph{NewhallDataset}, \emph{NewhallResults}, and the column \code{output} which is \emph{character} containing the \code{toString()} output from \emph{NewhallResults}
+a \emph{data.frame} containing list columns with Java Objects for \emph{NewhallDataset}, \emph{NewhallResults}, and the column \code{output} which is \emph{character} containing the \code{toString()} output from \emph{NewhallResults}
 }
 \description{
 Run a Newhall simulation for each row in a CSV file

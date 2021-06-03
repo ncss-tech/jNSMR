@@ -9,7 +9,7 @@ Authors@R:
 Description: Provides methods to create input, read output, and run the routines from the legacy Java Newhall Simulation Model (jNSM). Currently this package uses version 1.6.1 of the jNSM available for download here: https://www.nrcs.usda.gov/wps/portal/nrcs/detail/?cid=nrcs142p2_053559. The system requirements of the extraction and installation tools (Windows .EXE archive) at the above link may not be met on your system but the core Java class files are stored in a platform-independent format (in newhall-1.6.1.jar) which is a core dependency in this package.
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.1.9001
+RoxygenNote: 7.1.1
 License: BSD_3_clause + file LICENSE
 SystemRequirements: Java
 Imports: 
