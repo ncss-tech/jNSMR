@@ -13,13 +13,17 @@ First, install the development version of the R package. This will install the l
 remotes::install_github('brownag/jNSMR')
 ```
 
-## Basic functions
+## Basic functionality 
+
+### Run the BASIC simulation model
+
+Create a _NewhallDataset_ with `xml_NewhallDataset()` or `NewhallDataset()` then run a single simulation with `newhall_simulation()`
 
 ```r
 library(jNSMR)
 
-# read single-station XML  file
-input_xml <- xml_NewhallDataset("misc/WILLIAMSPORT_1930_1930_input.xml")
+# read single-station XML file
+input_xml <- xml_NewhallDataset(system.file("extdata/WILLIAMSPORT_1930_1930_input.xml", package = "jNSMR")[1])
 
 # or specify inputs directly to the constructor
 input_direct <- NewhallDataset(stationName = "WILLIAMSPORT",
@@ -35,10 +39,33 @@ input_direct <- NewhallDataset(stationName = "WILLIAMSPORT",
                                pdend = 1930,
                                smcsawc = 200.0)
 
-# run model
-output <- newhall_simulation(input_direct)
+# run single model from XML file
+output_xml <- newhall_simulation(input_xml)
 
-# inspect results as string (requires the metadata specified in XML)
+# run single model from direct input
+output <- newhall_simulation(input_direct)
+```
+
+### Run batch sets of models
+
+The jNSM has a defined CSV (comma-separated value) batch file format. Examples of that setup are included in the official download. The batching in the {jNSMR} package is handled by R code, not Java. The main interface to batching is `newhall_batch()`. 
+
+`newhall_batch()` takes either a `pathname` argument, or you can specify `data` as a _data.frame_ directly.
+
+Selected example input files have been inclided in `inst/extdata` directory of this package.
+
+```r
+pathname <- system.file("extdata/All PA jNSM Example Batch Metric.csv", package = "jNSMR")[1]
+
+res <- newhall_batch(pathname = pathname)
+
+head(res)
+```
+
+### Support for Newhall XML format for input and output
+
+```r
+# inspect XML result format
 cat(newhall_XMLStringResultsExporter(input_xml, output))
 #> <?xml version="1.0" encoding="UTF-8"?>
 #> <model>
@@ -209,13 +236,22 @@ cat(newhall_XMLStringResultsExporter(input_xml, output))
 #>   </output>
 #> </model>
 #> 
+```
 
+### XML File Output
+
+```r
 # write XML results to file
 newhall_XMLResultsExporter(dataset = input_direct, 
                            result = output, 
                            pathname = "misc/WILLIAMSPORT_1930_1930_export.xml")
+```
 
-# convenience method to open GUI
+### Graphical User Interface for individual runs of _newhall-1.6.1.jar_
+
+```r
+# convenience method to open GUI with the R packag
+
 newhall_GUI()
 ```
 
@@ -237,6 +273,6 @@ This product includes software developed by the JDOM Project (http://www.jdom.or
 
 The system requirements of the extraction and installation tools (Windows .EXE archive) at the above link may not be met on your system but the core Java class files are stored in a platform-independent format (in _newhall-1.6.1.jar_) which is a core dependency in this package. Therefore, as long as you have a modern Java Runtime Environment (you probably do), you will be able to run jNSM via this package with only minimal setup.
 
-### Set up `PATH` to contain `java`
-
 ### {rJava}
+
+### Set up `PATH` to contain `java` (for `newhall_GUI()`)

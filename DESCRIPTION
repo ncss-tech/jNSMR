@@ -1,6 +1,6 @@
 Package: jNSMR
 Title: Wrapper for Java Newhall Simulation Model (jNSM) "A Traditional Soil Climate Simulation Model" 
-Version: 0.0.0.9001
+Version: 0.0.0.9002
 Authors@R: 
     person(given = "Andrew",
            family = "Brown",

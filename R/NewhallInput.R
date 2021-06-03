@@ -24,14 +24,7 @@ csv_writeNewhallBatch <- function(pathname, stationName = "", ..., append = FALS
 #
 #' @importFrom utils read.csv
 csv_readNewhallBatch <- function(pathname) {
-  .d <- read.csv(file = pathname, append = append, stringsAsFactors = FALSE)
-
-  batchcolnames <- .colnamesNewhallBatch()
-
-  # minimum dataset includes all of the codes specified in colnames of batch file template
-  stopifnot(all(.colnamesNewhallBatch() %in% colnames(.d)))
-
-  .d[, batchcolnames]
+  read.csv(file = pathname, stringsAsFactors = FALSE)[, .colnamesNewhallBatch()]
 }
 
 .colnamesNewhallBatch <- function() {
