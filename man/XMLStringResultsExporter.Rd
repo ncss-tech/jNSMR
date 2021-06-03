@@ -4,10 +4,7 @@
 \alias{XMLStringResultsExporter}
 \title{Create an instance of XMLStringResultsExporter}
 \usage{
-XMLStringResultsExporter(pathname)
-}
-\arguments{
-\item{pathname}{a character containing pathname}
+XMLStringResultsExporter()
 }
 \value{
 an instance of XMLStringResultsExporter class

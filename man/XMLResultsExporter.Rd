@@ -7,7 +7,7 @@
 XMLResultsExporter(pathname)
 }
 \arguments{
-\item{pathname}{a character containing pathname}
+\item{pathname}{character; output path}
 }
 \value{
 an instance of XMLResultsExporter class

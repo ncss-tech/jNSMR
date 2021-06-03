@@ -2,6 +2,8 @@
 % Please edit documentation in R/NewhallDataset.R
 \name{NewhallDatasetFromPath}
 \alias{NewhallDatasetFromPath}
+\alias{xml_NewhallDataset}
+\alias{csv_NewhallDataset}
 \title{Create an instance of NewhallDataset from XML file}
 \usage{
 NewhallDatasetFromPath(pathname, .parser = XMLFileParser)
