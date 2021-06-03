@@ -115,20 +115,20 @@
     <p>Create an instance of <em>NewhallDataset</em></p>
     </div>
 
-    <pre class="usage"><span class='fu'>NewhallDataset</span><span class='op'>(</span>
-  <span class='va'>stationName</span>,
-  <span class='va'>country</span>,
-  <span class='va'>lat</span>,
-  <span class='va'>lon</span>,
-  <span class='va'>nsHemisphere</span>,
-  <span class='va'>ewHemisphere</span>,
-  <span class='va'>stationElevation</span>,
-  <span class='va'>allPrecipsDbl</span>,
-  <span class='va'>allAirTempsDbl</span>,
-  <span class='va'>pdbegin</span>,
-  <span class='va'>pdend</span>,
-  <span class='va'>smcsawc</span>
-<span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>NewhallDataset</span>(
+  <span class='kw'>stationName</span>,
+  <span class='kw'>country</span>,
+  <span class='kw'>lat</span>,
+  <span class='kw'>lon</span>,
+  <span class='kw'>nsHemisphere</span>,
+  <span class='kw'>ewHemisphere</span>,
+  <span class='kw'>stationElevation</span>,
+  <span class='kw'>allPrecipsDbl</span>,
+  <span class='kw'>allAirTempsDbl</span>,
+  <span class='kw'>pdbegin</span>,
+  <span class='kw'>pdend</span>,
+  <span class='kw'>smcsawc</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -188,15 +188,15 @@
     <p>an instance of <em>NewhallDataset</em></p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='va'>input_direct</span> <span class='op'>&lt;-</span> <span class='fu'>NewhallDataset</span><span class='op'>(</span>
-  stationName <span class='op'>=</span> <span class='st'>"WILLIAMSPORT"</span>,
-  country <span class='op'>=</span> <span class='st'>"US"</span>,
-  lat <span class='op'>=</span> <span class='fl'>41.24</span>,
-  lon <span class='op'>=</span> <span class='op'>-</span><span class='fl'>76.92</span>,
-  nsHemisphere <span class='op'>=</span> <span class='st'>'N'</span>,
-  ewHemisphere <span class='op'>=</span> <span class='st'>'W'</span>,
-  stationElevation <span class='op'>=</span> <span class='fl'>158.0</span>,
-  allPrecipsDbl <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>
+    <pre class="examples"><div class='input'><span class='kw'>input_direct</span> <span class='op'>&lt;-</span> <span class='fu'>NewhallDataset</span>(
+  stationName = <span class='st'>"WILLIAMSPORT"</span>,
+  country = <span class='st'>"US"</span>,
+  lat = <span class='fl'>41.24</span>,
+  lon = <span class='op'>-</span><span class='fl'>76.92</span>,
+  nsHemisphere = <span class='st'>'N'</span>,
+  ewHemisphere = <span class='st'>'W'</span>,
+  stationElevation = <span class='fl'>158.0</span>,
+  allPrecipsDbl = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(
     <span class='fl'>44.2</span>,
     <span class='fl'>40.39</span>,
     <span class='fl'>113.54</span>,
@@ -209,8 +209,8 @@
     <span class='fl'>6.35</span>,
     <span class='fl'>17.53</span>,
     <span class='fl'>56.39</span>
-  <span class='op'>)</span>,
-  allAirTempsDbl <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>
+  ),
+  allAirTempsDbl = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(
     <span class='op'>-</span><span class='fl'>2.17</span>,
     <span class='fl'>0.89</span>,
     <span class='fl'>3.72</span>,
@@ -223,11 +223,11 @@
     <span class='fl'>10.5</span>,
     <span class='fl'>5.33</span>,
     <span class='op'>-</span><span class='fl'>1.06</span>
-  <span class='op'>)</span>,
-  pdbegin <span class='op'>=</span> <span class='fl'>1930</span>,
-  pdend <span class='op'>=</span> <span class='fl'>1930</span>,
-  smcsawc <span class='op'>=</span> <span class='fl'>200.0</span>
-<span class='op'>)</span>
+  ),
+  pdbegin = <span class='fl'>1930</span>,
+  pdend = <span class='fl'>1930</span>,
+  smcsawc = <span class='fl'>200.0</span>
+)
 
 </div></pre>
   </div>

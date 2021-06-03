@@ -115,18 +115,18 @@
     <p>Run a Newhall simulation for each row in a CSV file</p>
     </div>
 
-    <pre class="usage"><span class='fu'>newhall_batch</span><span class='op'>(</span>.data <span class='op'>=</span> <span class='cn'>NULL</span>, pathname <span class='op'>=</span> <span class='cn'>NULL</span>, verbose <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>newhall_batch</span>(.data = <span class='kw'>NULL</span>, pathname = <span class='kw'>NULL</span>, verbose = <span class='fl'>TRUE</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>.data</th>
-      <td><p>a data.frame</p></td>
+      <td><p>a <em>data.frame</em> or <em>character</em> vector of paths (used as <code>pathname</code>)</p></td>
     </tr>
     <tr>
       <th>pathname</th>
-      <td><p>path to CSV file with Newhall batch format and required columns</p></td>
+      <td><p>paths to CSV file with Newhall batch format and required columns; default <code>NULL</code></p></td>
     </tr>
     <tr>
       <th>verbose</th>
@@ -136,7 +136,7 @@
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a <code>data.frame</code> containing list columns with Java Objects for <em>NewhallDataset</em>, <em>NewhallResults</em>, and the column <code>output</code> which is <em>character</em> containing the <code><a href='https://rdrr.io/r/base/toString.html'>toString()</a></code> output from <em>NewhallResults</em></p>
+    <p>a <em>data.frame</em> containing list columns with Java Objects for <em>NewhallDataset</em>, <em>NewhallResults</em>, and the column <code>output</code> which is <em>character</em> containing the <code><a href='https://rdrr.io/r/base/toString.html'>toString()</a></code> output from <em>NewhallResults</em></p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p>csv_writeNewhallBatch</p></div>
