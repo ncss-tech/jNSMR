@@ -24,19 +24,16 @@ allAirTempsDbl <- NULL; allPrecipsDbl <- NULL; awc <- NULL; cntryCode <- NULL; d
         if (all(nchar(x) > 0) && file.exists(x))
           csv_readNewhallBatch(x)
       }), fill = TRUE)
-  } else {
+  } else if (!inherits(.data, 'data.frame')) {
     stop("'.data' should be a `data.frame` or a vector of path names to CSV files", call. = FALSE)
   }
-  
-# otherwise, .data inherits from data.frame
-  stopifnot(inherits(.data, 'data.frame'))
   
   # minimum dataset includes all of the codes specified in colnames of batch file template
   stopifnot(all(.colnamesNewhallBatch() %in% colnames(.data)))
 
   batchframe <- data.table::data.table(.data)
-  batchframe <- batchframe[batchframe[, list(allPrecipsDbl = list(c(tJan,tFeb,tMar,tApr,tMay,tJun,tJul,tAug,tSep,tOct,tNov,tDec)),
-                                             allAirTempsDbl = list(c(pJan,pFeb,pMar,pApr,pMay,pJun,pJul,pAug,pSep,pOct,pNov,pDec))),
+  batchframe <- batchframe[batchframe[, list(allAirTempsDbl = list(c(tJan,tFeb,tMar,tApr,tMay,tJun,tJul,tAug,tSep,tOct,tNov,tDec)),
+                                             allPrecipsDbl = list(c(pJan,pFeb,pMar,pApr,pMay,pJun,pJul,pAug,pSep,pOct,pNov,pDec))),
                                        by = stationName], on = "stationName"]
 
   t1 <- Sys.time()
