@@ -1,6 +1,6 @@
 <!-- badges: start -->
-[![R-CMD-check](https://github.com/brownag/jNSMR/workflows/R-CMD-check/badge.svg)](https://github.com/brownag/jNSMR/actions)
-[![Codecov test coverage](https://codecov.io/gh/brownag/jNSMR/branch/main/graph/badge.svg)](https://codecov.io/gh/brownag/jNSMR?branch=main)
+[![R-CMD-check](https://github.com/ncss-tech/jNSMR/workflows/R-CMD-check/badge.svg)](https://github.com/ncss-tech/jNSMR/actions)
+[![codecov](https://codecov.io/gh/ncss-tech/jNSMR/branch/main/graph/badge.svg?token=DRU5ylK1si)](https://codecov.io/gh/ncss-tech/jNSMR)
 <!-- badges: end -->
 
 # jNSMR
