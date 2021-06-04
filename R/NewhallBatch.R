@@ -42,7 +42,7 @@ allAirTempsDbl <- NULL; allPrecipsDbl <- NULL; awc <- NULL; cntryCode <- NULL; d
                                                                           lat = latDD, # double
                                                                           lon = lonDD, # double
                                                                           nsHemisphere = 'N', # char
-                                                                          ewHemisphere = 'W', # char
+                                                                          ewHemisphere = 'E', # char
                                                                           stationElevation = elev, # double
                                                                           allPrecipsDbl[[1]], # List<Double>
                                                                           allAirTempsDbl[[1]], # List<Double>
