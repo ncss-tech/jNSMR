@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">jNSMR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9002</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9003</span>
       </span>
     </div>
 
@@ -115,7 +115,7 @@
     <p>Run a Newhall simulation for each row in a CSV file</p>
     </div>
 
-    <pre class="usage"><span class='fu'>newhall_batch</span>(.data = <span class='kw'>NULL</span>, pathname = <span class='kw'>NULL</span>, verbose = <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='fu'>newhall_batch</span>(.data = <span class='kw'>NULL</span>, pathname = <span class='kw'>NULL</span>, verbose = <span class='fl'>TRUE</span>, toString = <span class='fl'>FALSE</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -132,11 +132,15 @@
       <th>verbose</th>
       <td><p>print message about number of simulations and elapsed time</p></td>
     </tr>
+    <tr>
+      <th>toString</th>
+      <td><p>call <code><a href='https://rdrr.io/r/base/toString.html'>toString()</a></code> method on each <em>NewhallResults</em> object and store in <code>output</code> column of result?</p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a <em>data.frame</em> containing list columns with Java Objects for <em>NewhallDataset</em>, <em>NewhallResults</em>, and the column <code>output</code> which is <em>character</em> containing the <code><a href='https://rdrr.io/r/base/toString.html'>toString()</a></code> output from <em>NewhallResults</em></p>
+    <p>a <em>data.frame</em> containing list columns with Java Objects for <em>NewhallDataset</em>, <em>NewhallResults</em>.  If <code>toString=TRUE</code> the column <code>output</code> is a <em>character</em> containing the <code><a href='https://rdrr.io/r/base/toString.html'>toString()</a></code> output from <em>NewhallResults</em></p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p>csv_writeNewhallBatch</p></div>

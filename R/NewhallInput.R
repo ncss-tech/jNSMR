@@ -1,6 +1,6 @@
 # NewhallInput.R
 
-# Write batch input CSV file for Newhall model
+# Write batch input CSV file template for Newhall 1.6.1 model
 #
 # @param stationName _character_ equal in length to number of rows in resulting batch table
 # @param ... additional column names and values as specified in the Details section
@@ -10,21 +10,36 @@
 # @return a file written to specified `pathname` containing a sample station ID, `0` for numeric values and `""` for character values
 # @export
 #' @importFrom utils write.csv
-csv_writeNewhallBatch <- function(pathname, stationName = "", ..., append = FALSE) {
+newhall_writeBatchTemplate <- function(pathname, stationName = "", ..., append = FALSE) {
   write.csv(.newhall_batch_template(stationName = stationName, ...),
             file = pathname,
             append = append)
 }
 
-# Read batch input CSV file for Newhall model
+# Read batch input CSV file for Newhall 1.6.1 model
 #
 # @param pathname path to batch CSV file to read
 # @return a _data.frame_, one row per "run" and one column per required field a NewhallSimulation
 # @export
 #
 #' @importFrom utils read.csv
-csv_readNewhallBatch <- function(pathname) {
+newhall_readBatchInput <- function(pathname) {
   read.csv(file = pathname, stringsAsFactors = FALSE)[, .colnamesNewhallBatch()]
+}
+
+
+# Write batch output CSV file for Newhall 1.6.1 model
+#
+# @param pathname path to batch CSV file to read
+# @return a _data.frame_, one row per "run" and one column per required field a NewhallSimulation
+# @export
+#
+#' @importFrom utils write.csv
+newhall_writeBatchOutput <- function(output_file, input_file = pathname, pathname = NULL, 
+                                     batch_results = newhall_batch(pathname = input_file)) {
+  res <- batch_results[,"output", drop=FALSE]
+  res$output <- as.character(res$output)
+  write.csv(as.data.frame(res), file = output_file)
 }
 
 .colnamesNewhallBatch <- function() {

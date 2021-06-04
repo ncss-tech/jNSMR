@@ -4,7 +4,7 @@
 \alias{newhall_batch}
 \title{Run a Newhall simulation for each row in a CSV file}
 \usage{
-newhall_batch(.data = NULL, pathname = NULL, verbose = TRUE)
+newhall_batch(.data = NULL, pathname = NULL, verbose = TRUE, toString = FALSE)
 }
 \arguments{
 \item{.data}{a \emph{data.frame} or \emph{character} vector of paths (used as \code{pathname})}
@@ -12,9 +12,11 @@ newhall_batch(.data = NULL, pathname = NULL, verbose = TRUE)
 \item{pathname}{paths to CSV file with Newhall batch format and required columns; default \code{NULL}}
 
 \item{verbose}{print message about number of simulations and elapsed time}
+
+\item{toString}{call \code{toString()} method on each \emph{NewhallResults} object and store in \code{output} column of result?}
 }
 \value{
-a \emph{data.frame} containing list columns with Java Objects for \emph{NewhallDataset}, \emph{NewhallResults}, and the column \code{output} which is \emph{character} containing the \code{toString()} output from \emph{NewhallResults}
+a \emph{data.frame} containing list columns with Java Objects for \emph{NewhallDataset}, \emph{NewhallResults}.  If \code{toString=TRUE} the column \code{output} is a \emph{character} containing the \code{toString()} output from \emph{NewhallResults}
 }
 \description{
 Run a Newhall simulation for each row in a CSV file
