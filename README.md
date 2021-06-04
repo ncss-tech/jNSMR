@@ -1,3 +1,8 @@
+<!-- badges: start -->
+[![R-CMD-check](https://github.com/brownag/jNSMR/workflows/R-CMD-check/badge.svg)](https://github.com/brownag/jNSMR/actions)
+[![Codecov test coverage](https://codecov.io/gh/brownag/jNSMR/branch/main/graph/badge.svg)](https://codecov.io/gh/brownag/jNSMR?branch=main)
+<!-- badges: end -->
+
 # jNSMR
 
 R wrapper for Java Newhall Simulation Model (jNSM) -- "A Traditional Soil Climate Simulation Model"
