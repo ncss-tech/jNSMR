@@ -19,17 +19,27 @@ newhall_simulation <- function(
                             toString = FALSE
                            ) {
 
-    res <- rJava::.jcall(
-                          bsm, # BASICSimulationModel
-                          returnSig = "Lorg/psu/newhall/sim/NewhallResults;",
-                          method =  "runSimulation",
-                          dataset, # NewhallDataset
-                          waterHoldingCapacity, # double
-                          fc, # double
-                          fcd # double
-                        )
-    if (toString)
+    res <- try(rJava::.jcall(bsm, # BASICSimulationModel
+                             returnSig = "Lorg/psu/newhall/sim/NewhallResults;",
+                             method =  "runSimulation",
+                             dataset, # NewhallDataset
+                             waterHoldingCapacity, # double
+                             fc, # double
+                             fcd # double
+                            ))
+
+    if (inherits(res, 'try-error')) {
+      print(waterHoldingCapacity)
+      print(fc)
+      print(fcd)
+      print(dataset$toString())
+      stop(res, call. = FALSE)
+    }
+
+    if (toString) {
       return(rJava::.jcall(res, returnSig = "S", method = "toString"))
+    }
+
     res
 }
 

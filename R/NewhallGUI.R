@@ -1,3 +1,4 @@
+
 #' Open the Java Newhall Graphical User Interface
 #'
 #' @param intern passed to `system()`; when `TRUE` return a character result containing output. Default `FALSE` returns invisibly.
@@ -16,7 +17,7 @@ newhall_GUI <- function(intern = FALSE, wait = FALSE) {
   ## requires `java` on PATH
   system(paste(
     "java -jar",
-    .jnsm_jar_file()
+    .jnsm_jar_file(suffix = "")
   ), intern = intern, wait = wait)
 
   ## when user exits GUI calling System.exit(0) from Java crashes R session
@@ -24,4 +25,4 @@ newhall_GUI <- function(intern = FALSE, wait = FALSE) {
 
 }
 
-.jnsm_jar_file <- function() system.file("java", "newhall-1.6.1.jar", package = "jNSMR")
+

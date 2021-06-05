@@ -9,14 +9,13 @@ NewhallDataset(
   country,
   lat,
   lon,
-  nsHemisphere,
-  ewHemisphere,
   stationElevation,
   allPrecipsDbl,
   allAirTempsDbl,
   pdbegin,
   pdend,
-  smcsawc
+  smcsawc,
+  checkargs = TRUE
 )
 }
 \arguments{
@@ -27,10 +26,6 @@ NewhallDataset(
 \item{lat}{\emph{double}; latitude decimal degrees}
 
 \item{lon}{\emph{double}; longitude decimal degrees}
-
-\item{nsHemisphere}{\emph{character} (length \code{1});\code{'N'} OR \code{'S'}}
-
-\item{ewHemisphere}{\emph{character} (length \code{1}); \code{'E'} OR \code{'W'}}
 
 \item{stationElevation}{\emph{double}; station elevation}
 
@@ -43,6 +38,8 @@ NewhallDataset(
 \item{pdend}{\emph{integer}; ending year}
 
 \item{smcsawc}{\emph{double}; soil moisture control section available water capacity}
+
+\item{checkargs}{\emph{logical}; check argument length and data types? Default: \code{FALSE}}
 }
 \value{
 an instance of \emph{NewhallDataset}
@@ -56,37 +53,11 @@ input_direct <- NewhallDataset(
   country = "US",
   lat = 41.24,
   lon = -76.92,
-  nsHemisphere = 'N',
-  ewHemisphere = 'W',
   stationElevation = 158.0,
-  allPrecipsDbl = c(
-    44.2,
-    40.39,
-    113.54,
-    96.77,
-    95.0,
-    98.55,
-    66.04,
-    13.46,
-    54.86,
-    6.35,
-    17.53,
-    56.39
-  ),
-  allAirTempsDbl = c(
-    -2.17,
-    0.89,
-    3.72,
-    9.11,
-    16.28,
-    21.11,
-    22.83,
-    21.94,
-    19.78,
-    10.5,
-    5.33,
-    -1.06
-  ),
+  allPrecipsDbl = c(44.2, 40.39, 113.54, 96.77, 95, 98.55,
+                    66.04, 13.46, 54.86, 6.35, 17.53, 56.39),
+  allAirTempsDbl = c(-2.17, 0.89, 3.72, 9.11, 16.28, 21.11,
+                     22.83, 21.94, 19.78, 10.5, 5.33, -1.06),
   pdbegin = 1930,
   pdend = 1930,
   smcsawc = 200.0

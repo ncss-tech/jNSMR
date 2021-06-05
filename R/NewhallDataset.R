@@ -52,14 +52,13 @@ csv_NewhallDataset <- function(pathname) {
 #' @param country _character_; country
 #' @param lat _double_; latitude decimal degrees
 #' @param lon _double_; longitude decimal degrees
-#' @param nsHemisphere _character_ (length `1`);`'N'` OR `'S'`
-#' @param ewHemisphere _character_ (length `1`); `'E'` OR `'W'`
 #' @param stationElevation _double_; station elevation
 #' @param allPrecipsDbl _double_; length `12` precipitation, monthly
 #' @param allAirTempsDbl _double_; length `12` air temperature, monthly
 #' @param pdbegin _integer_; beginning year
 #' @param pdend _integer_; ending year
 #' @param smcsawc _double_; soil moisture control section available water capacity
+#' @param checkargs _logical_; check argument length and data types? Default: `FALSE`
 #' @export
 #' @importFrom rJava .jnew .jchar .jcast
 #' @return an instance of _NewhallDataset_
@@ -70,37 +69,11 @@ csv_NewhallDataset <- function(pathname) {
 #'   country = "US",
 #'   lat = 41.24,
 #'   lon = -76.92,
-#'   nsHemisphere = 'N',
-#'   ewHemisphere = 'W',
 #'   stationElevation = 158.0,
-#'   allPrecipsDbl = c(
-#'     44.2,
-#'     40.39,
-#'     113.54,
-#'     96.77,
-#'     95.0,
-#'     98.55,
-#'     66.04,
-#'     13.46,
-#'     54.86,
-#'     6.35,
-#'     17.53,
-#'     56.39
-#'   ),
-#'   allAirTempsDbl = c(
-#'     -2.17,
-#'     0.89,
-#'     3.72,
-#'     9.11,
-#'     16.28,
-#'     21.11,
-#'     22.83,
-#'     21.94,
-#'     19.78,
-#'     10.5,
-#'     5.33,
-#'     -1.06
-#'   ),
+#'   allPrecipsDbl = c(44.2, 40.39, 113.54, 96.77, 95, 98.55,
+#'                     66.04, 13.46, 54.86, 6.35, 17.53, 56.39),
+#'   allAirTempsDbl = c(-2.17, 0.89, 3.72, 9.11, 16.28, 21.11,
+#'                      22.83, 21.94, 19.78, 10.5, 5.33, -1.06),
 #'   pdbegin = 1930,
 #'   pdend = 1930,
 #'   smcsawc = 200.0
@@ -111,36 +84,86 @@ NewhallDataset <-
            country, # String
            lat, # double
            lon, # double
-           nsHemisphere, # char
-           ewHemisphere, # char
            stationElevation, # double
            allPrecipsDbl, # List<Double>
            allAirTempsDbl, # List<Double>
            pdbegin, # integer
            pdend, # integer
-           smcsawc # double
+           smcsawc, # double
+           checkargs = TRUE
           ) {
 
-    rJava::.jnew(
+    if (checkargs) {
+      .checkFUN <- function(x, FUN) x[sapply(x, function(y) FUN(eval(as.symbol(x))))]
+
+      testa <- c("stationName","country","lat","lon",
+                 "stationElevation","pdbegin","pdend","smcsawc")
+      len1 <- .checkFUN(testa, function(x) length(x) == 1)
+      if (length(len1) != length(testa)) {
+        stop(sprintf("station '%s' arguments %s should be length 1",
+                     stationName[1], paste0(testb[!len1], collapse = ", ")))
+      }
+
+      testb <- c("allPrecipsDbl", "allAirTempsDbl")
+      len12 <- .checkFUN(testb, function(x) length(x) == 12)
+      if (length(len12) != length(testb)) {
+        stop(sprintf("station '%s' arguments %s should be length 12",
+                     stationName[1], paste0(testb[!len12], collapse = ", ")))
+      }
+
+      testc <- c("lat","lon","allPrecipsDbl", "allAirTempsDbl",
+                 "stationElevation","pdbegin","pdend","smcsawc")
+      isnum <- .checkFUN(testc, function(y) is.numeric(as.numeric(y)))
+      if (length(isnum) != length(testc)) {
+        stop(sprintf("station '%s' arguments %s should be numeric",
+                     stationName[1], paste0(testc[!isnum], collapse = ", ")))
+      }
+
+    }
+
+    nsHemisphere <- ifelse(lat > 0, 'N', 'S') # char
+    ewHemisphere <- ifelse(lon < 0, 'E', 'W') # char
+
+    res <- try(rJava::.jnew(
       "org/psu/newhall/sim/NewhallDataset",
-      as.character(stationName),
-      as.character(country),
-      as.double(lat),
-      as.double(lon),
-      rJava::.jchar(strtoi(charToRaw(substr(nsHemisphere, 1, 1)), 16L)),
-      rJava::.jchar(strtoi(charToRaw(substr(ewHemisphere, 1, 1)), 16L)),
-      as.double(stationElevation),
+      as.character(stationName[1]),
+      as.character(country[1]),
+      as.double(lat[1]),
+      as.double(lon[1]),
+      rJava::.jchar(strtoi(charToRaw(nsHemisphere), 16L)),
+      rJava::.jchar(strtoi(charToRaw(ewHemisphere), 16L)),
+      as.double(stationElevation[1]),
       rJava::.jcast(
-        .rvec2jarraylist(as.double(allPrecipsDbl), "java/lang/Double"),
+        .rvec2jarraylist(as.double(allPrecipsDbl[1:12]), "java/lang/Double"),
         "java/util/List"
       ),
       rJava::.jcast(
-        .rvec2jarraylist(as.double(allAirTempsDbl), "java/lang/Double"),
+        .rvec2jarraylist(as.double(allAirTempsDbl[1:12]), "java/lang/Double"),
         "java/util/List"
       ),
-      as.integer(pdbegin),
-      as.integer(pdend),
+      as.integer(pdbegin[1]),
+      as.integer(pdend[1]),
       TRUE,
-      as.double(smcsawc)
-    )
+      as.double(smcsawc[1])
+    ))
+
+    if (inherits(res, 'try-error')) {
+      print(stationName)
+      print(country)
+      print(lat)
+      print(lon)
+      print(nsHemisphere)
+      print(ewHemisphere)
+      print(stationElevation)
+      print(allPrecipsDbl)
+      print(allAirTempsDbl)
+      print(pdbegin)
+      print(pdend)
+      print(smcsawc)
+      stop(res, call. = FALSE)
+    }
+    res
 }
+
+# public org.psu.newhall.sim.NewhallDataset(java.lang.String, java.lang.String, double, double, char, char, double, java.util.List<java.lang.Double>, java.util.List<java.lang.Double>, int, int, boolean, double);
+# descriptor: (Ljava/lang/String;Ljava/lang/String;DDCCDLjava/util/List;Ljava/util/List;IIZD)V

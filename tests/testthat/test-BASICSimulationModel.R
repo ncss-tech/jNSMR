@@ -1,5 +1,5 @@
 test_that("newhall_simulation() works", {
-
+  cat("\n\njNSMR v", newhall_version(), "\n\n")
   tf <- tempfile()
   cat('<model>
         <metadata>
@@ -111,8 +111,6 @@ test_that("newhall_simulation() works", {
       country = "US",
       lat = 41.24,
       lon = -76.92,
-      nsHemisphere = 'N',
-      ewHemisphere = 'W',
       stationElevation = 158.0,
       allPrecipsDbl = c(
         44.2,

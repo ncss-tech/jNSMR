@@ -4,16 +4,27 @@
 \alias{newhall_batch}
 \title{Run a Newhall simulation for each row in a CSV file}
 \usage{
-newhall_batch(.data = NULL, pathname = NULL, verbose = TRUE, toString = FALSE)
+newhall_batch(
+  .data = NULL,
+  pathname = NULL,
+  unitSystem = "metric",
+  verbose = TRUE,
+  toString = TRUE,
+  checkargs = TRUE
+)
 }
 \arguments{
 \item{.data}{a \emph{data.frame} or \emph{character} vector of paths (used as \code{pathname})}
 
-\item{pathname}{paths to CSV file with Newhall batch format and required columns; default \code{NULL}}
+\item{pathname}{path(s) to CSV file(s) with Newhall batch format and required columns; default \code{NULL}}
+
+\item{unitSystem}{Default: \code{"metric"} OR \code{"mm"} OR \code{"cm"} use \emph{millimeters} of rainfall (default for the BASIC model); set to \code{unitSystem="english"} OR \code{unitSystem="in"} to transform English (inches of precipitation; degrees Fahrenheit) inputs to metric (millimeters of precipitation; degrees Celsius) before running simulation}
 
 \item{verbose}{print message about number of simulations and elapsed time}
 
 \item{toString}{call \code{toString()} method on each \emph{NewhallResults} object and store in \code{output} column of result?}
+
+\item{checkargs}{\emph{logical}; check argument length and data types for each run? Default: \code{TRUE}}
 }
 \value{
 a \emph{data.frame} containing list columns with Java Objects for \emph{NewhallDataset}, \emph{NewhallResults}.  If \code{toString=TRUE} the column \code{output} is a \emph{character} containing the \code{toString()} output from \emph{NewhallResults}

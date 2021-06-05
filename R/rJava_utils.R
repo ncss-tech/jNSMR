@@ -10,7 +10,11 @@
 # .rvec2jarraylist(as.double(c(1.234, 2.345)), class ="java/lang/Double")
 #
 .rvec2jarraylist <- function(x, class, n = length(x)) {
-  if(!is.double(x)) {
+
+  if (length(x) == 0 || n == 0)
+    return(rJava::.jnew("java/util/ArrayList", 0L))
+
+  if (!is.double(x)) {
     # iteratively add() ... works for arbitrary Java classes
     arrl <- rJava::.jnew("java/util/ArrayList", n)
     for (i in (seq_along(x) - 1)) {
@@ -25,11 +29,14 @@
     arrl
   } else {
     # DoubleStream collector (JDK 8) (would work for IntStream too)
+    #
+    #  Arrays.stream(x).boxed().collect(Collectors.toList())
+    #
     rJava::.jcall(
       rJava::.jcall(
         rJava::.jcall(
           rJava::.jnew("java/util/Arrays"),
-          returnSig = "Ljava/util/stream/DoubleStream;", 
+          returnSig = "Ljava/util/stream/DoubleStream;",
           method = "stream",
           as.double(x)
         ),

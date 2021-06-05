@@ -2,11 +2,11 @@
 <model>
   <metadata>
     <stninfo>
-      <nettype>HCN</nettype>
+      <nettype />
       <stnname>WILLIAMSPORT</stnname>
       <stnid />
       <stnelev>158.0</stnelev>
-      <stateprov>PA</stateprov>
+      <stateprov />
       <country>US</country>
     </stninfo>
     <mlra>
@@ -15,11 +15,11 @@
     </mlra>
     <cntinfo>
       <cntper>
-        <firstname>FirstName</firstname>
-        <lastname>LastName</lastname>
-        <title>Researcher</title>
+        <firstname />
+        <lastname />
+        <title />
       </cntper>
-      <cntorg>My Organization</cntorg>
+      <cntorg />
       <cntaddr>
         <address />
         <city />
@@ -31,11 +31,11 @@
       <cntphone />
     </cntinfo>
     <notes>
-      <note>gaps filled by interpolation of neighboring stations</note>
+      <note>0</note>
     </notes>
-    <rundate>20210601</rundate>
+    <rundate>20210605</rundate>
     <nsmver>1.6.1</nsmver>
-    <srcunitsys>english</srcunitsys>
+    <srcunitsys>metric</srcunitsys>
   </metadata>
   <input>
     <location>

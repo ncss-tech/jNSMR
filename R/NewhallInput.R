@@ -35,7 +35,7 @@ newhall_readBatchInput <- function(pathname) {
 # @export
 #
 #' @importFrom utils write.csv
-newhall_writeBatchOutput <- function(output_file, input_file = pathname, pathname = NULL, 
+newhall_writeBatchOutput <- function(output_file, input_file = pathname, pathname = NULL,
                                      batch_results = newhall_batch(pathname = input_file)) {
   res <- batch_results[,"output", drop=FALSE]
   res$output <- as.character(res$output)
@@ -43,7 +43,7 @@ newhall_writeBatchOutput <- function(output_file, input_file = pathname, pathnam
 }
 
 .colnamesNewhallBatch <- function() {
-  c("stationName","netType","latDD","lonDD","elev","tJan","tFeb","tMar","tApr","tMay","tJun","tJul","tAug","tSep","tOct","tNov","tDec","pJan","pFeb","pMar","pApr","pMay","pJun","pJul","pAug","pSep","pOct","pNov","pDec","pdType","pdStartYr","pdEndYr","awc","maatmast","cntryCode","stProvCode","notes","stationID")
+  c("stationName","latDD","lonDD","elev","tJan","tFeb","tMar","tApr","tMay","tJun","tJul","tAug","tSep","tOct","tNov","tDec","pJan","pFeb","pMar","pApr","pMay","pJun","pJul","pAug","pSep","pOct","pNov","pDec","pdType","pdStartYr","pdEndYr","awc","maatmast","cntryCode","notes","stationID")
 }
 
 .newhall_batch_template <-

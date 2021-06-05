@@ -1,6 +1,5 @@
 # NewhallDatasetMetadata
 
-
 #' Create an instance of _NewhallDatasetMetadata_
 #'
 #' @param stationName _character_; station name
@@ -33,31 +32,31 @@
 #' @export
 #'
 NewhallDatasetMetadata <- function(
-   stationName, #String
-   stationId, #String
-   stationElevation, #double
-   stationStateProvidence, #String
-   stationCountry, #String
-   mlraName, #String
-   mlraId, #int
-   contribFirstName, #String
-   contribLastName, #String
-   contribTitle, #String
-   contribOrg, #String
-   contribAddress, #String
-   contribCity, #String
-   contribStateProvidence, #String
-   contribPostal, #String
-   contribCountry, #String
-   contribEmail, #String
-   contribPhone, #String
-   notes, #List<String>
-   runDate, #String
-   modelVersion, #String
-   unitSystem, #String
-   soilAirOffset, #double
-   amplitude, #double
-   network #String
+   stationName, # String only required argument
+   stationId = character(length(stationName)), #String
+   stationElevation = numeric(length(stationName)), #double
+   stationStateProvidence = character(length(stationName)), #String
+   stationCountry = character(length(stationName)), #String
+   mlraName = character(length(stationName)), #String
+   mlraId = numeric(length(stationName)), #int
+   contribFirstName = character(length(stationName)), #String
+   contribLastName = character(length(stationName)), #String
+   contribTitle = character(length(stationName)), #String
+   contribOrg = character(length(stationName)), #String
+   contribAddress = character(length(stationName)), #String
+   contribCity = character(length(stationName)), #String
+   contribStateProvidence = character(length(stationName)), #String
+   contribPostal = character(length(stationName)), #String
+   contribCountry = character(length(stationName)), #String
+   contribEmail = character(length(stationName)), #String
+   contribPhone = character(length(stationName)), #String
+   notes = numeric(length(stationName)), # String (may have length >1)
+   runDate = rep(Sys.Date(), length(stationName)), #String
+   modelVersion = rep(newhall_version(), length(stationName)), #String
+   unitSystem = rep("metric", length(stationName)), #String
+   soilAirOffset = rep(1.2, length(stationName)), #double
+   amplitude = rep(0.66, length(stationName)), #double
+   network = character(length(stationName)) #String
  ) {
    rJava::.jnew(
      "org/psu/newhall/sim/NewhallDatasetMetadata",
