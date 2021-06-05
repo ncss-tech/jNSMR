@@ -23,13 +23,15 @@ newhall_version <- function() {
 
   # rJava setup
   rJava::.jinit()
-  rJava::.jpackage(pkgname, lib.loc = libname)
+
+  # we load the JAR explicitly, rather than everything in inst/java
+  # rJava::.jpackage(pkgname, lib.loc = libname)
 
   # allow an option to add additional characters to jar file name (custom jar file)
   jas <- getOption("jNSMR.JAR_SUFFIX", default = "-1.6.1")
 
   # newhall JAR setup: add to class path
-  rJava::.jaddClassPath(.jnsm_jar_file(jas))
+  rJava::.jaddClassPath(.jnsm_jar_file(suffix = jas))
 }
 
 #' @importFrom rJava .jfield .jnew

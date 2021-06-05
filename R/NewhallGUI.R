@@ -17,7 +17,7 @@ newhall_GUI <- function(intern = FALSE, wait = FALSE) {
   ## requires `java` on PATH
   system(paste(
     "java -jar",
-    .jnsm_jar_file(suffix = "")
+    .jnsm_jar_file(suffix = "-1.6.1")
   ), intern = intern, wait = wait)
 
   ## when user exits GUI calling System.exit(0) from Java crashes R session

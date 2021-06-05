@@ -3,5 +3,6 @@
 ^codecov\.yml$
 ^docs$
 ^misc$
+^deprecated$
 ^\.github$
 README.Rmd
