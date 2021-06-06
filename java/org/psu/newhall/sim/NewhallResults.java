@@ -143,16 +143,15 @@
 /* 476 */     DecimalFormat df = new DecimalFormat(format);
 /* 477 */     return Double.valueOf(df.format(d)).doubleValue();
 /*     */   }
-
+/* 477 */
 /*     */   public String toString() {
 /* 139 */     String result = getFormattedStatistics();
-              result = result + "\n\nMean Monthly PET: ";
+              result = result + "\n\nMean Monthly PET (mm): ";
 /*     */     int i;
 /* 141 */     for (i = 0; i < 11; i++) {
-/* 142 */       result = result + round(this.meanPotentialEvapotranspiration.get(i), 0) + ", ";
+/* 142 */       result = result + ((int) Math.round(this.meanPotentialEvapotranspiration.get(i))) + ", ";
 /*     */     }
-/* 144 */     result = result + this.meanPotentialEvapotranspiration.get(11) + "\n";
-              result = result + "\n";
+/* 144 */     result = result + ((int) Math.round(this.meanPotentialEvapotranspiration.get(11))) + "\n";
 /*     */
 /* 146 */     result = result + "\nTemperature Calendar: (- = Less than 5C)(5 = Between 5C and 8C)(8 = Excess of 8C)\n";
 /* 147 */     result = result + "1''''''''''''15'''''''''''''30\n";

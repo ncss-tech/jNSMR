@@ -2,6 +2,7 @@
 /*    */
 /*    */ // import javax.swing.UIManager;
 /*    */ // import org.psu.newhall.ui.DefaultNewhallFrame;
+         import java.io.File;
          import java.util.Arrays;
          import java.util.stream.Stream;
          import java.util.stream.Collectors;
@@ -15,8 +16,19 @@
 /*    */
 /*    */   public static void main(String[] args) {
 
-             System.out.println("This is Java Newhall Simulation Model v"+NSM_VERSION);
-             System.out.println("Running in demo mode...");
+             if (args.length < 4) {
+               System.out.println("This is Java Newhall Simulation Model v"+NSM_VERSION);
+               System.out.println("Usage: java -jar newhall-"+NSM_VERSION+".jar <path-to-CSV-file> <smcsawc> <soilAirOffset> <amplitude>");
+             } else {
+               NewhallDataset nd = new CSVFileParser(new File(args[0])).getDatset();
+               System.out.println(nd.toString());
+               NewhallResults nr = BASICSimulationModel.runSimulation(nd,
+                                                                      Double.parseDouble(args[1]),
+                                                                      Double.parseDouble(args[2]),
+                                                                      Double.parseDouble(args[3]));
+               System.out.println(nr.toString());
+             }
+
 
 /* 13 */     //System.setProperty("com.apple.mrj.application.apple.menu.about.name", "Newhall");
 /*    */     //try {
@@ -28,7 +40,11 @@
 /* 21 */     //DefaultNewhallFrame dnf = new DefaultNewhallFrame();
 /* 22 */     //dnf.setLocation(100, 100);
 /* 23 */     //dnf.setVisible(true);
-              NewhallDataset nhd = new NewhallDataset("WILLIAMSPORT",
+
+
+             /* //Single model run example
+
+             NewhallDataset nhd = new NewhallDataset("WILLIAMSPORT",
                                                                "US",
                                                                41.24,
                                                                -76.92,
@@ -45,8 +61,7 @@
                                                                200.0);
                 System.out.println(nhd.toString());
                 NewhallResults nr = BASICSimulationModel.runSimulation(nhd, 200);
-                System.out.println(nr.toString());
-
+                System.out.println(nr.toString()); */
 
 /*    */   }
 /*    */ }
