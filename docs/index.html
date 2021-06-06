@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">jNSMR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9003</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9004</span>
       </span>
     </div>
 
@@ -73,10 +73,8 @@
 <h2 class="hasAnchor">
 <a href="#install-jnsmr" class="anchor"></a>Install {jNSMR}</h2>
 <p>First, install the development version of the R package. This will install the latest version of the Java Newhall model JAR (in the {jNSMR} folder of your package library).</p>
-<div class="sourceCode" id="cb1"><pre class="downlit">
-<span class="co"># install.packages('remotes')</span>
-<span class="kw">remotes</span>::<span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span>(<span class="st">'ncss-tech/jNSMR'</span>)
-</pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages('remotes')</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">'ncss-tech/jNSMR'</span>)</span></code></pre></div>
 </div>
 <div id="basic-functionality" class="section level2">
 <h2 class="hasAnchor">
@@ -84,244 +82,310 @@
 <div id="run-the-basic-simulation-model" class="section level3">
 <h3 class="hasAnchor">
 <a href="#run-the-basic-simulation-model" class="anchor"></a>Run the BASIC simulation model</h3>
-<p>Create a <em>NewhallDataset</em> with <code><a href="reference/NewhallDatasetFromPath.html">xml_NewhallDataset()</a></code> or <code><a href="reference/NewhallDataset.html">NewhallDataset()</a></code> then run a single simulation with <code><a href="reference/newhall_simulation.html">newhall_simulation()</a></code></p>
-<div class="sourceCode" id="cb2"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw">jNSMR</span>)
-
-<span class="co"># read single-station XML file</span>
-<span class="kw">input_xml</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/NewhallDatasetFromPath.html">xml_NewhallDataset</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"extdata/WILLIAMSPORT_1930_1930_input.xml"</span>, package = <span class="st">"jNSMR"</span>)[<span class="fl">1</span>])
-
-<span class="co"># or specify inputs directly to the constructor</span>
-<span class="kw">input_direct</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/NewhallDataset.html">NewhallDataset</a></span>(stationName = <span class="st">"WILLIAMSPORT"</span>,
-                               country = <span class="st">"US"</span>,
-                               lat = <span class="fl">41.24</span>,
-                               lon = <span class="op">-</span><span class="fl">76.92</span>,
-                               nsHemisphere = <span class="st">'N'</span>,
-                               ewHemisphere = <span class="st">'E'</span>,
-                               stationElevation = <span class="fl">158.0</span>,
-                               allPrecipsDbl = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">44.2</span>,<span class="fl">40.39</span>,<span class="fl">113.54</span>,<span class="fl">96.77</span>,<span class="fl">95.0</span>,<span class="fl">98.55</span>,<span class="fl">66.04</span>,<span class="fl">13.46</span>,<span class="fl">54.86</span>,<span class="fl">6.35</span>,<span class="fl">17.53</span>,<span class="fl">56.39</span>),
-                               allAirTempsDbl = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="op">-</span><span class="fl">2.17</span>,<span class="fl">0.89</span>,<span class="fl">3.72</span>,<span class="fl">9.11</span>,<span class="fl">16.28</span>,<span class="fl">21.11</span>,<span class="fl">22.83</span>,<span class="fl">21.94</span>,<span class="fl">19.78</span>,<span class="fl">10.5</span>,<span class="fl">5.33</span>,<span class="op">-</span><span class="fl">1.06</span>),
-                               pdbegin = <span class="fl">1930</span>,
-                               pdend = <span class="fl">1930</span>,
-                               smcsawc = <span class="fl">200.0</span>)
-
-<span class="co"># run single model from XML file</span>
-<span class="kw">output_xml</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/newhall_simulation.html">newhall_simulation</a></span>(<span class="kw">input_xml</span>)
-
-<span class="co"># run single model from direct input</span>
-<span class="kw">output</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/newhall_simulation.html">newhall_simulation</a></span>(<span class="kw">input_direct</span>)
-</pre></div>
+<p>Create a <em>NewhallDataset</em> with <code><a href="reference/NewhallDatasetFromPath.html">xml_NewhallDataset()</a></code> or <code><a href="reference/NewhallDataset.html">NewhallDataset()</a></code> and associated <em>NewhallDatasetMetadata</em> with <code><a href="reference/NewhallDatasetMetadata.html">NewhallDatasetMetadata()</a></code>.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(jNSMR)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># read single-station XML file (NewhallDataset + NewhallDatasetMetadata)</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>input_xml_file <span class="ot">&lt;-</span> <span class="fu">system.file</span>(<span class="st">"extdata/WILLIAMSPORT_1930_1930_input.xml"</span>, <span class="at">package =</span> <span class="st">"jNSMR"</span>)[<span class="dv">1</span>]</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>input_xml <span class="ot">&lt;-</span> <span class="fu">xml_NewhallDataset</span>(input_xml_file)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># or specify inputs directly to the constructor</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>input_direct <span class="ot">&lt;-</span> <span class="fu">NewhallDataset</span>(<span class="at">stationName =</span> <span class="st">"WILLIAMSPORT"</span>,</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>                               <span class="at">country =</span> <span class="st">"US"</span>,</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>                               <span class="at">lat =</span> <span class="fl">41.24</span>,</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>                               <span class="at">lon =</span> <span class="sc">-</span><span class="fl">76.92</span>,</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>                               <span class="at">stationElevation =</span> <span class="fl">158.0</span>,</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>                               <span class="at">allPrecipsDbl =</span> <span class="fu">c</span>(<span class="fl">44.2</span>,<span class="fl">40.39</span>,<span class="fl">113.54</span>,<span class="fl">96.77</span>,<span class="fl">95.0</span>,<span class="fl">98.55</span>,</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>                                                 <span class="fl">66.04</span>,<span class="fl">13.46</span>,<span class="fl">54.86</span>,<span class="fl">6.35</span>,<span class="fl">17.53</span>,<span class="fl">56.39</span>),</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>                               <span class="at">allAirTempsDbl =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">2.17</span>,<span class="fl">0.89</span>,<span class="fl">3.72</span>,<span class="fl">9.11</span>,<span class="fl">16.28</span>,<span class="fl">21.11</span>,</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>                                                  <span class="fl">22.83</span>,<span class="fl">21.94</span>,<span class="fl">19.78</span>,<span class="fl">10.5</span>,<span class="fl">5.33</span>,<span class="sc">-</span><span class="fl">1.06</span>),</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>                               <span class="at">pdbegin =</span> <span class="dv">1930</span>,</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>                               <span class="at">pdend =</span> <span class="dv">1930</span>,</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>                               <span class="at">smcsawc =</span> <span class="fl">200.0</span>)</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>                               </span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="co"># set minimal _NewhallDatasetMetadata_ for our constructed _NewhallDataset_</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>input_direct<span class="sc">$</span><span class="fu">setMetadata</span>(<span class="fu">NewhallDatasetMetadata</span>(<span class="at">stationName =</span> <span class="st">"WILLIAMSPORT"</span>))</span></code></pre></div>
 </div>
-<div id="run-batch-sets-of-models" class="section level3">
+<div id="run-single-model-from-file-or-r-object" class="section level3">
 <h3 class="hasAnchor">
-<a href="#run-batch-sets-of-models" class="anchor"></a>Run batch sets of models</h3>
-<p>The jNSM has a defined CSV (comma-separated value) batch file format. Examples of that setup are included in the official download. The batching in the {jNSMR} package is handled by R code, not Java. The main interface to batching is <code><a href="reference/newhall_batch.html">newhall_batch()</a></code>.</p>
-<p><code><a href="reference/newhall_batch.html">newhall_batch()</a></code> takes either a <code>pathname</code> argument, or you can specify <code>.data</code> as a <em>data.frame</em> directly.</p>
-<p>Selected example input files have been included in <code>inst/extdata</code> directory of this package.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit">
-<span class="kw">pathname</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"extdata/All_PA_jNSM_Example_Batch_Metric.csv"</span>, package = <span class="st">"jNSMR"</span>)[<span class="fl">1</span>]
-
-<span class="kw">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/newhall_batch.html">newhall_batch</a></span>(pathname = <span class="kw">pathname</span>)
-
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="kw">res</span>)
-</pre></div>
-</div>
-<div id="support-for-newhall-xml-format-for-input-and-output" class="section level3">
-<h3 class="hasAnchor">
-<a href="#support-for-newhall-xml-format-for-input-and-output" class="anchor"></a>Support for Newhall XML format for input and output</h3>
-<div class="sourceCode" id="cb4"><pre class="downlit">
-<span class="co"># inspect XML result format</span>
-<span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span>(<span class="fu"><a href="reference/newhall_XMLStringResultsExporter.html">newhall_XMLStringResultsExporter</a></span>(<span class="kw">input_xml</span>, <span class="kw">output</span>))
-<span class="co">#&gt; &lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
-<span class="co">#&gt; &lt;model&gt;</span>
-<span class="co">#&gt;   &lt;metadata&gt;</span>
-<span class="co">#&gt;     &lt;stninfo&gt;</span>
-<span class="co">#&gt;       &lt;nettype&gt;HCN&lt;/nettype&gt;</span>
-<span class="co">#&gt;       &lt;stnname&gt;WILLIAMSPORT&lt;/stnname&gt;</span>
-<span class="co">#&gt;       &lt;stnid /&gt;</span>
-<span class="co">#&gt;       &lt;stnelev&gt;158.0&lt;/stnelev&gt;</span>
-<span class="co">#&gt;       &lt;stateprov&gt;PA&lt;/stateprov&gt;</span>
-<span class="co">#&gt;       &lt;country&gt;US&lt;/country&gt;</span>
-<span class="co">#&gt;     &lt;/stninfo&gt;</span>
-<span class="co">#&gt;     &lt;mlra&gt;</span>
-<span class="co">#&gt;       &lt;mlraname /&gt;</span>
-<span class="co">#&gt;       &lt;mlraid&gt;0&lt;/mlraid&gt;</span>
-<span class="co">#&gt;     &lt;/mlra&gt;</span>
-<span class="co">#&gt;     &lt;cntinfo&gt;</span>
-<span class="co">#&gt;       &lt;cntper&gt;</span>
-<span class="co">#&gt;         &lt;firstname&gt;FirstName&lt;/firstname&gt;</span>
-<span class="co">#&gt;         &lt;lastname&gt;LastName&lt;/lastname&gt;</span>
-<span class="co">#&gt;         &lt;title&gt;Researcher&lt;/title&gt;</span>
-<span class="co">#&gt;       &lt;/cntper&gt;</span>
-<span class="co">#&gt;       &lt;cntorg&gt;My Organization&lt;/cntorg&gt;</span>
-<span class="co">#&gt;       &lt;cntaddr&gt;</span>
-<span class="co">#&gt;         &lt;address /&gt;</span>
-<span class="co">#&gt;         &lt;city /&gt;</span>
-<span class="co">#&gt;         &lt;stateprov /&gt;</span>
-<span class="co">#&gt;         &lt;postal /&gt;</span>
-<span class="co">#&gt;         &lt;country /&gt;</span>
-<span class="co">#&gt;       &lt;/cntaddr&gt;</span>
-<span class="co">#&gt;       &lt;cntemail /&gt;</span>
-<span class="co">#&gt;       &lt;cntphone /&gt;</span>
-<span class="co">#&gt;     &lt;/cntinfo&gt;</span>
-<span class="co">#&gt;     &lt;notes&gt;</span>
-<span class="co">#&gt;       &lt;note&gt;gaps filled by interpolation of neighboring stations&lt;/note&gt;</span>
-<span class="co">#&gt;     &lt;/notes&gt;</span>
-<span class="co">#&gt;     &lt;rundate&gt;20210601&lt;/rundate&gt;</span>
-<span class="co">#&gt;     &lt;nsmver&gt;1.6.1&lt;/nsmver&gt;</span>
-<span class="co">#&gt;     &lt;srcunitsys&gt;english&lt;/srcunitsys&gt;</span>
-<span class="co">#&gt;   &lt;/metadata&gt;</span>
-<span class="co">#&gt;   &lt;input&gt;</span>
-<span class="co">#&gt;     &lt;location&gt;</span>
-<span class="co">#&gt;       &lt;lat&gt;41.24&lt;/lat&gt;</span>
-<span class="co">#&gt;       &lt;lon&gt;-76.92&lt;/lon&gt;</span>
-<span class="co">#&gt;       &lt;usercoordfmt&gt;DD&lt;/usercoordfmt&gt;</span>
-<span class="co">#&gt;     &lt;/location&gt;</span>
-<span class="co">#&gt;     &lt;recordpd&gt;</span>
-<span class="co">#&gt;       &lt;pdtype&gt;normal&lt;/pdtype&gt;</span>
-<span class="co">#&gt;       &lt;pdbegin&gt;1930&lt;/pdbegin&gt;</span>
-<span class="co">#&gt;       &lt;pdend&gt;1930&lt;/pdend&gt;</span>
-<span class="co">#&gt;     &lt;/recordpd&gt;</span>
-<span class="co">#&gt;     &lt;precips&gt;</span>
-<span class="co">#&gt;       &lt;precip id="Jan"&gt;44.2&lt;/precip&gt;</span>
-<span class="co">#&gt;       &lt;precip id="Feb"&gt;40.39&lt;/precip&gt;</span>
-<span class="co">#&gt;       &lt;precip id="Mar"&gt;113.54&lt;/precip&gt;</span>
-<span class="co">#&gt;       &lt;precip id="Apr"&gt;96.77&lt;/precip&gt;</span>
-<span class="co">#&gt;       &lt;precip id="May"&gt;95.0&lt;/precip&gt;</span>
-<span class="co">#&gt;       &lt;precip id="Jun"&gt;98.55&lt;/precip&gt;</span>
-<span class="co">#&gt;       &lt;precip id="Jul"&gt;66.04&lt;/precip&gt;</span>
-<span class="co">#&gt;       &lt;precip id="Aug"&gt;13.46&lt;/precip&gt;</span>
-<span class="co">#&gt;       &lt;precip id="Sep"&gt;54.86&lt;/precip&gt;</span>
-<span class="co">#&gt;       &lt;precip id="Oct"&gt;6.35&lt;/precip&gt;</span>
-<span class="co">#&gt;       &lt;precip id="Nov"&gt;17.53&lt;/precip&gt;</span>
-<span class="co">#&gt;       &lt;precip id="Dec"&gt;56.39&lt;/precip&gt;</span>
-<span class="co">#&gt;     &lt;/precips&gt;</span>
-<span class="co">#&gt;     &lt;airtemps&gt;</span>
-<span class="co">#&gt;       &lt;airtemp id="Jan"&gt;-2.17&lt;/airtemp&gt;</span>
-<span class="co">#&gt;       &lt;airtemp id="Feb"&gt;0.89&lt;/airtemp&gt;</span>
-<span class="co">#&gt;       &lt;airtemp id="Mar"&gt;3.72&lt;/airtemp&gt;</span>
-<span class="co">#&gt;       &lt;airtemp id="Apr"&gt;9.11&lt;/airtemp&gt;</span>
-<span class="co">#&gt;       &lt;airtemp id="May"&gt;16.28&lt;/airtemp&gt;</span>
-<span class="co">#&gt;       &lt;airtemp id="Jun"&gt;21.11&lt;/airtemp&gt;</span>
-<span class="co">#&gt;       &lt;airtemp id="Jul"&gt;22.83&lt;/airtemp&gt;</span>
-<span class="co">#&gt;       &lt;airtemp id="Aug"&gt;21.94&lt;/airtemp&gt;</span>
-<span class="co">#&gt;       &lt;airtemp id="Sep"&gt;19.78&lt;/airtemp&gt;</span>
-<span class="co">#&gt;       &lt;airtemp id="Oct"&gt;10.5&lt;/airtemp&gt;</span>
-<span class="co">#&gt;       &lt;airtemp id="Nov"&gt;5.33&lt;/airtemp&gt;</span>
-<span class="co">#&gt;       &lt;airtemp id="Dec"&gt;-1.06&lt;/airtemp&gt;</span>
-<span class="co">#&gt;     &lt;/airtemps&gt;</span>
-<span class="co">#&gt;     &lt;smcsawc&gt;200.0&lt;/smcsawc&gt;</span>
-<span class="co">#&gt;     &lt;soilairrel&gt;</span>
-<span class="co">#&gt;       &lt;ampltd&gt;0.66&lt;/ampltd&gt;</span>
-<span class="co">#&gt;       &lt;maatmast&gt;1.2&lt;/maatmast&gt;</span>
-<span class="co">#&gt;     &lt;/soilairrel&gt;</span>
-<span class="co">#&gt;   &lt;/input&gt;</span>
-<span class="co">#&gt;   &lt;output&gt;</span>
-<span class="co">#&gt;     &lt;smrclass&gt;Ustic&lt;/smrclass&gt;</span>
-<span class="co">#&gt;     &lt;strclass&gt;Mesic&lt;/strclass&gt;</span>
-<span class="co">#&gt;     &lt;subgrpmod&gt;Wet Tempustic&lt;/subgrpmod&gt;</span>
-<span class="co">#&gt;     &lt;awb&gt;13.12&lt;/awb&gt;</span>
-<span class="co">#&gt;     &lt;swb&gt;-218.22&lt;/swb&gt;</span>
-<span class="co">#&gt;     &lt;smcstates&gt;</span>
-<span class="co">#&gt;       &lt;cumdays&gt;</span>
-<span class="co">#&gt;         &lt;yrdry&gt;67&lt;/yrdry&gt;</span>
-<span class="co">#&gt;         &lt;yrmd&gt;88&lt;/yrmd&gt;</span>
-<span class="co">#&gt;         &lt;yrmst&gt;205&lt;/yrmst&gt;</span>
-<span class="co">#&gt;         &lt;bio5dry&gt;48&lt;/bio5dry&gt;</span>
-<span class="co">#&gt;         &lt;bio5md&gt;58&lt;/bio5md&gt;</span>
-<span class="co">#&gt;         &lt;bio5mst&gt;118&lt;/bio5mst&gt;</span>
-<span class="co">#&gt;       &lt;/cumdays&gt;</span>
-<span class="co">#&gt;       &lt;consdays&gt;</span>
-<span class="co">#&gt;         &lt;yrmst&gt;293&lt;/yrmst&gt;</span>
-<span class="co">#&gt;         &lt;bio8mst&gt;166&lt;/bio8mst&gt;</span>
-<span class="co">#&gt;         &lt;smrdry&gt;22&lt;/smrdry&gt;</span>
-<span class="co">#&gt;         &lt;wtrmst&gt;105&lt;/wtrmst&gt;</span>
-<span class="co">#&gt;       &lt;/consdays&gt;</span>
-<span class="co">#&gt;     &lt;/smcstates&gt;</span>
-<span class="co">#&gt;     &lt;pets&gt;</span>
-<span class="co">#&gt;       &lt;pet id="Jan"&gt;0.0&lt;/pet&gt;</span>
-<span class="co">#&gt;       &lt;pet id="Feb"&gt;1.49&lt;/pet&gt;</span>
-<span class="co">#&gt;       &lt;pet id="Mar"&gt;11.44&lt;/pet&gt;</span>
-<span class="co">#&gt;       &lt;pet id="Apr"&gt;38.55&lt;/pet&gt;</span>
-<span class="co">#&gt;       &lt;pet id="May"&gt;90.93&lt;/pet&gt;</span>
-<span class="co">#&gt;       &lt;pet id="Jun"&gt;127.6&lt;/pet&gt;</span>
-<span class="co">#&gt;       &lt;pet id="Jul"&gt;142.1&lt;/pet&gt;</span>
-<span class="co">#&gt;       &lt;pet id="Aug"&gt;126.57&lt;/pet&gt;</span>
-<span class="co">#&gt;       &lt;pet id="Sep"&gt;96.94&lt;/pet&gt;</span>
-<span class="co">#&gt;       &lt;pet id="Oct"&gt;39.95&lt;/pet&gt;</span>
-<span class="co">#&gt;       &lt;pet id="Nov"&gt;14.39&lt;/pet&gt;</span>
-<span class="co">#&gt;       &lt;pet id="Dec"&gt;0.0&lt;/pet&gt;</span>
-<span class="co">#&gt;     &lt;/pets&gt;</span>
-<span class="co">#&gt;     &lt;calendars&gt;</span>
-<span class="co">#&gt;       &lt;tempcal&gt;</span>
-<span class="co">#&gt;         &lt;stlt5&gt;</span>
-<span class="co">#&gt;           &lt;beginday&gt;1&lt;/beginday&gt;</span>
-<span class="co">#&gt;           &lt;endday&gt;102&lt;/endday&gt;</span>
-<span class="co">#&gt;         &lt;/stlt5&gt;</span>
-<span class="co">#&gt;         &lt;st5to8&gt;</span>
-<span class="co">#&gt;           &lt;beginday&gt;103&lt;/beginday&gt;</span>
-<span class="co">#&gt;           &lt;endday&gt;112&lt;/endday&gt;</span>
-<span class="co">#&gt;         &lt;/st5to8&gt;</span>
-<span class="co">#&gt;         &lt;stgt8&gt;</span>
-<span class="co">#&gt;           &lt;beginday&gt;113&lt;/beginday&gt;</span>
-<span class="co">#&gt;           &lt;endday&gt;314&lt;/endday&gt;</span>
-<span class="co">#&gt;         &lt;/stgt8&gt;</span>
-<span class="co">#&gt;         &lt;st5to8&gt;</span>
-<span class="co">#&gt;           &lt;beginday&gt;315&lt;/beginday&gt;</span>
-<span class="co">#&gt;           &lt;endday&gt;326&lt;/endday&gt;</span>
-<span class="co">#&gt;         &lt;/st5to8&gt;</span>
-<span class="co">#&gt;         &lt;stlt5&gt;</span>
-<span class="co">#&gt;           &lt;beginday&gt;327&lt;/beginday&gt;</span>
-<span class="co">#&gt;           &lt;endday&gt;360&lt;/endday&gt;</span>
-<span class="co">#&gt;         &lt;/stlt5&gt;</span>
-<span class="co">#&gt;       &lt;/tempcal&gt;</span>
-<span class="co">#&gt;       &lt;moistcal&gt;</span>
-<span class="co">#&gt;         &lt;moistdry&gt;</span>
-<span class="co">#&gt;           &lt;beginday&gt;1&lt;/beginday&gt;</span>
-<span class="co">#&gt;           &lt;endday&gt;15&lt;/endday&gt;</span>
-<span class="co">#&gt;         &lt;/moistdry&gt;</span>
-<span class="co">#&gt;         &lt;moist&gt;</span>
-<span class="co">#&gt;           &lt;beginday&gt;16&lt;/beginday&gt;</span>
-<span class="co">#&gt;           &lt;endday&gt;220&lt;/endday&gt;</span>
-<span class="co">#&gt;         &lt;/moist&gt;</span>
-<span class="co">#&gt;         &lt;moistdry&gt;</span>
-<span class="co">#&gt;           &lt;beginday&gt;221&lt;/beginday&gt;</span>
-<span class="co">#&gt;           &lt;endday&gt;278&lt;/endday&gt;</span>
-<span class="co">#&gt;         &lt;/moistdry&gt;</span>
-<span class="co">#&gt;         &lt;dry&gt;</span>
-<span class="co">#&gt;           &lt;beginday&gt;279&lt;/beginday&gt;</span>
-<span class="co">#&gt;           &lt;endday&gt;345&lt;/endday&gt;</span>
-<span class="co">#&gt;         &lt;/dry&gt;</span>
-<span class="co">#&gt;         &lt;moistdry&gt;</span>
-<span class="co">#&gt;           &lt;beginday&gt;346&lt;/beginday&gt;</span>
-<span class="co">#&gt;           &lt;endday&gt;360&lt;/endday&gt;</span>
-<span class="co">#&gt;         &lt;/moistdry&gt;</span>
-<span class="co">#&gt;       &lt;/moistcal&gt;</span>
-<span class="co">#&gt;     &lt;/calendars&gt;</span>
-<span class="co">#&gt;   &lt;/output&gt;</span>
-<span class="co">#&gt; &lt;/model&gt;</span>
-<span class="co">#&gt; </span>
-</pre></div>
-</div>
-<div id="xml-file-output" class="section level3">
-<h3 class="hasAnchor">
-<a href="#xml-file-output" class="anchor"></a>XML File Output</h3>
-<div class="sourceCode" id="cb5"><pre class="downlit">
-<span class="co"># write XML results to file</span>
-<span class="fu"><a href="reference/newhall_XMLResultsExporter.html">newhall_XMLResultsExporter</a></span>(dataset = <span class="kw">input_direct</span>, 
-                           result = <span class="kw">output</span>, 
-                           pathname = <span class="st">"misc/WILLIAMSPORT_1930_1930_export.xml"</span>)
-</pre></div>
+<a href="#run-single-model-from-file-or-r-object" class="anchor"></a>Run single model from file or R object</h3>
+<div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># run single model (from XML file)</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>output_xml <span class="ot">&lt;-</span> <span class="fu">newhall_simulation</span>(input_xml)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># run single model (from direct input)</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>output <span class="ot">&lt;-</span> <span class="fu">newhall_simulation</span>(input_direct)</span></code></pre></div>
 </div>
 <div id="graphical-user-interface-for-individual-runs-of-newhall-161jar" class="section level3">
 <h3 class="hasAnchor">
 <a href="#graphical-user-interface-for-individual-runs-of-newhall-161jar" class="anchor"></a>Graphical User Interface for individual runs of <em>newhall-1.6.1.jar</em>
 </h3>
-<div class="sourceCode" id="cb6"><pre class="downlit">
-<span class="co"># convenience method to open GUI with the R package</span>
-
-<span class="fu"><a href="reference/newhall_GUI.html">newhall_GUI</a></span>()
-</pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># convenience method to open GUI with the R package</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">newhall_GUI</span>()</span></code></pre></div>
+</div>
+<div id="access-references-to-java-objects-containing-results" class="section level3">
+<h3 class="hasAnchor">
+<a href="#access-references-to-java-objects-containing-results" class="anchor"></a>Access references to Java objects containing results</h3>
+<div id="moisture-and-temperature-regime-statistics" class="section level4">
+<h4 class="hasAnchor">
+<a href="#moisture-and-temperature-regime-statistics" class="anchor"></a>Moisture and temperature regime statistics</h4>
+<div class="sourceCode" id="cb5"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(output<span class="sc">$</span><span class="fu">getFormattedStatistics</span>())</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="do">## Number of Cumulative Days that the Moisture Control Section (MCS) is:</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="do">##   During one year is:</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="do">##     Dry: 67</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="do">##     MoistDry: 88</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="do">##     Moist: 205</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="do">##   When soil temp is above 5°C:</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="do">##     Dry: 48</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="do">##     MoistDry: 58</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="do">##     Moist: 118</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="do">## Highest number of consecutive days that the MCS is:</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="do">##   Moist in some parts:</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="do">##     Year: 293</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="do">##     Temp over 8°C: 166</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="do">##   Dry after summer solstice: 22</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="do">##   Moist after winter solstice: 105</span></span></code></pre></div>
+</div>
+<div id="moisture-calendar" class="section level4">
+<h4 class="hasAnchor">
+<a href="#moisture-calendar" class="anchor"></a>Moisture calendar</h4>
+<div class="sourceCode" id="cb6"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(output<span class="sc">$</span><span class="fu">getFormattedMoistureCalendar</span>())</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="do">## 222222222222222333333333333333</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="do">## 333333333333333333333333333333</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="do">## 333333333333333333333333333333</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="do">## 333333333333333333333333333333</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="do">## 333333333333333333333333333333</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="do">## 333333333333333333333333333333</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="do">## 333333333333333333333333333333</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="do">## 333333333322222222222222222222</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="do">## 222222222222222222222222222222</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="do">## 222222221111111111111111111111</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="do">## 111111111111111111111111111111</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="do">## 111111111111111222222222222222</span></span></code></pre></div>
+</div>
+<div id="temperature-calendar" class="section level4">
+<h4 class="hasAnchor">
+<a href="#temperature-calendar" class="anchor"></a>Temperature calendar</h4>
+<div class="sourceCode" id="cb7"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(output<span class="sc">$</span><span class="fu">getFormattedTemperatureCalendar</span>())</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="do">## ------------------------------</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="do">## ------------------------------</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="do">## ------------------------------</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="do">## ------------555555555588888888</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="do">## 888888888888888888888888888888</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="do">## 888888888888888888888888888888</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="do">## 888888888888888888888888888888</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="do">## 888888888888888888888888888888</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="do">## 888888888888888888888888888888</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="do">## 888888888888888888888888888888</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="do">## 88888888888888555555555555----</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="do">## ------------------------------</span></span></code></pre></div>
+</div>
+</div>
+<div id="support-for-newhall-xml-format-for-input-and-output" class="section level3">
+<h3 class="hasAnchor">
+<a href="#support-for-newhall-xml-format-for-input-and-output" class="anchor"></a>Support for Newhall XML format for input and output</h3>
+<div class="sourceCode" id="cb8"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># inspect XML result format</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">newhall_XMLStringResultsExporter</span>(input_xml, output))</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="do">## &lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="do">## &lt;model&gt;</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="do">##   &lt;metadata&gt;</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="do">##     &lt;stninfo&gt;</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="do">##       &lt;nettype&gt;HCN&lt;/nettype&gt;</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="do">##       &lt;stnname&gt;WILLIAMSPORT&lt;/stnname&gt;</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="do">##       &lt;stnid /&gt;</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="do">##       &lt;stnelev&gt;158.0&lt;/stnelev&gt;</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="do">##       &lt;stateprov&gt;PA&lt;/stateprov&gt;</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="do">##       &lt;country&gt;US&lt;/country&gt;</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="do">##     &lt;/stninfo&gt;</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="do">##     &lt;mlra&gt;</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="do">##       &lt;mlraname /&gt;</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a><span class="do">##       &lt;mlraid&gt;0&lt;/mlraid&gt;</span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a><span class="do">##     &lt;/mlra&gt;</span></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a><span class="do">##     &lt;cntinfo&gt;</span></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a><span class="do">##       &lt;cntper&gt;</span></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a><span class="do">##         &lt;firstname&gt;FirstName&lt;/firstname&gt;</span></span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a><span class="do">##         &lt;lastname&gt;LastName&lt;/lastname&gt;</span></span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a><span class="do">##         &lt;title&gt;Researcher&lt;/title&gt;</span></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a><span class="do">##       &lt;/cntper&gt;</span></span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a><span class="do">##       &lt;cntorg&gt;My Organization&lt;/cntorg&gt;</span></span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a><span class="do">##       &lt;cntaddr&gt;</span></span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a><span class="do">##         &lt;address /&gt;</span></span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a><span class="do">##         &lt;city /&gt;</span></span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a><span class="do">##         &lt;stateprov /&gt;</span></span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a><span class="do">##         &lt;postal /&gt;</span></span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a><span class="do">##         &lt;country /&gt;</span></span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a><span class="do">##       &lt;/cntaddr&gt;</span></span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a><span class="do">##       &lt;cntemail /&gt;</span></span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a><span class="do">##       &lt;cntphone /&gt;</span></span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a><span class="do">##     &lt;/cntinfo&gt;</span></span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a><span class="do">##     &lt;notes&gt;</span></span>
+<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a><span class="do">##       &lt;note&gt;gaps filled by interpolation of neighboring stations&lt;/note&gt;</span></span>
+<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a><span class="do">##     &lt;/notes&gt;</span></span>
+<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a><span class="do">##     &lt;rundate&gt;20210605&lt;/rundate&gt;</span></span>
+<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a><span class="do">##     &lt;nsmver&gt;1.6.1&lt;/nsmver&gt;</span></span>
+<span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a><span class="do">##     &lt;srcunitsys&gt;english&lt;/srcunitsys&gt;</span></span>
+<span id="cb8-42"><a href="#cb8-42" aria-hidden="true" tabindex="-1"></a><span class="do">##   &lt;/metadata&gt;</span></span>
+<span id="cb8-43"><a href="#cb8-43" aria-hidden="true" tabindex="-1"></a><span class="do">##   &lt;input&gt;</span></span>
+<span id="cb8-44"><a href="#cb8-44" aria-hidden="true" tabindex="-1"></a><span class="do">##     &lt;location&gt;</span></span>
+<span id="cb8-45"><a href="#cb8-45" aria-hidden="true" tabindex="-1"></a><span class="do">##       &lt;lat&gt;41.24&lt;/lat&gt;</span></span>
+<span id="cb8-46"><a href="#cb8-46" aria-hidden="true" tabindex="-1"></a><span class="do">##       &lt;lon&gt;-76.92&lt;/lon&gt;</span></span>
+<span id="cb8-47"><a href="#cb8-47" aria-hidden="true" tabindex="-1"></a><span class="do">##       &lt;usercoordfmt&gt;DD&lt;/usercoordfmt&gt;</span></span>
+<span id="cb8-48"><a href="#cb8-48" aria-hidden="true" tabindex="-1"></a><span class="do">##     &lt;/location&gt;</span></span>
+<span id="cb8-49"><a href="#cb8-49" aria-hidden="true" tabindex="-1"></a><span class="do">##     &lt;recordpd&gt;</span></span>
+<span id="cb8-50"><a href="#cb8-50" aria-hidden="true" tabindex="-1"></a><span class="do">##       &lt;pdtype&gt;normal&lt;/pdtype&gt;</span></span>
+<span id="cb8-51"><a href="#cb8-51" aria-hidden="true" tabindex="-1"></a><span class="do">##       &lt;pdbegin&gt;1930&lt;/pdbegin&gt;</span></span>
+<span id="cb8-52"><a href="#cb8-52" aria-hidden="true" tabindex="-1"></a><span class="do">##       &lt;pdend&gt;1930&lt;/pdend&gt;</span></span>
+<span id="cb8-53"><a href="#cb8-53" aria-hidden="true" tabindex="-1"></a><span class="do">##     &lt;/recordpd&gt;</span></span>
+<span id="cb8-54"><a href="#cb8-54" aria-hidden="true" tabindex="-1"></a><span class="do">##     &lt;precips&gt;</span></span>
+<span id="cb8-55"><a href="#cb8-55" aria-hidden="true" tabindex="-1"></a><span class="do">##       &lt;precip id="Jan"&gt;44.2&lt;/precip&gt;</span></span>
+<span id="cb8-56"><a href="#cb8-56" aria-hidden="true" tabindex="-1"></a><span class="do">##       &lt;precip id="Feb"&gt;40.39&lt;/precip&gt;</span></span>
+<span id="cb8-57"><a href="#cb8-57" aria-hidden="true" tabindex="-1"></a><span class="do">##       &lt;precip id="Mar"&gt;113.54&lt;/precip&gt;</span></span>
+<span id="cb8-58"><a href="#cb8-58" aria-hidden="true" tabindex="-1"></a><span class="do">##       &lt;precip id="Apr"&gt;96.77&lt;/precip&gt;</span></span>
+<span id="cb8-59"><a href="#cb8-59" aria-hidden="true" tabindex="-1"></a><span class="do">##       &lt;precip id="May"&gt;95.0&lt;/precip&gt;</span></span>
+<span id="cb8-60"><a href="#cb8-60" aria-hidden="true" tabindex="-1"></a><span class="do">##       &lt;precip id="Jun"&gt;98.55&lt;/precip&gt;</span></span>
+<span id="cb8-61"><a href="#cb8-61" aria-hidden="true" tabindex="-1"></a><span class="do">##       &lt;precip id="Jul"&gt;66.04&lt;/precip&gt;</span></span>
+<span id="cb8-62"><a href="#cb8-62" aria-hidden="true" tabindex="-1"></a><span class="do">##       &lt;precip id="Aug"&gt;13.46&lt;/precip&gt;</span></span>
+<span id="cb8-63"><a href="#cb8-63" aria-hidden="true" tabindex="-1"></a><span class="do">##       &lt;precip id="Sep"&gt;54.86&lt;/precip&gt;</span></span>
+<span id="cb8-64"><a href="#cb8-64" aria-hidden="true" tabindex="-1"></a><span class="do">##       &lt;precip id="Oct"&gt;6.35&lt;/precip&gt;</span></span>
+<span id="cb8-65"><a href="#cb8-65" aria-hidden="true" tabindex="-1"></a><span class="do">##       &lt;precip id="Nov"&gt;17.53&lt;/precip&gt;</span></span>
+<span id="cb8-66"><a href="#cb8-66" aria-hidden="true" tabindex="-1"></a><span class="do">##       &lt;precip id="Dec"&gt;56.39&lt;/precip&gt;</span></span>
+<span id="cb8-67"><a href="#cb8-67" aria-hidden="true" tabindex="-1"></a><span class="do">##     &lt;/precips&gt;</span></span>
+<span id="cb8-68"><a href="#cb8-68" aria-hidden="true" tabindex="-1"></a><span class="do">##     &lt;airtemps&gt;</span></span>
+<span id="cb8-69"><a href="#cb8-69" aria-hidden="true" tabindex="-1"></a><span class="do">##       &lt;airtemp id="Jan"&gt;-2.17&lt;/airtemp&gt;</span></span>
+<span id="cb8-70"><a href="#cb8-70" aria-hidden="true" tabindex="-1"></a><span class="do">##       &lt;airtemp id="Feb"&gt;0.89&lt;/airtemp&gt;</span></span>
+<span id="cb8-71"><a href="#cb8-71" aria-hidden="true" tabindex="-1"></a><span class="do">##       &lt;airtemp id="Mar"&gt;3.72&lt;/airtemp&gt;</span></span>
+<span id="cb8-72"><a href="#cb8-72" aria-hidden="true" tabindex="-1"></a><span class="do">##       &lt;airtemp id="Apr"&gt;9.11&lt;/airtemp&gt;</span></span>
+<span id="cb8-73"><a href="#cb8-73" aria-hidden="true" tabindex="-1"></a><span class="do">##       &lt;airtemp id="May"&gt;16.28&lt;/airtemp&gt;</span></span>
+<span id="cb8-74"><a href="#cb8-74" aria-hidden="true" tabindex="-1"></a><span class="do">##       &lt;airtemp id="Jun"&gt;21.11&lt;/airtemp&gt;</span></span>
+<span id="cb8-75"><a href="#cb8-75" aria-hidden="true" tabindex="-1"></a><span class="do">##       &lt;airtemp id="Jul"&gt;22.83&lt;/airtemp&gt;</span></span>
+<span id="cb8-76"><a href="#cb8-76" aria-hidden="true" tabindex="-1"></a><span class="do">##       &lt;airtemp id="Aug"&gt;21.94&lt;/airtemp&gt;</span></span>
+<span id="cb8-77"><a href="#cb8-77" aria-hidden="true" tabindex="-1"></a><span class="do">##       &lt;airtemp id="Sep"&gt;19.78&lt;/airtemp&gt;</span></span>
+<span id="cb8-78"><a href="#cb8-78" aria-hidden="true" tabindex="-1"></a><span class="do">##       &lt;airtemp id="Oct"&gt;10.5&lt;/airtemp&gt;</span></span>
+<span id="cb8-79"><a href="#cb8-79" aria-hidden="true" tabindex="-1"></a><span class="do">##       &lt;airtemp id="Nov"&gt;5.33&lt;/airtemp&gt;</span></span>
+<span id="cb8-80"><a href="#cb8-80" aria-hidden="true" tabindex="-1"></a><span class="do">##       &lt;airtemp id="Dec"&gt;-1.06&lt;/airtemp&gt;</span></span>
+<span id="cb8-81"><a href="#cb8-81" aria-hidden="true" tabindex="-1"></a><span class="do">##     &lt;/airtemps&gt;</span></span>
+<span id="cb8-82"><a href="#cb8-82" aria-hidden="true" tabindex="-1"></a><span class="do">##     &lt;smcsawc&gt;200.0&lt;/smcsawc&gt;</span></span>
+<span id="cb8-83"><a href="#cb8-83" aria-hidden="true" tabindex="-1"></a><span class="do">##     &lt;soilairrel&gt;</span></span>
+<span id="cb8-84"><a href="#cb8-84" aria-hidden="true" tabindex="-1"></a><span class="do">##       &lt;ampltd&gt;0.66&lt;/ampltd&gt;</span></span>
+<span id="cb8-85"><a href="#cb8-85" aria-hidden="true" tabindex="-1"></a><span class="do">##       &lt;maatmast&gt;1.2&lt;/maatmast&gt;</span></span>
+<span id="cb8-86"><a href="#cb8-86" aria-hidden="true" tabindex="-1"></a><span class="do">##     &lt;/soilairrel&gt;</span></span>
+<span id="cb8-87"><a href="#cb8-87" aria-hidden="true" tabindex="-1"></a><span class="do">##   &lt;/input&gt;</span></span>
+<span id="cb8-88"><a href="#cb8-88" aria-hidden="true" tabindex="-1"></a><span class="do">##   &lt;output&gt;</span></span>
+<span id="cb8-89"><a href="#cb8-89" aria-hidden="true" tabindex="-1"></a><span class="do">##     &lt;smrclass&gt;Ustic&lt;/smrclass&gt;</span></span>
+<span id="cb8-90"><a href="#cb8-90" aria-hidden="true" tabindex="-1"></a><span class="do">##     &lt;strclass&gt;Mesic&lt;/strclass&gt;</span></span>
+<span id="cb8-91"><a href="#cb8-91" aria-hidden="true" tabindex="-1"></a><span class="do">##     &lt;subgrpmod&gt;Wet Tempustic&lt;/subgrpmod&gt;</span></span>
+<span id="cb8-92"><a href="#cb8-92" aria-hidden="true" tabindex="-1"></a><span class="do">##     &lt;awb&gt;13.12&lt;/awb&gt;</span></span>
+<span id="cb8-93"><a href="#cb8-93" aria-hidden="true" tabindex="-1"></a><span class="do">##     &lt;swb&gt;-218.22&lt;/swb&gt;</span></span>
+<span id="cb8-94"><a href="#cb8-94" aria-hidden="true" tabindex="-1"></a><span class="do">##     &lt;smcstates&gt;</span></span>
+<span id="cb8-95"><a href="#cb8-95" aria-hidden="true" tabindex="-1"></a><span class="do">##       &lt;cumdays&gt;</span></span>
+<span id="cb8-96"><a href="#cb8-96" aria-hidden="true" tabindex="-1"></a><span class="do">##         &lt;yrdry&gt;67&lt;/yrdry&gt;</span></span>
+<span id="cb8-97"><a href="#cb8-97" aria-hidden="true" tabindex="-1"></a><span class="do">##         &lt;yrmd&gt;88&lt;/yrmd&gt;</span></span>
+<span id="cb8-98"><a href="#cb8-98" aria-hidden="true" tabindex="-1"></a><span class="do">##         &lt;yrmst&gt;205&lt;/yrmst&gt;</span></span>
+<span id="cb8-99"><a href="#cb8-99" aria-hidden="true" tabindex="-1"></a><span class="do">##         &lt;bio5dry&gt;48&lt;/bio5dry&gt;</span></span>
+<span id="cb8-100"><a href="#cb8-100" aria-hidden="true" tabindex="-1"></a><span class="do">##         &lt;bio5md&gt;58&lt;/bio5md&gt;</span></span>
+<span id="cb8-101"><a href="#cb8-101" aria-hidden="true" tabindex="-1"></a><span class="do">##         &lt;bio5mst&gt;118&lt;/bio5mst&gt;</span></span>
+<span id="cb8-102"><a href="#cb8-102" aria-hidden="true" tabindex="-1"></a><span class="do">##       &lt;/cumdays&gt;</span></span>
+<span id="cb8-103"><a href="#cb8-103" aria-hidden="true" tabindex="-1"></a><span class="do">##       &lt;consdays&gt;</span></span>
+<span id="cb8-104"><a href="#cb8-104" aria-hidden="true" tabindex="-1"></a><span class="do">##         &lt;yrmst&gt;293&lt;/yrmst&gt;</span></span>
+<span id="cb8-105"><a href="#cb8-105" aria-hidden="true" tabindex="-1"></a><span class="do">##         &lt;bio8mst&gt;166&lt;/bio8mst&gt;</span></span>
+<span id="cb8-106"><a href="#cb8-106" aria-hidden="true" tabindex="-1"></a><span class="do">##         &lt;smrdry&gt;22&lt;/smrdry&gt;</span></span>
+<span id="cb8-107"><a href="#cb8-107" aria-hidden="true" tabindex="-1"></a><span class="do">##         &lt;wtrmst&gt;105&lt;/wtrmst&gt;</span></span>
+<span id="cb8-108"><a href="#cb8-108" aria-hidden="true" tabindex="-1"></a><span class="do">##       &lt;/consdays&gt;</span></span>
+<span id="cb8-109"><a href="#cb8-109" aria-hidden="true" tabindex="-1"></a><span class="do">##     &lt;/smcstates&gt;</span></span>
+<span id="cb8-110"><a href="#cb8-110" aria-hidden="true" tabindex="-1"></a><span class="do">##     &lt;pets&gt;</span></span>
+<span id="cb8-111"><a href="#cb8-111" aria-hidden="true" tabindex="-1"></a><span class="do">##       &lt;pet id="Jan"&gt;0.0&lt;/pet&gt;</span></span>
+<span id="cb8-112"><a href="#cb8-112" aria-hidden="true" tabindex="-1"></a><span class="do">##       &lt;pet id="Feb"&gt;1.49&lt;/pet&gt;</span></span>
+<span id="cb8-113"><a href="#cb8-113" aria-hidden="true" tabindex="-1"></a><span class="do">##       &lt;pet id="Mar"&gt;11.44&lt;/pet&gt;</span></span>
+<span id="cb8-114"><a href="#cb8-114" aria-hidden="true" tabindex="-1"></a><span class="do">##       &lt;pet id="Apr"&gt;38.55&lt;/pet&gt;</span></span>
+<span id="cb8-115"><a href="#cb8-115" aria-hidden="true" tabindex="-1"></a><span class="do">##       &lt;pet id="May"&gt;90.93&lt;/pet&gt;</span></span>
+<span id="cb8-116"><a href="#cb8-116" aria-hidden="true" tabindex="-1"></a><span class="do">##       &lt;pet id="Jun"&gt;127.6&lt;/pet&gt;</span></span>
+<span id="cb8-117"><a href="#cb8-117" aria-hidden="true" tabindex="-1"></a><span class="do">##       &lt;pet id="Jul"&gt;142.1&lt;/pet&gt;</span></span>
+<span id="cb8-118"><a href="#cb8-118" aria-hidden="true" tabindex="-1"></a><span class="do">##       &lt;pet id="Aug"&gt;126.57&lt;/pet&gt;</span></span>
+<span id="cb8-119"><a href="#cb8-119" aria-hidden="true" tabindex="-1"></a><span class="do">##       &lt;pet id="Sep"&gt;96.94&lt;/pet&gt;</span></span>
+<span id="cb8-120"><a href="#cb8-120" aria-hidden="true" tabindex="-1"></a><span class="do">##       &lt;pet id="Oct"&gt;39.95&lt;/pet&gt;</span></span>
+<span id="cb8-121"><a href="#cb8-121" aria-hidden="true" tabindex="-1"></a><span class="do">##       &lt;pet id="Nov"&gt;14.39&lt;/pet&gt;</span></span>
+<span id="cb8-122"><a href="#cb8-122" aria-hidden="true" tabindex="-1"></a><span class="do">##       &lt;pet id="Dec"&gt;0.0&lt;/pet&gt;</span></span>
+<span id="cb8-123"><a href="#cb8-123" aria-hidden="true" tabindex="-1"></a><span class="do">##     &lt;/pets&gt;</span></span>
+<span id="cb8-124"><a href="#cb8-124" aria-hidden="true" tabindex="-1"></a><span class="do">##     &lt;calendars&gt;</span></span>
+<span id="cb8-125"><a href="#cb8-125" aria-hidden="true" tabindex="-1"></a><span class="do">##       &lt;tempcal&gt;</span></span>
+<span id="cb8-126"><a href="#cb8-126" aria-hidden="true" tabindex="-1"></a><span class="do">##         &lt;stlt5&gt;</span></span>
+<span id="cb8-127"><a href="#cb8-127" aria-hidden="true" tabindex="-1"></a><span class="do">##           &lt;beginday&gt;1&lt;/beginday&gt;</span></span>
+<span id="cb8-128"><a href="#cb8-128" aria-hidden="true" tabindex="-1"></a><span class="do">##           &lt;endday&gt;102&lt;/endday&gt;</span></span>
+<span id="cb8-129"><a href="#cb8-129" aria-hidden="true" tabindex="-1"></a><span class="do">##         &lt;/stlt5&gt;</span></span>
+<span id="cb8-130"><a href="#cb8-130" aria-hidden="true" tabindex="-1"></a><span class="do">##         &lt;st5to8&gt;</span></span>
+<span id="cb8-131"><a href="#cb8-131" aria-hidden="true" tabindex="-1"></a><span class="do">##           &lt;beginday&gt;103&lt;/beginday&gt;</span></span>
+<span id="cb8-132"><a href="#cb8-132" aria-hidden="true" tabindex="-1"></a><span class="do">##           &lt;endday&gt;112&lt;/endday&gt;</span></span>
+<span id="cb8-133"><a href="#cb8-133" aria-hidden="true" tabindex="-1"></a><span class="do">##         &lt;/st5to8&gt;</span></span>
+<span id="cb8-134"><a href="#cb8-134" aria-hidden="true" tabindex="-1"></a><span class="do">##         &lt;stgt8&gt;</span></span>
+<span id="cb8-135"><a href="#cb8-135" aria-hidden="true" tabindex="-1"></a><span class="do">##           &lt;beginday&gt;113&lt;/beginday&gt;</span></span>
+<span id="cb8-136"><a href="#cb8-136" aria-hidden="true" tabindex="-1"></a><span class="do">##           &lt;endday&gt;314&lt;/endday&gt;</span></span>
+<span id="cb8-137"><a href="#cb8-137" aria-hidden="true" tabindex="-1"></a><span class="do">##         &lt;/stgt8&gt;</span></span>
+<span id="cb8-138"><a href="#cb8-138" aria-hidden="true" tabindex="-1"></a><span class="do">##         &lt;st5to8&gt;</span></span>
+<span id="cb8-139"><a href="#cb8-139" aria-hidden="true" tabindex="-1"></a><span class="do">##           &lt;beginday&gt;315&lt;/beginday&gt;</span></span>
+<span id="cb8-140"><a href="#cb8-140" aria-hidden="true" tabindex="-1"></a><span class="do">##           &lt;endday&gt;326&lt;/endday&gt;</span></span>
+<span id="cb8-141"><a href="#cb8-141" aria-hidden="true" tabindex="-1"></a><span class="do">##         &lt;/st5to8&gt;</span></span>
+<span id="cb8-142"><a href="#cb8-142" aria-hidden="true" tabindex="-1"></a><span class="do">##         &lt;stlt5&gt;</span></span>
+<span id="cb8-143"><a href="#cb8-143" aria-hidden="true" tabindex="-1"></a><span class="do">##           &lt;beginday&gt;327&lt;/beginday&gt;</span></span>
+<span id="cb8-144"><a href="#cb8-144" aria-hidden="true" tabindex="-1"></a><span class="do">##           &lt;endday&gt;360&lt;/endday&gt;</span></span>
+<span id="cb8-145"><a href="#cb8-145" aria-hidden="true" tabindex="-1"></a><span class="do">##         &lt;/stlt5&gt;</span></span>
+<span id="cb8-146"><a href="#cb8-146" aria-hidden="true" tabindex="-1"></a><span class="do">##       &lt;/tempcal&gt;</span></span>
+<span id="cb8-147"><a href="#cb8-147" aria-hidden="true" tabindex="-1"></a><span class="do">##       &lt;moistcal&gt;</span></span>
+<span id="cb8-148"><a href="#cb8-148" aria-hidden="true" tabindex="-1"></a><span class="do">##         &lt;moistdry&gt;</span></span>
+<span id="cb8-149"><a href="#cb8-149" aria-hidden="true" tabindex="-1"></a><span class="do">##           &lt;beginday&gt;1&lt;/beginday&gt;</span></span>
+<span id="cb8-150"><a href="#cb8-150" aria-hidden="true" tabindex="-1"></a><span class="do">##           &lt;endday&gt;15&lt;/endday&gt;</span></span>
+<span id="cb8-151"><a href="#cb8-151" aria-hidden="true" tabindex="-1"></a><span class="do">##         &lt;/moistdry&gt;</span></span>
+<span id="cb8-152"><a href="#cb8-152" aria-hidden="true" tabindex="-1"></a><span class="do">##         &lt;moist&gt;</span></span>
+<span id="cb8-153"><a href="#cb8-153" aria-hidden="true" tabindex="-1"></a><span class="do">##           &lt;beginday&gt;16&lt;/beginday&gt;</span></span>
+<span id="cb8-154"><a href="#cb8-154" aria-hidden="true" tabindex="-1"></a><span class="do">##           &lt;endday&gt;220&lt;/endday&gt;</span></span>
+<span id="cb8-155"><a href="#cb8-155" aria-hidden="true" tabindex="-1"></a><span class="do">##         &lt;/moist&gt;</span></span>
+<span id="cb8-156"><a href="#cb8-156" aria-hidden="true" tabindex="-1"></a><span class="do">##         &lt;moistdry&gt;</span></span>
+<span id="cb8-157"><a href="#cb8-157" aria-hidden="true" tabindex="-1"></a><span class="do">##           &lt;beginday&gt;221&lt;/beginday&gt;</span></span>
+<span id="cb8-158"><a href="#cb8-158" aria-hidden="true" tabindex="-1"></a><span class="do">##           &lt;endday&gt;278&lt;/endday&gt;</span></span>
+<span id="cb8-159"><a href="#cb8-159" aria-hidden="true" tabindex="-1"></a><span class="do">##         &lt;/moistdry&gt;</span></span>
+<span id="cb8-160"><a href="#cb8-160" aria-hidden="true" tabindex="-1"></a><span class="do">##         &lt;dry&gt;</span></span>
+<span id="cb8-161"><a href="#cb8-161" aria-hidden="true" tabindex="-1"></a><span class="do">##           &lt;beginday&gt;279&lt;/beginday&gt;</span></span>
+<span id="cb8-162"><a href="#cb8-162" aria-hidden="true" tabindex="-1"></a><span class="do">##           &lt;endday&gt;345&lt;/endday&gt;</span></span>
+<span id="cb8-163"><a href="#cb8-163" aria-hidden="true" tabindex="-1"></a><span class="do">##         &lt;/dry&gt;</span></span>
+<span id="cb8-164"><a href="#cb8-164" aria-hidden="true" tabindex="-1"></a><span class="do">##         &lt;moistdry&gt;</span></span>
+<span id="cb8-165"><a href="#cb8-165" aria-hidden="true" tabindex="-1"></a><span class="do">##           &lt;beginday&gt;346&lt;/beginday&gt;</span></span>
+<span id="cb8-166"><a href="#cb8-166" aria-hidden="true" tabindex="-1"></a><span class="do">##           &lt;endday&gt;360&lt;/endday&gt;</span></span>
+<span id="cb8-167"><a href="#cb8-167" aria-hidden="true" tabindex="-1"></a><span class="do">##         &lt;/moistdry&gt;</span></span>
+<span id="cb8-168"><a href="#cb8-168" aria-hidden="true" tabindex="-1"></a><span class="do">##       &lt;/moistcal&gt;</span></span>
+<span id="cb8-169"><a href="#cb8-169" aria-hidden="true" tabindex="-1"></a><span class="do">##     &lt;/calendars&gt;</span></span>
+<span id="cb8-170"><a href="#cb8-170" aria-hidden="true" tabindex="-1"></a><span class="do">##   &lt;/output&gt;</span></span>
+<span id="cb8-171"><a href="#cb8-171" aria-hidden="true" tabindex="-1"></a><span class="do">## &lt;/model&gt;</span></span>
+<span id="cb8-172"><a href="#cb8-172" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span></code></pre></div>
+</div>
+<div id="xml-file-output" class="section level3">
+<h3 class="hasAnchor">
+<a href="#xml-file-output" class="anchor"></a>XML File Output</h3>
+<div class="sourceCode" id="cb9"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># write XML results to file</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">newhall_XMLResultsExporter</span>(<span class="at">dataset =</span> input_direct, </span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>                           <span class="at">result =</span> output, </span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>                           <span class="at">pathname =</span> <span class="st">"misc/WILLIAMSPORT_1930_1930_export.xml"</span>)</span></code></pre></div>
+</div>
+<div id="run-batch-sets-of-models" class="section level3">
+<h3 class="hasAnchor">
+<a href="#run-batch-sets-of-models" class="anchor"></a>Run batch sets of models</h3>
+<p>The jNSM has a defined CSV (comma-separated value) batch file format. Examples of batch inputs are included in the official download. The batching in the {jNSMR} package is handled by R code, not Java. The main interface to batching is <code><a href="reference/newhall_batch.html">newhall_batch()</a></code>.</p>
+<p><code><a href="reference/newhall_batch.html">newhall_batch()</a></code> takes either a <code>pathname</code> argument, or you can specify <code>.data</code> as a <em>data.frame</em> directly.</p>
+<p>Selected example input files have been included in <code>inst/extdata</code> directory of this package.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>pathname <span class="ot">&lt;-</span> <span class="fu">system.file</span>(<span class="st">"extdata/All_PA_jNSM_Example_Batch_Metric.csv"</span>, <span class="at">package =</span> <span class="st">"jNSMR"</span>)[<span class="dv">1</span>]</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> data.table<span class="sc">::</span><span class="fu">data.table</span>(<span class="fu">newhall_batch</span>(<span class="at">pathname =</span> pathname, <span class="at">toString =</span> <span class="cn">FALSE</span>, <span class="at">verbose =</span> <span class="cn">FALSE</span>))</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(res)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="do">##         dataset      results output</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="do">## 1: &lt;jobjRef[2]&gt; &lt;jobjRef[2]&gt;       </span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="do">## 2: &lt;jobjRef[2]&gt; &lt;jobjRef[2]&gt;       </span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="do">## 3: &lt;jobjRef[2]&gt; &lt;jobjRef[2]&gt;       </span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="do">## 4: &lt;jobjRef[2]&gt; &lt;jobjRef[2]&gt;       </span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="do">## 5: &lt;jobjRef[2]&gt; &lt;jobjRef[2]&gt;       </span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="do">## 6: &lt;jobjRef[2]&gt; &lt;jobjRef[2]&gt;</span></span></code></pre></div>
 </div>
 </div>
 <div id="license-information" class="section level2">
