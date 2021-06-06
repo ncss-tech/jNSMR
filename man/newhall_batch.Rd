@@ -8,6 +8,8 @@ newhall_batch(
   .data = NULL,
   pathname = NULL,
   unitSystem = "metric",
+  soilAirOffset = ifelse(unitSystem \%in\% c("in", "english"), 4.5, 2.5),
+  amplitude = 0.66,
   verbose = TRUE,
   toString = TRUE,
   checkargs = TRUE
@@ -19,6 +21,10 @@ newhall_batch(
 \item{pathname}{path(s) to CSV file(s) with Newhall batch format and required columns; default \code{NULL}}
 
 \item{unitSystem}{Default: \code{"metric"} OR \code{"mm"} OR \code{"cm"} use \emph{millimeters} of rainfall (default for the BASIC model); set to \code{unitSystem="english"} OR \code{unitSystem="in"} to transform English (inches of precipitation; degrees Fahrenheit) inputs to metric (millimeters of precipitation; degrees Celsius) before running simulation}
+
+\item{soilAirOffset}{air-soil temperature offset. Conventionally for jNSM: \code{2.5} for metric units (default); \code{4.5} for english units.}
+
+\item{amplitude}{difference in amplitude between soil and air temperature sine waves. Default \code{0.66}}
 
 \item{verbose}{print message about number of simulations and elapsed time}
 

@@ -7,9 +7,9 @@
 NewhallDataset(
   stationName,
   country,
-  lat,
-  lon,
-  stationElevation,
+  latDD,
+  lonDD,
+  elev,
   allPrecipsDbl,
   allAirTempsDbl,
   pdbegin,
@@ -23,21 +23,21 @@ NewhallDataset(
 
 \item{country}{\emph{character}; country}
 
-\item{lat}{\emph{double}; latitude decimal degrees}
+\item{latDD}{\emph{double}; latitude decimal degrees}
 
-\item{lon}{\emph{double}; longitude decimal degrees}
+\item{lonDD}{\emph{double}; longitude decimal degrees}
 
-\item{stationElevation}{\emph{double}; station elevation}
+\item{elev}{\emph{double}; station elevation}
 
-\item{allPrecipsDbl}{\emph{double}; length \code{12} precipitation, monthly}
+\item{allPrecipsDbl}{\emph{double}; length \code{12} precipitation, monthly (millimeters of water)}
 
-\item{allAirTempsDbl}{\emph{double}; length \code{12} air temperature, monthly}
+\item{allAirTempsDbl}{\emph{double}; length \code{12} air temperature, monthly (degrees celsius)}
 
 \item{pdbegin}{\emph{integer}; beginning year}
 
 \item{pdend}{\emph{integer}; ending year}
 
-\item{smcsawc}{\emph{double}; soil moisture control section available water capacity}
+\item{smcsawc}{\emph{double}; soil moisture control section available water capacity (millimeters)}
 
 \item{checkargs}{\emph{logical}; check argument length and data types? Default: \code{FALSE}}
 }
@@ -51,9 +51,9 @@ Create an instance of \emph{NewhallDataset}
 input_direct <- NewhallDataset(
   stationName = "WILLIAMSPORT",
   country = "US",
-  lat = 41.24,
-  lon = -76.92,
-  stationElevation = 158.0,
+  latDD = 41.24,
+  lonDD = -76.92,
+  elev = 158.0,
   allPrecipsDbl = c(44.2, 40.39, 113.54, 96.77, 95, 98.55,
                     66.04, 13.46, 54.86, 6.35, 17.53, 56.39),
   allAirTempsDbl = c(-2.17, 0.89, 3.72, 9.11, 16.28, 21.11,

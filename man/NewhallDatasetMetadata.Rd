@@ -7,7 +7,7 @@
 NewhallDatasetMetadata(
   stationName,
   stationId = character(length(stationName)),
-  stationElevation = numeric(length(stationName)),
+  elev = numeric(length(stationName)),
   stationStateProvidence = character(length(stationName)),
   stationCountry = character(length(stationName)),
   mlraName = character(length(stationName)),
@@ -37,7 +37,7 @@ NewhallDatasetMetadata(
 
 \item{stationId}{\emph{character}; station ID}
 
-\item{stationElevation}{\emph{double}; station elevation}
+\item{elev}{\emph{double}; station elevation}
 
 \item{stationStateProvidence}{\emph{character}; station state / providence}
 

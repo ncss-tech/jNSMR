@@ -1,9 +1,9 @@
 #' Run _BASICSimulationModel_ simulation with newhall-1.6.1.jar
 #'
 #' @param dataset a _NewhallDataset_ `jobjRef`
-#' @param waterHoldingCapacity Default: `200`
-#' @param fc Default: `2.5`
-#' @param fcd Default: `0.66`
+#' @param smcsawc Default: `200`
+#' @param soilAirOffset air-soil temperature offset. Conventionally for jNSM: `2.5` for metric units (default); `4.5` for english units.
+#' @param amplitude Default: `0.66` amplitude difference between soil and air temperature sine waves
 #' @param bsm `jobjRef` for _BASICSimulationModel_; Default: `BASICSimulationModel()`
 #' @param toString logical; return _NewhallResults_ (Default: `FALSE`), or if `TRUE` call `result.toString()` to get formatted standard output as _character_?
 #'
@@ -12,9 +12,9 @@
 #' @importFrom rJava .jcall
 newhall_simulation <- function(
                             dataset, # NewhallDataset
-                            waterHoldingCapacity = 200.0, # double
-                            fc = 2.5, # double
-                            fcd = 0.66, # double
+                            smcsawc = 200.0, # double
+                            soilAirOffset = 2.5, # double
+                            amplitude = 0.66, # double
                             bsm = BASICSimulationModel(), # BASICSimulationModel
                             toString = FALSE
                            ) {
@@ -23,16 +23,16 @@ newhall_simulation <- function(
                              returnSig = "Lorg/psu/newhall/sim/NewhallResults;",
                              method =  "runSimulation",
                              dataset, # NewhallDataset
-                             waterHoldingCapacity, # double
-                             fc, # double
-                             fcd # double
+                             smcsawc, # double
+                             soilAirOffset, # double
+                             amplitude # double
                             ))
 
     if (inherits(res, 'try-error')) {
-      print(waterHoldingCapacity)
-      print(fc)
-      print(fcd)
-      print(dataset$toString())
+      print(rJava::.jcall(dataset, returnSig = "S", method = "toString"))
+      print(smcsawc)
+      print(soilAirOffset)
+      print(amplitude)
       stop(res, call. = FALSE)
     }
 

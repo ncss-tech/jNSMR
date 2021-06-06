@@ -27,9 +27,11 @@ CSVFileParser <- function(pathname) {
 #' @aliases xml_NewhallDataset csv_NewhallDataset
 #' @importFrom rJava .jcall
 NewhallDatasetFromPath <- function(pathname, .parser = XMLFileParser) {
+  subpar <- as.character(substitute(.parser))
+
   rJava::.jcall(obj = .parser(pathname),
-                returnSig="Lorg/psu/newhall/sim/NewhallDataset;",
-                method = "getDataset")
+                returnSig = "Lorg/psu/newhall/sim/NewhallDataset;",
+                method = ifelse(as.character(as.name(subpar)) == "CSVFileParser", "getDatset","getDataset"))
 }
 
 # convenience methods supply .parser argument
@@ -50,14 +52,14 @@ csv_NewhallDataset <- function(pathname) {
 #'
 #' @param stationName _character_; station name
 #' @param country _character_; country
-#' @param lat _double_; latitude decimal degrees
-#' @param lon _double_; longitude decimal degrees
-#' @param stationElevation _double_; station elevation
-#' @param allPrecipsDbl _double_; length `12` precipitation, monthly
-#' @param allAirTempsDbl _double_; length `12` air temperature, monthly
+#' @param latDD _double_; latitude decimal degrees
+#' @param lonDD _double_; longitude decimal degrees
+#' @param elev _double_; station elevation
+#' @param allPrecipsDbl _double_; length `12` precipitation, monthly (millimeters of water)
+#' @param allAirTempsDbl _double_; length `12` air temperature, monthly (degrees celsius)
 #' @param pdbegin _integer_; beginning year
 #' @param pdend _integer_; ending year
-#' @param smcsawc _double_; soil moisture control section available water capacity
+#' @param smcsawc _double_; soil moisture control section available water capacity (millimeters)
 #' @param checkargs _logical_; check argument length and data types? Default: `FALSE`
 #' @export
 #' @importFrom rJava .jnew .jchar .jcast
@@ -67,9 +69,9 @@ csv_NewhallDataset <- function(pathname) {
 #' input_direct <- NewhallDataset(
 #'   stationName = "WILLIAMSPORT",
 #'   country = "US",
-#'   lat = 41.24,
-#'   lon = -76.92,
-#'   stationElevation = 158.0,
+#'   latDD = 41.24,
+#'   lonDD = -76.92,
+#'   elev = 158.0,
 #'   allPrecipsDbl = c(44.2, 40.39, 113.54, 96.77, 95, 98.55,
 #'                     66.04, 13.46, 54.86, 6.35, 17.53, 56.39),
 #'   allAirTempsDbl = c(-2.17, 0.89, 3.72, 9.11, 16.28, 21.11,
@@ -82,9 +84,9 @@ csv_NewhallDataset <- function(pathname) {
 NewhallDataset <-
   function(stationName, # String
            country, # String
-           lat, # double
-           lon, # double
-           stationElevation, # double
+           latDD, # double
+           lonDD, # double
+           elev, # double
            allPrecipsDbl, # List<Double>
            allAirTempsDbl, # List<Double>
            pdbegin, # integer
@@ -94,45 +96,45 @@ NewhallDataset <-
           ) {
 
     if (checkargs) {
-      .checkFUN <- function(x, FUN) x[sapply(x, function(y) FUN(eval(as.symbol(x))))]
+      .checkFUN <- function(x, FUN) x[sapply(x, function(y) FUN(eval(as.symbol(y))))]
 
-      testa <- c("stationName","country","lat","lon",
-                 "stationElevation","pdbegin","pdend","smcsawc")
+      testa <- c("stationName","country","latDD","lonDD",
+                 "elev","pdbegin","pdend","smcsawc")
       len1 <- .checkFUN(testa, function(x) length(x) == 1)
       if (length(len1) != length(testa)) {
         stop(sprintf("station '%s' arguments %s should be length 1",
-                     stationName[1], paste0(testb[!len1], collapse = ", ")))
+                     stationName[1], paste0(testa[!testa %in% len1], collapse = ", ")), call.=FALSE)
       }
 
       testb <- c("allPrecipsDbl", "allAirTempsDbl")
       len12 <- .checkFUN(testb, function(x) length(x) == 12)
       if (length(len12) != length(testb)) {
         stop(sprintf("station '%s' arguments %s should be length 12",
-                     stationName[1], paste0(testb[!len12], collapse = ", ")))
+                     stationName[1], paste0(testb[!testb %in% len12], collapse = ", ")), call.=FALSE)
       }
 
-      testc <- c("lat","lon","allPrecipsDbl", "allAirTempsDbl",
-                 "stationElevation","pdbegin","pdend","smcsawc")
-      isnum <- .checkFUN(testc, function(y) is.numeric(as.numeric(y)))
+      testc <- c("latDD","lonDD","allPrecipsDbl", "allAirTempsDbl",
+                 "elev","pdbegin","pdend","smcsawc")
+      isnum <- .checkFUN(testc, function(y) is.numeric(y))
       if (length(isnum) != length(testc)) {
         stop(sprintf("station '%s' arguments %s should be numeric",
-                     stationName[1], paste0(testc[!isnum], collapse = ", ")))
+                     stationName[1], paste0(testc[!testc %in% isnum], collapse = ", ")), call.=FALSE)
       }
 
     }
 
-    nsHemisphere <- ifelse(lat > 0, 'N', 'S') # char
-    ewHemisphere <- ifelse(lon < 0, 'E', 'W') # char
+    nsHemisphere <- ifelse(latDD > 0, 'N', 'S') # char
+    ewHemisphere <- ifelse(lonDD < 0, 'E', 'W') # char
 
     res <- try(rJava::.jnew(
       "org/psu/newhall/sim/NewhallDataset",
       as.character(stationName[1]),
       as.character(country[1]),
-      as.double(lat[1]),
-      as.double(lon[1]),
+      as.double(latDD[1]),
+      as.double(lonDD[1]),
       rJava::.jchar(strtoi(charToRaw(nsHemisphere), 16L)),
       rJava::.jchar(strtoi(charToRaw(ewHemisphere), 16L)),
-      as.double(stationElevation[1]),
+      as.double(elev[1]),
       rJava::.jcast(
         .rvec2jarraylist(as.double(allPrecipsDbl[1:12]), "java/lang/Double"),
         "java/util/List"
@@ -143,23 +145,23 @@ NewhallDataset <-
       ),
       as.integer(pdbegin[1]),
       as.integer(pdend[1]),
-      TRUE,
+      TRUE, # isMetric: all calls to the Java Newhall model via run_simulation() are with metric values
       as.double(smcsawc[1])
-    ))
+    ), silent = TRUE)
 
     if (inherits(res, 'try-error')) {
-      print(stationName)
-      print(country)
-      print(lat)
-      print(lon)
-      print(nsHemisphere)
-      print(ewHemisphere)
-      print(stationElevation)
-      print(allPrecipsDbl)
-      print(allAirTempsDbl)
-      print(pdbegin)
-      print(pdend)
-      print(smcsawc)
+      # print(stationName)
+      # print(country)
+      # print(latDD)
+      # print(lonDD)
+      # print(nsHemisphere)
+      # print(ewHemisphere)
+      # print(elev)
+      # print(allPrecipsDbl)
+      # print(allAirTempsDbl)
+      # print(pdbegin)
+      # print(pdend)
+      # print(smcsawc)
       stop(res, call. = FALSE)
     }
     res

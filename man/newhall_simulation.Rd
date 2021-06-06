@@ -6,9 +6,9 @@
 \usage{
 newhall_simulation(
   dataset,
-  waterHoldingCapacity = 200,
-  fc = 2.5,
-  fcd = 0.66,
+  smcsawc = 200,
+  soilAirOffset = 2.5,
+  amplitude = 0.66,
   bsm = BASICSimulationModel(),
   toString = FALSE
 )
@@ -16,11 +16,11 @@ newhall_simulation(
 \arguments{
 \item{dataset}{a \emph{NewhallDataset} \code{jobjRef}}
 
-\item{waterHoldingCapacity}{Default: \code{200}}
+\item{smcsawc}{Default: \code{200}}
 
-\item{fc}{Default: \code{2.5}}
+\item{soilAirOffset}{air-soil temperature offset. Conventionally for jNSM: \code{2.5} for metric units (default); \code{4.5} for english units.}
 
-\item{fcd}{Default: \code{0.66}}
+\item{amplitude}{Default: \code{0.66} amplitude difference between soil and air temperature sine waves}
 
 \item{bsm}{\code{jobjRef} for \emph{BASICSimulationModel}; Default: \code{BASICSimulationModel()}}
 

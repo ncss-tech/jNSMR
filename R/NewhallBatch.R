@@ -2,7 +2,8 @@
 #' @param .data a _data.frame_ or _character_ vector of paths (used as `pathname`)
 #' @param pathname path(s) to CSV file(s) with Newhall batch format and required columns; default `NULL`
 #' @param unitSystem Default: `"metric"` OR `"mm"` OR `"cm"` use _millimeters_ of rainfall (default for the BASIC model); set to `unitSystem="english"` OR `unitSystem="in"` to transform English (inches of precipitation; degrees Fahrenheit) inputs to metric (millimeters of precipitation; degrees Celsius) before running simulation
-#'
+#' @param soilAirOffset air-soil temperature offset. Conventionally for jNSM: `2.5` for metric units (default); `4.5` for english units.
+#' @param amplitude difference in amplitude between soil and air temperature sine waves. Default `0.66`
 #' @param verbose print message about number of simulations and elapsed time
 #' @param toString call `toString()` method on each _NewhallResults_ object and store in `output` column of result?
 #' @param checkargs _logical_; check argument length and data types for each run? Default: `TRUE`
@@ -14,6 +15,8 @@
 newhall_batch <- function(.data = NULL,
                           pathname = NULL,
                           unitSystem = "metric",
+                          soilAirOffset = ifelse(unitSystem %in% c("in","english"), 4.5, 2.5),
+                          amplitude = 0.66,
                           verbose = TRUE,
                           toString = TRUE,
                           checkargs = TRUE) {
@@ -78,9 +81,9 @@ newhall_batch <- function(.data = NULL,
   res <- batchframe[, list(awc = awc,
                            dataset = list(NewhallDataset(stationName = as.character(stationName), # String
                                                          country = as.character(cntryCode), # String
-                                                         lat = as.double(latDD), # double
-                                                         lon = as.double(lonDD), # double
-                                                         stationElevation = as.double(elev), # double
+                                                         latDD = as.double(latDD), # double
+                                                         lonDD = as.double(lonDD), # double
+                                                         elev = as.double(elev), # double
                                                          allPrecipsDbl = as.double(allPrecipsDbl[[1]]), # List<Double>
                                                          allAirTempsDbl = as.double(allAirTempsDbl[[1]]), # List<Double>
                                                          pdbegin = as.integer(pdStartYr), # integer
@@ -91,7 +94,10 @@ newhall_batch <- function(.data = NULL,
                                           by = .id][,
                                             list(dataset = dataset,
                                                  results = list(newhall_simulation(dataset = dataset[[1]],
-                                                                                   waterHoldingCapacity = as.double(awc)))),
+                                                                                   smcsawc = as.double(awc),
+                                                                                   soilAirOffset = as.double(soilAirOffset),
+                                                                                   amplitude = as.double(amplitude)))),
+
                                           by = .id][,
                                             list(dataset = dataset,
                                                  results = results,

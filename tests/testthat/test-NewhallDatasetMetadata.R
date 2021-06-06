@@ -9,16 +9,15 @@ test_that("NewhallDatasetMetadata works", {
   # make a NewhallDataset without any metadata
   nd <- NewhallDataset(stationName = "foo",
                        country = "US",
-                       lat = 37.2,
-                       lon = -120.1,
-                       stationElevation = 100.1,
+                       latDD = 37.2,
+                       lonDD = -120.1,
+                       elev = 100.1,
                        allPrecipsDbl = rep(2.2, 12),
                        allAirTempsDbl = rep(18.1, 12),
                        pdbegin = 1990,
                        pdend = 1990,
                        smcsawc = 200.0,
                        checkargs = TRUE)
-
   # metadata are null
   expect_null(nd$getMetadata())
 
@@ -28,3 +27,4 @@ test_that("NewhallDatasetMetadata works", {
   # metadata are now set
   expect_equal(nd$getMetadata()$getClass()$toString(), "class org.psu.newhall.sim.NewhallDatasetMetadata")
 })
+

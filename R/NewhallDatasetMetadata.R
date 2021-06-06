@@ -4,7 +4,7 @@
 #'
 #' @param stationName _character_; station name
 #' @param stationId _character_; station ID
-#' @param stationElevation _double_; station elevation
+#' @param elev _double_; station elevation
 #' @param stationStateProvidence _character_; station state / providence
 #' @param stationCountry _character_; station country
 #' @param mlraName _character_; Major Land Resource Area (MLRA) name
@@ -34,7 +34,7 @@
 NewhallDatasetMetadata <- function(
    stationName, # String only required argument
    stationId = character(length(stationName)), #String
-   stationElevation = numeric(length(stationName)), #double
+   elev = numeric(length(stationName)), #double
    stationStateProvidence = character(length(stationName)), #String
    stationCountry = character(length(stationName)), #String
    mlraName = character(length(stationName)), #String
@@ -62,7 +62,7 @@ NewhallDatasetMetadata <- function(
      "org/psu/newhall/sim/NewhallDatasetMetadata",
      as.character(stationName), #String
      as.character(stationId), #String
-     as.double(stationElevation), #double
+     as.double(elev), #double
      as.character(stationStateProvidence), #String
      as.character(stationCountry), #String
      as.character(mlraName), #String
