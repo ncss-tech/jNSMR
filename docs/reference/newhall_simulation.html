@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">jNSMR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9004</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9005</span>
       </span>
     </div>
 
@@ -117,9 +117,9 @@
 
     <pre class="usage"><span class='fu'>newhall_simulation</span><span class='op'>(</span>
   <span class='va'>dataset</span>,
-  waterHoldingCapacity <span class='op'>=</span> <span class='fl'>200</span>,
-  fc <span class='op'>=</span> <span class='fl'>2.5</span>,
-  fcd <span class='op'>=</span> <span class='fl'>0.66</span>,
+  smcsawc <span class='op'>=</span> <span class='fl'>200</span>,
+  soilAirOffset <span class='op'>=</span> <span class='fl'>2.5</span>,
+  amplitude <span class='op'>=</span> <span class='fl'>0.66</span>,
   bsm <span class='op'>=</span> <span class='fu'><a href='BASICSimulationModel.html'>BASICSimulationModel</a></span><span class='op'>(</span><span class='op'>)</span>,
   toString <span class='op'>=</span> <span class='cn'>FALSE</span>
 <span class='op'>)</span></pre>
@@ -132,16 +132,16 @@
       <td><p>a <em>NewhallDataset</em> <code>jobjRef</code></p></td>
     </tr>
     <tr>
-      <th>waterHoldingCapacity</th>
+      <th>smcsawc</th>
       <td><p>Default: <code>200</code></p></td>
     </tr>
     <tr>
-      <th>fc</th>
-      <td><p>Default: <code>2.5</code> for metric units (default); <code>4.5</code> for english units.</p></td>
+      <th>soilAirOffset</th>
+      <td><p>air-soil temperature offset. Conventionally for jNSM: <code>2.5</code> for metric units (default); <code>4.5</code> for english units.</p></td>
     </tr>
     <tr>
-      <th>fcd</th>
-      <td><p>Default: <code>0.66</code> amplitude</p></td>
+      <th>amplitude</th>
+      <td><p>Default: <code>0.66</code> amplitude difference between soil and air temperature sine waves</p></td>
     </tr>
     <tr>
       <th>bsm</th>

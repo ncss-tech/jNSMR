@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">jNSMR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9004</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9005</span>
       </span>
     </div>
 
@@ -118,9 +118,9 @@
     <pre class="usage"><span class='fu'>NewhallDataset</span><span class='op'>(</span>
   <span class='va'>stationName</span>,
   <span class='va'>country</span>,
-  <span class='va'>lat</span>,
-  <span class='va'>lon</span>,
-  <span class='va'>stationElevation</span>,
+  <span class='va'>latDD</span>,
+  <span class='va'>lonDD</span>,
+  <span class='va'>elev</span>,
   <span class='va'>allPrecipsDbl</span>,
   <span class='va'>allAirTempsDbl</span>,
   <span class='va'>pdbegin</span>,
@@ -141,24 +141,24 @@
       <td><p><em>character</em>; country</p></td>
     </tr>
     <tr>
-      <th>lat</th>
+      <th>latDD</th>
       <td><p><em>double</em>; latitude decimal degrees</p></td>
     </tr>
     <tr>
-      <th>lon</th>
+      <th>lonDD</th>
       <td><p><em>double</em>; longitude decimal degrees</p></td>
     </tr>
     <tr>
-      <th>stationElevation</th>
+      <th>elev</th>
       <td><p><em>double</em>; station elevation</p></td>
     </tr>
     <tr>
       <th>allPrecipsDbl</th>
-      <td><p><em>double</em>; length <code>12</code> precipitation, monthly</p></td>
+      <td><p><em>double</em>; length <code>12</code> precipitation, monthly (millimeters of water)</p></td>
     </tr>
     <tr>
       <th>allAirTempsDbl</th>
-      <td><p><em>double</em>; length <code>12</code> air temperature, monthly</p></td>
+      <td><p><em>double</em>; length <code>12</code> air temperature, monthly (degrees celsius)</p></td>
     </tr>
     <tr>
       <th>pdbegin</th>
@@ -170,7 +170,7 @@
     </tr>
     <tr>
       <th>smcsawc</th>
-      <td><p><em>double</em>; soil moisture control section available water capacity</p></td>
+      <td><p><em>double</em>; soil moisture control section available water capacity (millimeters)</p></td>
     </tr>
     <tr>
       <th>checkargs</th>
@@ -186,9 +186,9 @@
     <pre class="examples"><div class='input'><span class='va'>input_direct</span> <span class='op'>&lt;-</span> <span class='fu'>NewhallDataset</span><span class='op'>(</span>
   stationName <span class='op'>=</span> <span class='st'>"WILLIAMSPORT"</span>,
   country <span class='op'>=</span> <span class='st'>"US"</span>,
-  lat <span class='op'>=</span> <span class='fl'>41.24</span>,
-  lon <span class='op'>=</span> <span class='op'>-</span><span class='fl'>76.92</span>,
-  stationElevation <span class='op'>=</span> <span class='fl'>158.0</span>,
+  latDD <span class='op'>=</span> <span class='fl'>41.24</span>,
+  lonDD <span class='op'>=</span> <span class='op'>-</span><span class='fl'>76.92</span>,
+  elev <span class='op'>=</span> <span class='fl'>158.0</span>,
   allPrecipsDbl <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>44.2</span>, <span class='fl'>40.39</span>, <span class='fl'>113.54</span>, <span class='fl'>96.77</span>, <span class='fl'>95</span>, <span class='fl'>98.55</span>,
                     <span class='fl'>66.04</span>, <span class='fl'>13.46</span>, <span class='fl'>54.86</span>, <span class='fl'>6.35</span>, <span class='fl'>17.53</span>, <span class='fl'>56.39</span><span class='op'>)</span>,
   allAirTempsDbl <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='op'>-</span><span class='fl'>2.17</span>, <span class='fl'>0.89</span>, <span class='fl'>3.72</span>, <span class='fl'>9.11</span>, <span class='fl'>16.28</span>, <span class='fl'>21.11</span>,
