@@ -107,6 +107,32 @@ newhall_batch <- function(.data = NULL,
                                                                                      method = "toString")),
                                                                   list())),
                                           by = .id]
+
+
+  .format_results <- function(x) {
+    data.frame(
+      NumCumulativeDaysMoist = rJava::.jcall(x, 'I', "getNumCumulativeDaysMoist"),
+      NumCumulativeDaysMoistDry =  rJava::.jcall(x, 'I', "getNumCumulativeDaysMoistDry"),
+      NumCumulativeDaysMoistDryOver5C =  rJava::.jcall(x, 'I', "getNumCumulativeDaysMoistDryOver5C"),
+      NumConsecutiveDaysMoistInSomePartsOver8C =  rJava::.jcall(x, 'I', "getNumConsecutiveDaysMoistInSomePartsOver8C"),
+      NumCumulativeDaysDry = rJava::.jcall(x, 'I', "getNumCumulativeDaysDry"),
+      NumCumulativeDaysDryOver5C = rJava::.jcall(x, 'I', "getNumCumulativeDaysDryOver5C"),
+      NumCumulativeDaysMoistOver5C = rJava::.jcall(x, 'I', "getNumCumulativeDaysMoistOver5C"),
+      # Ncpm = x$getNcpm(),
+      # Nsd = x$getNsd(),
+      NumConsecutiveDaysMoistInSomeParts = rJava::.jcall(x, 'I', "getNumConsecutiveDaysMoistInSomeParts"),
+      TemperatureRegime = rJava::.jcall(x, 'S', "getTemperatureRegime"),
+      MoistureRegime = rJava::.jcall(x, 'S', "getMoistureRegime"),
+      RegimeSubdivision1 = rJava::.jcall(x, 'S', "getRegimeSubdivision1"),
+      RegimeSubdivision2 = rJava::.jcall(x, 'S', "getRegimeSubdivision2"),
+      # MeanPotentialEvapotranspiration = x$getMeanPotentialEvapotranspiration()
+      MoistDaysAfterWinterSolstice = rJava::.jcall(x, 'I', "getMoistDaysAfterWinterSolstice"),
+      DryDaysAfterSummerSolstice = rJava::.jcall(x, 'I', "getDryDaysAfterSummerSolstice")
+    )
+  }
+
+  res <- cbind(res, res[, .format_results(results[[1]]), by = list(1:nrow(res))])
+
   if (verbose) {
     deltat <- signif(difftime(Sys.time(), t1, units = "auto"), digits = 2)
     message(sprintf(
