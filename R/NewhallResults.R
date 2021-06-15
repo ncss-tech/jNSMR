@@ -5,8 +5,7 @@
 #' @export
 #' @importFrom rJava .jnew
 XMLResultsExporter <- function(pathname) {
-  rJava::.jnew("org/psu/newhall/util/XMLResultsExporter",
-               rJava::.jnew("java/io/File", pathname))
+  rJava::.jnew("org/psu/newhall/util/XMLResultsExporter", rJava::.jnew("java/io/File", pathname))
 }
 
 #' Create an instance of _XMLStringResultsExporter_
@@ -41,25 +40,24 @@ newhall_XMLStringResultsExporter <- function(dataset, results) {
 }
 
 #' Create an instance of _CSVResultsExporter_
+#' @param results _NewhallResults_ `jobjRef`
 #' @param pathname a character containing pathname
 #' @return an instance of _CSVResultsExporter_ class
 #' @export
 #' @importFrom rJava .jnew
-CSVResultsExporter <- function(pathname) {
-  rJava::.jnew("org/psu/newhall/util/CSVResultsExporter",
-               rJava::.jnew("java/io/File", pathname))
+CSVResultsExporter <- function(results, pathname) {
+  rJava::.jnew("org/psu/newhall/util/CSVResultsExporter", results, rJava::.jnew("java/io/File", pathname))
 }
 
 #' Export Newhall Results, Data and Metadata to CSV file with _CSVResultsExporter_
 #'
-#' @param dataset _NewhallDataset_ `jobjRef`
 #' @param results _NewhallResults_ `jobjRef`
 #' @param pathname output CSV file path; default: `NULL`
 #'
 #' @return a CSV file written to specified path
 #' @export
 #' @importFrom rJava .jcall
-newhall_CSVResultsExporter <- function(dataset, results, pathname) {
-  rJava::.jcall(CSVResultsExporter(pathname), "export", results, dataset)
+newhall_CSVResultsExporter <- function(results, pathname) {
+  rJava::.jcall(CSVResultsExporter(results, pathname), , "save")
 }
 

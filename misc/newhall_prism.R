@@ -6,6 +6,8 @@ PRISM_PATH <- "~/Geodata/PRISM"
 # PRISM resolution; either 4km or 800m
 RESOLUTION <- "4km"
 
+bilfile <- list.files(PRISM_PATH, "\\.bil$", recursive = TRUE)
+
 # only download the PRISM data if it can't be found in PRISM_PATH
 if (length(bilfile) == 0) {
   source("misc/dl_PRISM.R") # download .BIL files if needed
@@ -51,7 +53,7 @@ prism_frame$stProvCode <- ""
 prism_frame$notes <- ""
 prism_frame$stationID <- 1:nrow(prism_frame)
 
-# make test batch of prism point data values 
+# make test batch of prism point data values
 test_set <- prism_frame[round(runif(20000, 1, nrow(prism_frame))),]
 
 # write to file
@@ -71,7 +73,7 @@ newspsub <- subset(newsp, MoistureRegime %in% c("Xeric","Aridic","Ustic","Udic")
 legnames <- factor(paste(newspsub$MoistureRegime))
 nlegnames <- unique(levels(legnames))
 nlegcolors <- rev(viridisLite::viridis(length(nlegnames)))
-plot(sf::st_transform(newspsub, sf::st_crs(6350))$geometry, 
+plot(sf::st_transform(newspsub, sf::st_crs(6350))$geometry,
      col = nlegcolors[match(legnames, nlegnames)], pch=".", cex=5)
 plot(sf::st_transform(spData::us_states$geometry, sf::st_crs(6350)), add=T)
 legend("topright", legend = nlegnames, pch=".", fill = nlegcolors)
@@ -82,7 +84,7 @@ newspsub2 <- subset(newsp, MoistureRegime %in% c("Aridic","Xeric"))
 legnames <- factor(paste(newspsub2$RegimeSubdivision1, newspsub2$MoistureRegime))
 nlegnames <- unique(levels(legnames))
 nlegcolors <- viridisLite::viridis(length(nlegnames))
-plot(sf::st_transform(newspsub2, sf::st_crs(6350))$geometry, 
+plot(sf::st_transform(newspsub2, sf::st_crs(6350))$geometry,
      col = nlegcolors[match(legnames, nlegnames)], pch=".", cex=5)
 plot(sf::st_transform(spData::us_states$geometry, sf::st_crs(6350)), add=T)
 legend("bottomleft", legend = nlegnames, pch=".", fill = nlegcolors)

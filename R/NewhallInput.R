@@ -12,8 +12,7 @@
 #' @importFrom utils write.csv
 newhall_writeBatchTemplate <- function(pathname, stationName = "", ..., append = FALSE) {
   write.csv(.newhall_batch_template(stationName = stationName, ...),
-            file = pathname,
-            append = append)
+            file = pathname)
 }
 
 # Read batch input CSV file for Newhall 1.6.1 model
@@ -35,7 +34,7 @@ newhall_readBatchInput <- function(pathname) {
 # @export
 #
 #' @importFrom utils write.csv
-newhall_writeBatchOutput <- function(output_file, input_file = pathname, pathname = NULL,
+newhall_writeBatchOutput <- function(output_file, pathname = NULL, input_file = pathname,
                                      batch_results = newhall_batch(pathname = input_file)) {
   res <- batch_results[,"output", drop=FALSE]
   res$output <- as.character(res$output)

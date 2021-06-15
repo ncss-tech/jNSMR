@@ -4,11 +4,16 @@ test_that("newhall_batch() works", {
 
   cat("\n\n")
 
-  res1 <- newhall_batch(pathname = pathname)
+  # sample minimal batch file
+  newhall_writeBatchTemplate(tempfile())
+
+  # write output directly to tempfile
+  tf2 <- tempfile()
+  newhall_writeBatchOutput(output_file = tf2, pathname = pathname)
   # res2 <- newhall_batch(pathname = pathname, toString = FALSE)
 
   cat("\n")
 
-  expect_true(all(sapply(list(res1), inherits, 'data.frame')))
+  expect_true(inherits(read.csv(tf2), 'data.frame'))
 
 })

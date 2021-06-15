@@ -4,11 +4,9 @@
 \alias{newhall_CSVResultsExporter}
 \title{Export Newhall Results, Data and Metadata to CSV file with \emph{CSVResultsExporter}}
 \usage{
-newhall_CSVResultsExporter(dataset, results, pathname)
+newhall_CSVResultsExporter(results, pathname)
 }
 \arguments{
-\item{dataset}{\emph{NewhallDataset} \code{jobjRef}}
-
 \item{results}{\emph{NewhallResults} \code{jobjRef}}
 
 \item{pathname}{output CSV file path; default: \code{NULL}}

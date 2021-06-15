@@ -1,6 +1,7 @@
 test_that("newhall_simulation() works", {
+  library(jNSMR)
 
-  cat("\n\njNSMR v", newhall_version(), "\n\n")
+  cat("\n\njNSMR -- ", basename(.jnsm_jar_file(paste0("-", newhall_version()))), "\n\n")
 
   # direct input with NewhallDataset built from R objects
 
@@ -49,4 +50,6 @@ test_that("newhall_simulation() works", {
   )
 
   expect_equal(ndmeta$getContribFirstName(), "Josephine")
+
+  newhall_CSVResultsExporter(newhall_simulation(dataset = input_direct), tempfile())
 })

@@ -28,13 +28,7 @@ newhall_simulation <- function(
                              amplitude # double
                             ))
 
-    if (inherits(res, 'try-error')) {
-      print(rJava::.jcall(dataset, returnSig = "S", method = "toString"))
-      print(smcsawc)
-      print(soilAirOffset)
-      print(amplitude)
-      stop(res, call. = FALSE)
-    }
+    if (inherits(res, 'try-error')) stop(res, call. = FALSE)
 
     if (toString) {
       return(rJava::.jcall(res, returnSig = "S", method = "toString"))

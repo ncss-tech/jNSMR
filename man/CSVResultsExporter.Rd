@@ -4,9 +4,11 @@
 \alias{CSVResultsExporter}
 \title{Create an instance of \emph{CSVResultsExporter}}
 \usage{
-CSVResultsExporter(pathname)
+CSVResultsExporter(results, pathname)
 }
 \arguments{
+\item{results}{\emph{NewhallResults} \code{jobjRef}}
+
 \item{pathname}{a character containing pathname}
 }
 \value{
