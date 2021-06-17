@@ -3,7 +3,7 @@
 [![R-CMD-check](https://github.com/ncss-tech/jNSMR/workflows/R-CMD-check/badge.svg)](https://github.com/ncss-tech/jNSMR/actions)
 [![Codecov test
 coverage](https://codecov.io/gh/ncss-tech/jNSMR/branch/main/graph/badge.svg)](https://codecov.io/gh/ncss-tech/jNSMR?branch=main)
-[![html-docs](https://camo.githubusercontent.com/f7ba98e46ecd14313e0e8a05bec3f92ca125b8f36302a5b1679d4a949bccbe31/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f646f63732d48544d4c2d696e666f726d6174696f6e616c)](https://ncss-tech.github.io/jNSMR/)
+[![html-docs](https://camo.githubusercontent.com/f7ba98e46ecd14313e0e8a05bec3f92ca125b8f36302a5b1679d4a949bccbe31/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f646f63732d48544d4c2d696e666f726d6174696f6e616c)](https://ncss-tech.github.io/jNSMR/docs/)
 <!-- badges: end -->
 
 # jNSMR
@@ -42,7 +42,7 @@ Create a *NewhallDataset* with `xml_NewhallDataset()` or
                                    country = "US",
                                    lat = 41.24,
                                    lon = -76.92,
-                                   stationElevation = 158.0,
+                                   elev = 158.0,
                                    allPrecipsDbl = c(44.2,40.39,113.54,96.77,95.0,98.55,
                                                      66.04,13.46,54.86,6.35,17.53,56.39),
                                    allAirTempsDbl = c(-2.17,0.89,3.72,9.11,16.28,21.11,
@@ -78,14 +78,14 @@ Create a *NewhallDataset* with `xml_NewhallDataset()` or
     ##     Dry: 67
     ##     MoistDry: 88
     ##     Moist: 205
-    ##   When soil temp is above 5°C:
+    ##   When soil temp is above 5Â°C:
     ##     Dry: 48
     ##     MoistDry: 58
     ##     Moist: 118
     ## Highest number of consecutive days that the MCS is:
     ##   Moist in some parts:
     ##     Year: 293
-    ##     Temp over 8°C: 166
+    ##     Temp over 8Â°C: 166
     ##   Dry after summer solstice: 22
     ##   Moist after winter solstice: 105
 
@@ -163,7 +163,7 @@ Create a *NewhallDataset* with `xml_NewhallDataset()` or
     ##     <notes>
     ##       <note>gaps filled by interpolation of neighboring stations</note>
     ##     </notes>
-    ##     <rundate>20210605</rundate>
+    ##     <rundate>20210617</rundate>
     ##     <nsmver>1.6.1</nsmver>
     ##     <srcunitsys>english</srcunitsys>
     ##   </metadata>
@@ -324,13 +324,55 @@ directory of this package.
 
     head(res)
 
-    ##         dataset      results output
-    ## 1: <jobjRef[2]> <jobjRef[2]>       
-    ## 2: <jobjRef[2]> <jobjRef[2]>       
-    ## 3: <jobjRef[2]> <jobjRef[2]>       
-    ## 4: <jobjRef[2]> <jobjRef[2]>       
-    ## 5: <jobjRef[2]> <jobjRef[2]>       
-    ## 6: <jobjRef[2]> <jobjRef[2]>
+    ##         dataset      results output nrow NumCumulativeDaysMoist
+    ## 1: <jobjRef[2]> <jobjRef[2]>           1                    360
+    ## 2: <jobjRef[2]> <jobjRef[2]>           2                    360
+    ## 3: <jobjRef[2]> <jobjRef[2]>           3                    360
+    ## 4: <jobjRef[2]> <jobjRef[2]>           4                    360
+    ## 5: <jobjRef[2]> <jobjRef[2]>           5                    360
+    ## 6: <jobjRef[2]> <jobjRef[2]>           6                    360
+    ##    NumCumulativeDaysMoistDry NumCumulativeDaysMoistDryOver5C
+    ## 1:                         0                               0
+    ## 2:                         0                               0
+    ## 3:                         0                               0
+    ## 4:                         0                               0
+    ## 5:                         0                               0
+    ## 6:                         0                               0
+    ##    NumConsecutiveDaysMoistInSomePartsOver8C NumCumulativeDaysDry
+    ## 1:                                      205                    0
+    ## 2:                                      206                    0
+    ## 3:                                      204                    0
+    ## 4:                                      205                    0
+    ## 5:                                      193                    0
+    ## 6:                                      203                    0
+    ##    NumCumulativeDaysDryOver5C NumCumulativeDaysMoistOver5C
+    ## 1:                          0                          227
+    ## 2:                          0                          226
+    ## 3:                          0                          224
+    ## 4:                          0                          226
+    ## 5:                          0                          212
+    ## 6:                          0                          223
+    ##    NumConsecutiveDaysMoistInSomeParts TemperatureRegime MoistureRegime
+    ## 1:                                360             Mesic           Udic
+    ## 2:                                360             Mesic           Udic
+    ## 3:                                360             Mesic           Udic
+    ## 4:                                360             Mesic           Udic
+    ## 5:                                360             Mesic           Udic
+    ## 6:                                360             Mesic           Udic
+    ##    RegimeSubdivision1 RegimeSubdivision2 MoistDaysAfterWinterSolstice
+    ## 1:              Typic               Udic                          120
+    ## 2:              Typic               Udic                          120
+    ## 3:              Typic               Udic                          120
+    ## 4:              Typic               Udic                          120
+    ## 5:              Typic               Udic                          120
+    ## 6:              Typic               Udic                          120
+    ##    DryDaysAfterSummerSolstice
+    ## 1:                          0
+    ## 2:                          0
+    ## 3:                          0
+    ## 4:                          0
+    ## 5:                          0
+    ## 6:                          0
 
 ## License information
 
