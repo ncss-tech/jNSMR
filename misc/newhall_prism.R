@@ -57,10 +57,11 @@ prism_frame$stationID <- 1:nrow(prism_frame)
 test_set <- prism_frame[round(runif(20000, 1, nrow(prism_frame))),]
 
 # write to file
-write.csv(test_set, file = "misc/prism_monthly.csv")
-
+afile <- tempfile()
+write.csv(test_set, file = afile) #"misc/prism_monthly.csv")
+test_set <- read.csv(afile)#"misc/prism_monthly.csv")
 # read batch file, run simulations
-res <- jNSMR::newhall_batch(pathname = "misc/prism_monthly.csv")
+res <- jNSMR::newhall_batch(pathname = afile) #"misc/prism_monthly.csv")
 
 newsp <- sf::st_as_sf(cbind(test_set[,c('lonDD','latDD')], res), coords = c('lonDD','latDD'))
 sf::st_crs(newsp) <- sf::st_crs(4326)
