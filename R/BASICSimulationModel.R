@@ -1,4 +1,4 @@
-#' Run _BASICSimulationModel_ simulation with newhall-1.6.1.jar
+#' Run Newhall _BASICSimulationModel_ simulation
 #'
 #' @param dataset a _NewhallDataset_ `jobjRef`
 #' @param smcsawc Default: `200`

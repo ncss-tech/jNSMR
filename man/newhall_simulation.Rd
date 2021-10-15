@@ -2,7 +2,7 @@
 % Please edit documentation in R/BASICSimulationModel.R
 \name{newhall_simulation}
 \alias{newhall_simulation}
-\title{Run \emph{BASICSimulationModel} simulation with newhall-1.6.1.jar}
+\title{Run Newhall \emph{BASICSimulationModel} simulation}
 \usage{
 newhall_simulation(
   dataset,
@@ -30,5 +30,5 @@ newhall_simulation(
 \emph{NewhallResults} \code{jobjRef}
 }
 \description{
-Run \emph{BASICSimulationModel} simulation with newhall-1.6.1.jar
+Run Newhall \emph{BASICSimulationModel} simulation
 }
