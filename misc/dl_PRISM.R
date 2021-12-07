@@ -5,20 +5,26 @@
 library(prism)
 library(raster)
 
-PRISM_PATH <- "~/Geodata/PRISM"
-prism_set_dl_dir(PRISM_PATH)
-
 # download 4km or 800m data
-.download_month <- function(i, resolution = c("4km","800m"), annual = FALSE, keepZip = TRUE) {
+.download_month <- function(i, resolution = c("4km","800m"), annual = FALSE, keepZip = FALSE) {
   resolution <- match.arg(resolution, c("4km","800m"))
+  print(resolution)
   if(i == 1)
     annual = TRUE
-  get_prism_normals(mon = i, type = "ppt",
-                    resolution = resolution,
-                    annual = annual, keepZip = keepZip)
-  get_prism_normals(mon = i, type = "tmean",
-                    resolution = resolution,
-                    annual = annual, keepZip = keepZip)
+  prism::get_prism_normals(mon = i, type = "ppt",
+                           resolution = resolution,
+                           annual = annual, keepZip = keepZip)
+  prism::get_prism_normals(mon = i, type = "tmean",
+                           resolution = resolution,
+                           annual = annual, keepZip = keepZip)
   TRUE
 }
+
+PRISM_PATH <- "C:/Users/Andrew.G.Brown/Documents/Geodata/Geodata/PRISM/800m"
+dir.create(PRISM_PATH, recursive = TRUE)
+prism_set_dl_dir(PRISM_PATH)
+res <- lapply(1:12, .download_month, resolution="800m")
+
+prism::prism_get_dl_dir()
 res <- lapply(1:12, .download_month, resolution="4km")
+

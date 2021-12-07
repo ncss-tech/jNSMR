@@ -3,7 +3,7 @@
 [![R-CMD-check](https://github.com/ncss-tech/jNSMR/workflows/R-CMD-check/badge.svg)](https://github.com/ncss-tech/jNSMR/actions)
 [![Codecov test
 coverage](https://codecov.io/gh/ncss-tech/jNSMR/branch/main/graph/badge.svg)](https://codecov.io/gh/ncss-tech/jNSMR?branch=main)
-[![html-docs](https://camo.githubusercontent.com/f7ba98e46ecd14313e0e8a05bec3f92ca125b8f36302a5b1679d4a949bccbe31/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f646f63732d48544d4c2d696e666f726d6174696f6e616c)](https://ncss-tech.github.io/jNSMR/)
+[![html-docs](https://camo.githubusercontent.com/f7ba98e46ecd14313e0e8a05bec3f92ca125b8f36302a5b1679d4a949bccbe31/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f646f63732d48544d4c2d696e666f726d6174696f6e616c)](https://ncss-tech.github.io/jNSMR/docs/)
 <!-- badges: end -->
 
 # jNSMR
@@ -78,14 +78,14 @@ Create a *NewhallDataset* with `xml_NewhallDataset()` or
     ##     Dry: 67
     ##     MoistDry: 88
     ##     Moist: 205
-    ##   When soil temp is above 5Â°C:
+    ##   When soil temp is above 5°C:
     ##     Dry: 48
     ##     MoistDry: 58
     ##     Moist: 118
     ## Highest number of consecutive days that the MCS is:
     ##   Moist in some parts:
     ##     Year: 293
-    ##     Temp over 8Â°C: 166
+    ##     Temp over 8°C: 166
     ##   Dry after summer solstice: 22
     ##   Moist after winter solstice: 105
 
@@ -163,7 +163,7 @@ Create a *NewhallDataset* with `xml_NewhallDataset()` or
     ##     <notes>
     ##       <note>gaps filled by interpolation of neighboring stations</note>
     ##     </notes>
-    ##     <rundate>20210617</rundate>
+    ##     <rundate>20211207</rundate>
     ##     <nsmver>1.6.1</nsmver>
     ##     <srcunitsys>english</srcunitsys>
     ##   </metadata>
@@ -312,15 +312,15 @@ Examples of batch inputs are included in the official download. The
 batching in the {jNSMR} package is handled by R code, not Java. The main
 interface to batching is `newhall_batch()`.
 
-`newhall_batch()` takes either a `pathname` argument, or you can specify
-`.data` as a *data.frame* directly.
+`newhall_batch()` takes either a character vector of CSV batch file
+paths, a data.frame, a SpatRaster or RasterStack object as input.
 
 Selected example input files have been included in `inst/extdata`
 directory of this package.
 
     pathname <- system.file("extdata/All_PA_jNSM_Example_Batch_Metric.csv", package = "jNSMR")[1]
 
-    res <- data.table::data.table(newhall_batch(pathname = pathname, toString = FALSE, verbose = FALSE))
+    res <- data.table::data.table(newhall_batch(pathname, toString = FALSE, verbose = FALSE))
 
     head(res)
 
