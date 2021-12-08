@@ -20,7 +20,7 @@ library(raster)
   TRUE
 }
 
-PRISM_PATH <- "C:/Users/Andrew.G.Brown/Documents/Geodata/Geodata/PRISM/800m"
+PRISM_PATH <- "~/Geodata/PRISM/800m"
 dir.create(PRISM_PATH, recursive = TRUE)
 prism_set_dl_dir(PRISM_PATH)
 res <- lapply(1:12, .download_month, resolution="800m")

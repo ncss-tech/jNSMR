@@ -14,7 +14,7 @@
   if (length(x) == 0 || n == 0)
     return(rJava::.jnew("java/util/ArrayList", 0L))
 
-  if (!is.double(x)) {
+  if (!is.double(x) || !is.null(dim(x))) {
     # iteratively add() ... works for arbitrary Java classes
     arrl <- rJava::.jnew("java/util/ArrayList", n)
     for (i in (seq_along(x) - 1)) {
