@@ -1,7 +1,9 @@
 /*      */ package org.psu.newhall.sim;
 /*      */
-/*      */ import java.util.ArrayList;
 /*      */ import java.util.List;
+/*      */ import java.util.ArrayList;
+/*      */ import java.util.Arrays;
+/*      */ import java.util.stream.Collectors;
 /*      */
 /*      */
 /*      */
@@ -16,7 +18,18 @@
 /*   16 */     return runSimulation(dataset, waterHoldingCapacity, 2.5D, 0.66D);
 /*      */   }
 /*      */
-/*      */
+/*      */   
+             public static NewhallResults[] runBatch(String[] name, String[] country, double latitude[], double longitude[], char nsHemisphere[], char ewHemisphere[], double elevation[], double[][] precipitation, double[][] temperature, int[] startYear, int[] endYear, boolean[] isMetric, double[] waterholdingCapacity, double[] fc, double[] fcd) {
+                NewhallResults[] r = new NewhallResults[name.length];
+                for (int i = 0; i <= (name.length - 1); i++) {
+                  NewhallDataset d = new NewhallDataset(name[i], country[i], latitude[i], longitude[i], nsHemisphere[i], ewHemisphere[i], elevation[i], 
+                                                    Arrays.stream(precipitation[i]).boxed().collect(Collectors.toList()),
+                                                    Arrays.stream(temperature[i]).boxed().collect(Collectors.toList()), 
+                                                    startYear[i], endYear[i], isMetric[i], waterholdingCapacity[i]); 
+                  r[i] = runSimulation(d, waterholdingCapacity[i], fc[i], fcd[i]);                                   
+                }
+                return r;
+             } 
 /*      */
 /*      */
 /*      */

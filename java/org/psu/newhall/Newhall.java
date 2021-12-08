@@ -10,7 +10,7 @@
          import org.psu.newhall.util.*;
 /*    */ public class Newhall
 /*    */ {
-/*  8 */   public static String NSM_VERSION = "1.6.2";
+/*  8 */   public static String NSM_VERSION = "1.6.3";
 /*    */
 /*    */
 /*    */
