@@ -19,6 +19,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-home">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -31,18 +33,12 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">jNSMR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9006</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.9007</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-<li>
-  <a href="index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
 <li>
   <a href="reference/index.html">Reference</a>
 </li>
@@ -64,24 +60,24 @@
   <div class="contents col-md-9">
 
 
-<div id="jnsmr" class="section level1">
-<div class="page-header"><h1 class="hasAnchor">
-<a href="#jnsmr" class="anchor"></a>jNSMR</h1></div>
+<div class="section level1">
+<div class="page-header"><h1 id="jnsmr">jNSMR<a class="anchor" aria-label="anchor" href="#jnsmr"></a>
+</h1></div>
 <p>R wrapper for Java Newhall Simulation Model (jNSM) – “A Traditional Soil Climate Simulation Model”</p>
 <p>Provides methods to create input, read output, and run the routines from the legacy Java Newhall Simulation Model (jNSM).</p>
-<div id="install-jnsmr" class="section level2">
-<h2 class="hasAnchor">
-<a href="#install-jnsmr" class="anchor"></a>Install {jNSMR}</h2>
+<div class="section level2">
+<h2 id="install-jnsmr">Install {jNSMR}<a class="anchor" aria-label="anchor" href="#install-jnsmr"></a>
+</h2>
 <p>First, install the development version of the R package. This will install the latest version of the Java Newhall model JAR (in the {jNSMR} folder of your package library).</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="co"># install.packages('remotes')</span></span>
 <span id="cb1-2"><a href="#cb1-2"></a>remotes<span class="op">::</span><span class="kw">install_github</span>(<span class="st">'ncss-tech/jNSMR'</span>)</span></code></pre></div>
 </div>
-<div id="basic-functionality" class="section level2">
-<h2 class="hasAnchor">
-<a href="#basic-functionality" class="anchor"></a>Basic functionality</h2>
-<div id="run-the-basic-simulation-model" class="section level3">
-<h3 class="hasAnchor">
-<a href="#run-the-basic-simulation-model" class="anchor"></a>Run the BASIC simulation model</h3>
+<div class="section level2">
+<h2 id="basic-functionality">Basic functionality<a class="anchor" aria-label="anchor" href="#basic-functionality"></a>
+</h2>
+<div class="section level3">
+<h3 id="run-the-basic-simulation-model">Run the BASIC simulation model<a class="anchor" aria-label="anchor" href="#run-the-basic-simulation-model"></a>
+</h3>
 <p>Create a <em>NewhallDataset</em> with <code><a href="reference/NewhallDatasetFromPath.html">xml_NewhallDataset()</a></code> or <code><a href="reference/NewhallDataset.html">NewhallDataset()</a></code> and associated <em>NewhallDatasetMetadata</em> with <code><a href="reference/NewhallDatasetMetadata.html">NewhallDatasetMetadata()</a></code>.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">library</span>(jNSMR)</span>
 <span id="cb2-2"><a href="#cb2-2"></a></span>
@@ -106,28 +102,28 @@
 <span id="cb2-21"><a href="#cb2-21"></a><span class="co"># set minimal _NewhallDatasetMetadata_ for our constructed _NewhallDataset_</span></span>
 <span id="cb2-22"><a href="#cb2-22"></a>input_direct<span class="op">$</span><span class="kw">setMetadata</span>(<span class="kw">NewhallDatasetMetadata</span>(<span class="dt">stationName =</span> <span class="st">"WILLIAMSPORT"</span>))</span></code></pre></div>
 </div>
-<div id="run-single-model-from-file-or-r-object" class="section level3">
-<h3 class="hasAnchor">
-<a href="#run-single-model-from-file-or-r-object" class="anchor"></a>Run single model from file or R object</h3>
+<div class="section level3">
+<h3 id="run-single-model-from-file-or-r-object">Run single model from file or R object<a class="anchor" aria-label="anchor" href="#run-single-model-from-file-or-r-object"></a>
+</h3>
 <div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="co"># run single model (from XML file)</span></span>
 <span id="cb3-2"><a href="#cb3-2"></a>output_xml &lt;-<span class="st"> </span><span class="kw">newhall_simulation</span>(input_xml)</span>
 <span id="cb3-3"><a href="#cb3-3"></a></span>
 <span id="cb3-4"><a href="#cb3-4"></a><span class="co"># run single model (from direct input)</span></span>
 <span id="cb3-5"><a href="#cb3-5"></a>output &lt;-<span class="st"> </span><span class="kw">newhall_simulation</span>(input_direct)</span></code></pre></div>
 </div>
-<div id="graphical-user-interface-for-individual-runs-of-newhall-161jar" class="section level3">
-<h3 class="hasAnchor">
-<a href="#graphical-user-interface-for-individual-runs-of-newhall-161jar" class="anchor"></a>Graphical User Interface for individual runs of <em>newhall-1.6.1.jar</em>
+<div class="section level3">
+<h3 id="graphical-user-interface-for-individual-runs-of-newhall-161jar">Graphical User Interface for individual runs of <em>newhall-1.6.1.jar</em>
+<a class="anchor" aria-label="anchor" href="#graphical-user-interface-for-individual-runs-of-newhall-161jar"></a>
 </h3>
 <div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="co"># convenience method to open GUI with the R package</span></span>
 <span id="cb4-2"><a href="#cb4-2"></a><span class="kw">newhall_GUI</span>()</span></code></pre></div>
 </div>
-<div id="access-references-to-java-objects-containing-results" class="section level3">
-<h3 class="hasAnchor">
-<a href="#access-references-to-java-objects-containing-results" class="anchor"></a>Access references to Java objects containing results</h3>
-<div id="moisture-and-temperature-regime-statistics" class="section level4">
-<h4 class="hasAnchor">
-<a href="#moisture-and-temperature-regime-statistics" class="anchor"></a>Moisture and temperature regime statistics</h4>
+<div class="section level3">
+<h3 id="access-references-to-java-objects-containing-results">Access references to Java objects containing results<a class="anchor" aria-label="anchor" href="#access-references-to-java-objects-containing-results"></a>
+</h3>
+<div class="section level4">
+<h4 id="moisture-and-temperature-regime-statistics">Moisture and temperature regime statistics<a class="anchor" aria-label="anchor" href="#moisture-and-temperature-regime-statistics"></a>
+</h4>
 <div class="sourceCode" id="cb5"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="kw">cat</span>(output<span class="op">$</span><span class="kw">getFormattedStatistics</span>())</span>
 <span id="cb5-2"><a href="#cb5-2"></a></span>
 <span id="cb5-3"><a href="#cb5-3"></a><span class="co">## Number of Cumulative Days that the Moisture Control Section (MCS) is:</span></span>
@@ -135,20 +131,20 @@
 <span id="cb5-5"><a href="#cb5-5"></a><span class="co">##     Dry: 67</span></span>
 <span id="cb5-6"><a href="#cb5-6"></a><span class="co">##     MoistDry: 88</span></span>
 <span id="cb5-7"><a href="#cb5-7"></a><span class="co">##     Moist: 205</span></span>
-<span id="cb5-8"><a href="#cb5-8"></a><span class="co">##   When soil temp is above 5Â°C:</span></span>
+<span id="cb5-8"><a href="#cb5-8"></a><span class="co">##   When soil temp is above 5°C:</span></span>
 <span id="cb5-9"><a href="#cb5-9"></a><span class="co">##     Dry: 48</span></span>
 <span id="cb5-10"><a href="#cb5-10"></a><span class="co">##     MoistDry: 58</span></span>
 <span id="cb5-11"><a href="#cb5-11"></a><span class="co">##     Moist: 118</span></span>
 <span id="cb5-12"><a href="#cb5-12"></a><span class="co">## Highest number of consecutive days that the MCS is:</span></span>
 <span id="cb5-13"><a href="#cb5-13"></a><span class="co">##   Moist in some parts:</span></span>
 <span id="cb5-14"><a href="#cb5-14"></a><span class="co">##     Year: 293</span></span>
-<span id="cb5-15"><a href="#cb5-15"></a><span class="co">##     Temp over 8Â°C: 166</span></span>
+<span id="cb5-15"><a href="#cb5-15"></a><span class="co">##     Temp over 8°C: 166</span></span>
 <span id="cb5-16"><a href="#cb5-16"></a><span class="co">##   Dry after summer solstice: 22</span></span>
 <span id="cb5-17"><a href="#cb5-17"></a><span class="co">##   Moist after winter solstice: 105</span></span></code></pre></div>
 </div>
-<div id="moisture-calendar" class="section level4">
-<h4 class="hasAnchor">
-<a href="#moisture-calendar" class="anchor"></a>Moisture calendar</h4>
+<div class="section level4">
+<h4 id="moisture-calendar">Moisture calendar<a class="anchor" aria-label="anchor" href="#moisture-calendar"></a>
+</h4>
 <div class="sourceCode" id="cb6"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="kw">cat</span>(output<span class="op">$</span><span class="kw">getFormattedMoistureCalendar</span>())</span>
 <span id="cb6-2"><a href="#cb6-2"></a></span>
 <span id="cb6-3"><a href="#cb6-3"></a><span class="co">## 222222222222222333333333333333</span></span>
@@ -164,9 +160,9 @@
 <span id="cb6-13"><a href="#cb6-13"></a><span class="co">## 111111111111111111111111111111</span></span>
 <span id="cb6-14"><a href="#cb6-14"></a><span class="co">## 111111111111111222222222222222</span></span></code></pre></div>
 </div>
-<div id="temperature-calendar" class="section level4">
-<h4 class="hasAnchor">
-<a href="#temperature-calendar" class="anchor"></a>Temperature calendar</h4>
+<div class="section level4">
+<h4 id="temperature-calendar">Temperature calendar<a class="anchor" aria-label="anchor" href="#temperature-calendar"></a>
+</h4>
 <div class="sourceCode" id="cb7"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="kw">cat</span>(output<span class="op">$</span><span class="kw">getFormattedTemperatureCalendar</span>())</span>
 <span id="cb7-2"><a href="#cb7-2"></a></span>
 <span id="cb7-3"><a href="#cb7-3"></a><span class="co">## ------------------------------</span></span>
@@ -183,9 +179,9 @@
 <span id="cb7-14"><a href="#cb7-14"></a><span class="co">## ------------------------------</span></span></code></pre></div>
 </div>
 </div>
-<div id="support-for-newhall-xml-format-for-input-and-output" class="section level3">
-<h3 class="hasAnchor">
-<a href="#support-for-newhall-xml-format-for-input-and-output" class="anchor"></a>Support for Newhall XML format for input and output</h3>
+<div class="section level3">
+<h3 id="support-for-newhall-xml-format-for-input-and-output">Support for Newhall XML format for input and output<a class="anchor" aria-label="anchor" href="#support-for-newhall-xml-format-for-input-and-output"></a>
+</h3>
 <div class="sourceCode" id="cb8"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="co"># inspect XML result format</span></span>
 <span id="cb8-2"><a href="#cb8-2"></a><span class="kw">cat</span>(<span class="kw">newhall_XMLStringResultsExporter</span>(input_xml, output))</span>
 <span id="cb8-3"><a href="#cb8-3"></a></span>
@@ -224,7 +220,7 @@
 <span id="cb8-36"><a href="#cb8-36"></a><span class="co">##     &lt;notes&gt;</span></span>
 <span id="cb8-37"><a href="#cb8-37"></a><span class="co">##       &lt;note&gt;gaps filled by interpolation of neighboring stations&lt;/note&gt;</span></span>
 <span id="cb8-38"><a href="#cb8-38"></a><span class="co">##     &lt;/notes&gt;</span></span>
-<span id="cb8-39"><a href="#cb8-39"></a><span class="co">##     &lt;rundate&gt;20210617&lt;/rundate&gt;</span></span>
+<span id="cb8-39"><a href="#cb8-39"></a><span class="co">##     &lt;rundate&gt;20211207&lt;/rundate&gt;</span></span>
 <span id="cb8-40"><a href="#cb8-40"></a><span class="co">##     &lt;nsmver&gt;1.6.1&lt;/nsmver&gt;</span></span>
 <span id="cb8-41"><a href="#cb8-41"></a><span class="co">##     &lt;srcunitsys&gt;english&lt;/srcunitsys&gt;</span></span>
 <span id="cb8-42"><a href="#cb8-42"></a><span class="co">##   &lt;/metadata&gt;</span></span>
@@ -359,23 +355,23 @@
 <span id="cb8-171"><a href="#cb8-171"></a><span class="co">## &lt;/model&gt;</span></span>
 <span id="cb8-172"><a href="#cb8-172"></a><span class="co">## </span></span></code></pre></div>
 </div>
-<div id="xml-file-output" class="section level3">
-<h3 class="hasAnchor">
-<a href="#xml-file-output" class="anchor"></a>XML File Output</h3>
+<div class="section level3">
+<h3 id="xml-file-output">XML File Output<a class="anchor" aria-label="anchor" href="#xml-file-output"></a>
+</h3>
 <div class="sourceCode" id="cb9"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="co"># write XML results to file</span></span>
 <span id="cb9-2"><a href="#cb9-2"></a><span class="kw">newhall_XMLResultsExporter</span>(<span class="dt">dataset =</span> input_direct, </span>
 <span id="cb9-3"><a href="#cb9-3"></a>                           <span class="dt">result =</span> output, </span>
 <span id="cb9-4"><a href="#cb9-4"></a>                           <span class="dt">pathname =</span> <span class="st">"misc/WILLIAMSPORT_1930_1930_export.xml"</span>)</span></code></pre></div>
 </div>
-<div id="run-batch-sets-of-models" class="section level3">
-<h3 class="hasAnchor">
-<a href="#run-batch-sets-of-models" class="anchor"></a>Run batch sets of models</h3>
+<div class="section level3">
+<h3 id="run-batch-sets-of-models">Run batch sets of models<a class="anchor" aria-label="anchor" href="#run-batch-sets-of-models"></a>
+</h3>
 <p>The jNSM has a defined CSV (comma-separated value) batch file format. Examples of batch inputs are included in the official download. The batching in the {jNSMR} package is handled by R code, not Java. The main interface to batching is <code><a href="reference/newhall_batch.html">newhall_batch()</a></code>.</p>
-<p><code><a href="reference/newhall_batch.html">newhall_batch()</a></code> takes either a <code>pathname</code> argument, or you can specify <code>.data</code> as a <em>data.frame</em> directly.</p>
+<p><code><a href="reference/newhall_batch.html">newhall_batch()</a></code> takes either a character vector of CSV batch file paths, a data.frame, a SpatRaster or RasterStack object as input.</p>
 <p>Selected example input files have been included in <code>inst/extdata</code> directory of this package.</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>pathname &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">"extdata/All_PA_jNSM_Example_Batch_Metric.csv"</span>, <span class="dt">package =</span> <span class="st">"jNSMR"</span>)[<span class="dv">1</span>]</span>
 <span id="cb10-2"><a href="#cb10-2"></a></span>
-<span id="cb10-3"><a href="#cb10-3"></a>res &lt;-<span class="st"> </span>data.table<span class="op">::</span><span class="kw">data.table</span>(<span class="kw">newhall_batch</span>(<span class="dt">pathname =</span> pathname, <span class="dt">toString =</span> <span class="ot">FALSE</span>, <span class="dt">verbose =</span> <span class="ot">FALSE</span>))</span>
+<span id="cb10-3"><a href="#cb10-3"></a>res &lt;-<span class="st"> </span>data.table<span class="op">::</span><span class="kw">data.table</span>(<span class="kw">newhall_batch</span>(pathname, <span class="dt">toString =</span> <span class="ot">FALSE</span>, <span class="dt">verbose =</span> <span class="ot">FALSE</span>))</span>
 <span id="cb10-4"><a href="#cb10-4"></a></span>
 <span id="cb10-5"><a href="#cb10-5"></a><span class="kw">head</span>(res)</span>
 <span id="cb10-6"><a href="#cb10-6"></a></span>
@@ -430,29 +426,29 @@
 <span id="cb10-55"><a href="#cb10-55"></a><span class="co">## 6:                          0</span></span></code></pre></div>
 </div>
 </div>
-<div id="license-information" class="section level2">
-<h2 class="hasAnchor">
-<a href="#license-information" class="anchor"></a>License information</h2>
-<p><strong>This package uses version 1.6.1 (released 2016/02/10) of the jNSM (official download here: <a href="https://www.nrcs.usda.gov/wps/portal/nrcs/detail/?cid=nrcs142p2_053559" class="uri">https://www.nrcs.usda.gov/wps/portal/nrcs/detail/?cid=nrcs142p2_053559</a>)</strong>. The compiled JAR and source code are distributed in this R package under the “New” (3-Clause) BSD License. See <em>LICENSE</em> for more information.</p>
+<div class="section level2">
+<h2 id="license-information">License information<a class="anchor" aria-label="anchor" href="#license-information"></a>
+</h2>
+<p><strong>This package uses version 1.6.1 (released 2016/02/10) of the jNSM (official download here: <a href="https://www.nrcs.usda.gov/wps/portal/nrcs/detail/?cid=nrcs142p2_053559" class="external-link uri">https://www.nrcs.usda.gov/wps/portal/nrcs/detail/?cid=nrcs142p2_053559</a>)</strong>. The compiled JAR and source code are distributed in this R package under the “New” (3-Clause) BSD License. See <em>LICENSE</em> for more information.</p>
 <blockquote>
 <p>Newhall 1.6.1, Copyright (C) 2010-2011 United States Department of Agriculture - Natural Resources Conservation Service, Penn State University Center for Environmental Informatics All rights reserved.</p>
 </blockquote>
-<p>This product includes software developed by the JDOM Project (<a href="http://www.jdom.org/" class="uri">http://www.jdom.org/</a>).</p>
+<p>This product includes software developed by the JDOM Project (<a href="http://www.jdom.org/" class="external-link uri">http://www.jdom.org/</a>).</p>
 <blockquote>
 <p>JDOM 1.1, Copyright (C) 2000-2004 Jason Hunter &amp; Brett McLaughlin All rights reserved.</p>
 </blockquote>
 </div>
-<div id="system-requirements" class="section level2">
-<h2 class="hasAnchor">
-<a href="#system-requirements" class="anchor"></a>System requirements</h2>
+<div class="section level2">
+<h2 id="system-requirements">System requirements<a class="anchor" aria-label="anchor" href="#system-requirements"></a>
+</h2>
 <p>The system requirements of the extraction and installation tools (Windows .EXE archive) at the above link may not be met on your system but the core Java class files are stored in a platform-independent format (in <em>newhall-1.6.1.jar</em>) which is a core dependency in this package. Therefore, as long as you have a modern Java Runtime Environment (you probably do), you will be able to run jNSM via this package with only minimal setup.</p>
-<div id="rjava" class="section level3">
-<h3 class="hasAnchor">
-<a href="#rjava" class="anchor"></a>{rJava}</h3>
+<div class="section level3">
+<h3 id="rjava">{rJava}<a class="anchor" aria-label="anchor" href="#rjava"></a>
+</h3>
 </div>
-<div id="set-up-path-to-contain-java-for-newhall_gui" class="section level3">
-<h3 class="hasAnchor">
-<a href="#set-up-path-to-contain-java-for-newhall_gui" class="anchor"></a>Set up <code>PATH</code> to contain <code>java</code> (for <code>newhall_GUI()</code>)</h3>
+<div class="section level3">
+<h3 id="set-up-path-to-contain-java-for-newhall_gui">Set up <code>PATH</code> to contain <code>java</code> (for <code>newhall_GUI()</code>)<a class="anchor" aria-label="anchor" href="#set-up-path-to-contain-java-for-newhall_gui"></a>
+</h3>
 </div>
 </div>
 </div>
@@ -461,38 +457,50 @@
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <div class="license">
-<h2>License</h2>
+<h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
 <li>
-<a href="https://opensource.org/licenses/BSD-3-Clause">BSD_3_clause</a> + file <a href="LICENSE-text.html">LICENSE</a>
+<a href="https://opensource.org/licenses/BSD-3-Clause" class="external-link">BSD_3_clause</a> + file <a href="LICENSE-text.html">LICENSE</a>
 </li>
 </ul>
 </div>
+
+
+<div class="citation">
+<h2 data-toc-skip>Citation</h2>
+<ul class="list-unstyled">
+<li><a href="authors.html#citation">Citing jNSMR</a></li>
+</ul>
+</div>
+
 <div class="developers">
-<h2>Developers</h2>
+<h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
 <li>Andrew Brown <br><small class="roles"> Author, maintainer </small>  </li>
 </ul>
 </div>
 
-  <div class="dev-status">
-<h2>Dev status</h2>
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="https://github.com/ncss-tech/jNSMR/actions"><img src="https://github.com/ncss-tech/jNSMR/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a></li>
-<li><a href="https://codecov.io/gh/ncss-tech/jNSMR?branch=main"><img src="https://codecov.io/gh/ncss-tech/jNSMR/branch/main/graph/badge.svg" alt="Codecov test coverage"></a></li>
+<li><a href="https://github.com/ncss-tech/jNSMR/actions" class="external-link"><img src="https://github.com/ncss-tech/jNSMR/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a></li>
+<li><a href="https://codecov.io/gh/ncss-tech/jNSMR?branch=main" class="external-link"><img src="https://codecov.io/gh/ncss-tech/jNSMR/branch/main/graph/badge.svg" alt="Codecov test coverage"></a></li>
 <li><a href="https://ncss-tech.github.io/jNSMR/docs/"><img src="https://camo.githubusercontent.com/f7ba98e46ecd14313e0e8a05bec3f92ca125b8f36302a5b1679d4a949bccbe31/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f646f63732d48544d4c2d696e666f726d6174696f6e616c" alt="html-docs"></a></li>
 </ul>
 </div>
-</div>
+
+  </div>
 </div>
 
 
       <footer><div class="copyright">
-  <p>Developed by Andrew Brown.</p>
+  <p></p>
+<p>Developed by Andrew Brown.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
 </div>
 
       </footer>
@@ -500,6 +508,8 @@
 
   
 
+
+  
 
   </body>
 </html>

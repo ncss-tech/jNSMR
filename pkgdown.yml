@@ -1,8 +1,8 @@
 pandoc: 2.7.3
-pkgdown: 1.6.1
+pkgdown: 2.0.1
 pkgdown_sha: ~
 articles: {}
-last_built: 2021-10-15T05:29Z
+last_built: 2021-12-08T02:34Z
 urls:
   reference: https://ncss-tech.github.io/jNSMR/reference
   article: https://ncss-tech.github.io/jNSMR/articles

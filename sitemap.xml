@@ -1,7 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://ncss-tech.github.io/jNSMR/404.html</loc>
+  </url>
+  <url>
+    <loc>https://ncss-tech.github.io/jNSMR/LICENSE-text.html</loc>
+  </url>
+  <url>
+    <loc>https://ncss-tech.github.io/jNSMR/authors.html</loc>
+  </url>
+  <url>
     <loc>https://ncss-tech.github.io/jNSMR/index.html</loc>
+  </url>
+  <url>
+    <loc>https://ncss-tech.github.io/jNSMR/news/index.html</loc>
   </url>
   <url>
     <loc>https://ncss-tech.github.io/jNSMR/reference/BASICSimulationModel.html</loc>
@@ -29,6 +41,9 @@
   </url>
   <url>
     <loc>https://ncss-tech.github.io/jNSMR/reference/XMLStringResultsExporter.html</loc>
+  </url>
+  <url>
+    <loc>https://ncss-tech.github.io/jNSMR/reference/index.html</loc>
   </url>
   <url>
     <loc>https://ncss-tech.github.io/jNSMR/reference/jNSMR-package.html</loc>
