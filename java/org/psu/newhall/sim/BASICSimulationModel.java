@@ -19,7 +19,7 @@
 /*      */   }
 /*      */
 /*      */   
-             public static NewhallResults[] runBatch(String[] name, String[] country, double latitude[], double longitude[], char nsHemisphere[], char ewHemisphere[], double elevation[], double[][] precipitation, double[][] temperature, int[] startYear, int[] endYear, boolean[] isMetric, double[] waterholdingCapacity, double[] fc, double[] fcd) {
+             public static NewhallBatchResults runBatch(String[] name, String[] country, double latitude[], double longitude[], char nsHemisphere[], char ewHemisphere[], double elevation[], double[][] precipitation, double[][] temperature, int[] startYear, int[] endYear, boolean[] isMetric, double[] waterholdingCapacity, double[] fc, double[] fcd) {
                 NewhallResults[] r = new NewhallResults[name.length];
                 for (int i = 0; i <= (name.length - 1); i++) {
                   NewhallDataset d = new NewhallDataset(name[i], country[i], latitude[i], longitude[i], nsHemisphere[i], ewHemisphere[i], elevation[i], 
@@ -28,7 +28,7 @@
                                                     startYear[i], endYear[i], isMetric[i], waterholdingCapacity[i]); 
                   r[i] = runSimulation(d, waterholdingCapacity[i], fc[i], fcd[i]);                                   
                 }
-                return r;
+                return new NewhallBatchResults(r);
              } 
 /*      */
 /*      */

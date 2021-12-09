@@ -30,8 +30,15 @@ newhall_version <- function() {
   # allow an option to add additional characters to jar file name (custom jar file)
   jas <- getOption("jNSMR.JAR_SUFFIX", default = "-1.6.1")
 
+  jnf <- .jnsm_jar_file(suffix = jas)
+  
+  if (interactive()) {
+    cat(paste0("jNSMR (", packageVersion("jNSMR"), ") -- R interface to the classic Java Newhall Simulation Model",
+               "\n A traditional soil climate simulation model'. JARFILE:  ", basename(jnf)))
+  }
+  
   # newhall JAR setup: add to class path
-  rJava::.jaddClassPath(.jnsm_jar_file(suffix = jas))
+  rJava::.jaddClassPath(jnf)
 }
 
 #' @importFrom rJava .jfield .jnew
