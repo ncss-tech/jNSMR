@@ -32,13 +32,13 @@ newhall_version <- function() {
 
   jnf <- .jnsm_jar_file(suffix = jas)
   
-  if (interactive()) {
-    cat(paste0("jNSMR (", packageVersion("jNSMR"), ") -- R interface to the classic Java Newhall Simulation Model",
-               "\n A traditional soil climate simulation model'. JARFILE:  ", basename(jnf)))
-  }
-  
   # newhall JAR setup: add to class path
   rJava::.jaddClassPath(jnf)
+  
+  if (interactive()) {
+cat(paste0("jNSMR (", packageVersion("jNSMR"), ") -- R interface to the classic Newhall Simulation Model\nAdded JAR file (", basename(jnf), ") to Java class path."))
+  }
+  
 }
 
 #' @importFrom rJava .jfield .jnew
