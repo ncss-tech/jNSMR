@@ -28,7 +28,7 @@ newhall_version <- function() {
   # rJava::.jpackage(pkgname, lib.loc = libname)
 
   # allow an option to add additional characters to jar file name (custom jar file)
-  jas <- getOption("jNSMR.JAR_SUFFIX", default = "-1.6.1")
+  jas <- getOption("jNSMR.JAR_SUFFIX", default = "")
 
   jnf <- .jnsm_jar_file(suffix = jas)
   

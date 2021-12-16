@@ -88,26 +88,26 @@ public class NewhallBatchResults {
       this.summerWaterBalance[i] = nr[i].getSummerWaterBalance();
       
       // unpacking lists -> matrices
-      List<Double> mpe = nr[i].getMeanPotentialEvapotranspiration();
+      ///List<Double> mpe = nr[i].getMeanPotentialEvapotranspiration();
       double[] pet = new double[12];
-      for (int j = 0; j < 12; j++) {
-        pet[j] = mpe.get(j);
-      }
+      //for (int j = 0; j < 12; j++) {
+      //  pet[j] = mpe.get(j);
+      //}
       this.meanPotentialEvapotranspiration[i] = pet;
       
       // calendars (12 30-day months stored as int[360])      
-      ArrayList<Character> tc = nr[i].getTemperatureCalendar();
+      //ArrayList<Character> tc = nr[i].getTemperatureCalendar();
       int[] tcal = new int[360];
-      for (int j = 0; j < 360; j++) {
-        tcal[j] = Character.getNumericValue(tc.get(j));
-      }
+      //for (int j = 0; j < 360; j++) {
+      //  tcal[j] = Character.getNumericValue(tc.get(j));
+      //}
       this.temperatureCalendar[i] = tcal;
       
-      ArrayList<Integer> mc = nr[i].getMoistureCalendar();
+      //ArrayList<Integer> mc = nr[i].getMoistureCalendar();
       int[] mcal = new int[360];
-      for (int j = 0; j < 360; j++) {
-        mcal[j] = mc.get(j);
-      }
+      //for (int j = 0; j < 360; j++) {
+      //  mcal[j] = mc.get(j);
+      //}
       this.moistureCalendar[i] = mcal;
     }
   }

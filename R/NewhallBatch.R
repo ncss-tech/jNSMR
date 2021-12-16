@@ -218,24 +218,41 @@ batch2 <- function(.data,
   
   # convert inches to _millimeters_
   .doUnitsLength <- function(x) if (unitSystem == "in") return(x * 25.4) else x
-  
-  res <- x$runBatch(
-    rJava::.jarray(as.character(.data$stationID)),
-    rJava::.jarray(as.character(.data$stationName)),
+  # 
+  # res <- x$runBatch(
+  #   rJava::.jarray(as.character(.data$stationID)),
+  #   rJava::.jarray(as.character(.data$stationName)),
+  #   rJava::.jarray(as.double(.data$latDD)),
+  #   rJava::.jarray(as.double(.data$lonDD)),
+  #   rJava::.jarray(rJava::.jchar(rep(rJava::.jchar(strtoi(charToRaw('N'), 16L)), nrow(.data)))),
+  #   rJava::.jarray(rJava::.jchar(rep(rJava::.jchar(strtoi(charToRaw('W'), 16L)), nrow(.data)))),
+  #   # rJava::.jarray(rJava::.jchar(c(rJava::.jchar(strtoi(charToRaw('N'), 16L)), rJava::.jchar(strtoi(charToRaw('S'), 16L))))[as.integer(.data$latDD < 0) + 1]),
+  #   # rJava::.jarray(rJava::.jchar(c(rJava::.jchar(strtoi(charToRaw('E'), 16L)), rJava::.jchar(strtoi(charToRaw('W'), 16L))))[as.integer(.data$latDD > 0) + 1]),
+  #   rJava::.jarray(as.double(.data$elev)),
+  #   rJava::.jarray(do.call('rbind', lapply(1:nrow(.data), 
+  #                                          function(i) as.double(.data[i,][, grep("^p[A-Z][a-z]{2}$", colnames(.data))]))), dispatch = TRUE),
+  #   rJava::.jarray(do.call('rbind', lapply(1:nrow(.data), 
+  #                                          function(i) as.double(.data[i,][, grep("t[A-Z][a-z]{2}$", colnames(.data))]))), dispatch = TRUE),
+  #   rJava::.jarray(as.integer(.data$pdStartYr)),
+  #   rJava::.jarray(as.integer(.data$pdEndYr)),
+  #   rJava::.jarray(rep(checkargs, nrow(.data))),
+  #   rJava::.jarray(as.double(.data$awc)),
+  #   rJava::.jarray(rep(soilAirOffset, nrow(.data))),
+  #   rJava::.jarray(rep(amplitude, nrow(.data)))
+  # )
+  res <- rJava::.jcall(x, "Lorg/psu/newhall/sim/NewhallBatchResults;", "runBatch2",
+  # res <- x$runBatch2(
+    rJava::.jarray(do.call('rbind', lapply(1:nrow(.data), 
+                                           function(i) c(0.0, as.double(.data[i,][, grep("t[A-Z][a-z]{2}$", colnames(.data))])))), dispatch = TRUE),
+    rJava::.jarray(do.call('rbind', lapply(1:nrow(.data), 
+                                           function(i) c(0.0, as.double(.data[i,][, grep("^p[A-Z][a-z]{2}$", colnames(.data))])))), dispatch = TRUE),
     rJava::.jarray(as.double(.data$latDD)),
     rJava::.jarray(as.double(.data$lonDD)),
     rJava::.jarray(rJava::.jchar(rep(rJava::.jchar(strtoi(charToRaw('N'), 16L)), nrow(.data)))),
-    rJava::.jarray(rJava::.jchar(rep(rJava::.jchar(strtoi(charToRaw('W'), 16L)), nrow(.data)))),
+    rJava::.jarray(as.double(.data$elev)),
     # rJava::.jarray(rJava::.jchar(c(rJava::.jchar(strtoi(charToRaw('N'), 16L)), rJava::.jchar(strtoi(charToRaw('S'), 16L))))[as.integer(.data$latDD < 0) + 1]),
     # rJava::.jarray(rJava::.jchar(c(rJava::.jchar(strtoi(charToRaw('E'), 16L)), rJava::.jchar(strtoi(charToRaw('W'), 16L))))[as.integer(.data$latDD > 0) + 1]),
-    rJava::.jarray(as.double(.data$elev)),
-    rJava::.jarray(do.call('rbind', lapply(1:nrow(.data), 
-                                           function(i) as.double(.data[i,][, grep("^p[A-Z][a-z]{2}$", colnames(.data))]))), dispatch = TRUE),
-    rJava::.jarray(do.call('rbind', lapply(1:nrow(.data), 
-                                           function(i) as.double(.data[i,][, grep("t[A-Z][a-z]{2}$", colnames(.data))]))), dispatch = TRUE),
-    rJava::.jarray(as.integer(.data$pdStartYr)),
-    rJava::.jarray(as.integer(.data$pdEndYr)),
-    rJava::.jarray(rep(checkargs, nrow(.data))),
+    rJava::.jarray(rep(unitSystem == "cm", nrow(.data))),
     rJava::.jarray(as.double(.data$awc)),
     rJava::.jarray(rep(soilAirOffset, nrow(.data))),
     rJava::.jarray(rep(amplitude, nrow(.data)))
