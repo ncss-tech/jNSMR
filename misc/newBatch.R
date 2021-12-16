@@ -1,6 +1,7 @@
 options("jNSMR.JAR_SUFFIX"="-1.6.3")
 library(jNSMR)
 
+x <- BASICSimulationModel()
 
 res <- x$runBatch(
   rJava::.jarray(c("a", "b", "c")),
