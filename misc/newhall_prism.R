@@ -69,7 +69,10 @@ x$stationID <-1:ncell(x)
 
 # S3 newhall_batch.SpatRaster method
 # system.time(res <- jNSMR::newhall_batch(x, nrows = 20, cores = 2))
-system.time(res <- jNSMR::newhall_batch(x, nrows = 20))
+d <- as.data.frame(x)
+system.time(res <- jNSMR::newhall_batch(d))
+
+(res2 <- batch2(d)) |> system.time()
 
 # inspect result
 bb <- sf::st_as_sf(as(raster::extent(raster::raster(res)), 'SpatialPolygons'))
