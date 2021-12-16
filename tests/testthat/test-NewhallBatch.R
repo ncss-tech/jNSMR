@@ -1,22 +1,27 @@
 test_that("newhall_batch() works", {
 
   pathname <- system.file("extdata/All_PA_jNSM_Example_Batch_Metric.csv", package = "jNSMR")[1]
-
+  .data <- read.csv(pathname)
   cat("\n\n")
 
+  res2 <- newhall_batch(.data = .data, toString = FALSE)
+  
+  res2 <- newhall_batch(.data = .data, toString = FALSE)
+  
+  expect_true(inherits(res2, 'data.frame'))
+  
   # sample minimal batch file
   newhall_writeBatchTemplate(tempfile())
 
-  # write output directly to tempfile
-  tf2 <- tempfile()
-  newhall_writeBatchOutput(output_file = tf2, pathname = pathname)
-  # res2 <- newhall_batch(pathname = pathname, toString = FALSE)
-
-  cat("\n")
-
-  expect_true(inherits(read.csv(tf2), 'data.frame'))
-
+  if (newhall_version() >= "1.6.3") {
+    # newhall_writeBatchOutput(output_file = tempfile(), pathname = pathname)
+    res3 <- batch2(.data = .data)
+      
+    expect_true(all(res2$TemperatureRegime == res3$temperatureRegime))
+    expect_true(all(res2$MoistureRegime == res3$moistureRegime))
+  }
 })
+
 
 test_that("newhall_batch() raster interfaces", {
   pathname <- system.file("extdata/All_PA_jNSM_Example_Batch_Metric.csv", package = "jNSMR")[1]
@@ -25,7 +30,7 @@ test_that("newhall_batch() raster interfaces", {
                              "tFeb", "tMar", "tApr", "tMay", "tJun", "tJul", "tAug", "tSep", 
                              "tOct", "tNov", "tDec", "pJan", "pFeb", "pMar", "pApr", "pMay", 
                              "pJun", "pJul", "pAug", "pSep", "pOct", "pNov", "pDec"))
-  r <- terra::rast(lapply(x2, function(a) terra::rast(as.data.frame(a))))
+  r <- terra::rast(lapply(x2, function(a) terra::rast(matrix(a, 3, 4), crs="")))
   
   # PRISM info
   r$stationName <- 1:(terra::ncell(r))

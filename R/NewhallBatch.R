@@ -16,18 +16,53 @@
 #' @rdname newhall_batch
 #' @export
 newhall_batch.default <- function(.data = NULL,
-                          pathname = NULL,
-                          unitSystem = "metric",
-                          soilAirOffset = ifelse(unitSystem %in% c("in","english"), 4.5, 2.5),
-                          amplitude = 0.66,
-                          verbose = TRUE,
-                          toString = TRUE,
-                          checkargs = TRUE, 
-                          cores = 1,
-                          file = paste0(tempfile(),".grd"),
-                          nrows = nrow(.data),
-                          overwrite = TRUE) {
+                                  pathname = NULL,
+                                  unitSystem = "metric",
+                                  soilAirOffset = ifelse(unitSystem %in% c("in","english"), 4.5, 2.5),
+                                  amplitude = 0.66,
+                                  verbose = TRUE,
+                                  toString = TRUE,
+                                  checkargs = TRUE, 
+                                  cores = NULL,
+                                  file = NULL,
+                                  nrows = NULL,
+                                  overwrite = NULL) {
+  
+  # if newer JAR is available, use the fastest batch method
+  if (newhall_version() >= "1.6.3") {
+    batch2(
+      .data,
+      unitSystem = unitSystem,
+      soilAirOffset = soilAirOffset,
+      amplitude = amplitude,
+      verbose = verbose,
+      toString = toString,
+      checkargs = checkargs
+    )
+  } else {
+    # v1.6.1
+    batch1(
+      .data = .data,
+      pathname = pathname,
+      unitSystem = unitSystem,
+      soilAirOffset = soilAirOffset,
+      amplitude = amplitude,
+      verbose = verbose,
+      toString = toString,
+      checkargs = checkargs
+    )
+  }
+}
 
+batch1 <- function(.data = NULL,
+                   pathname = NULL,
+                   unitSystem = "metric",
+                   soilAirOffset = ifelse(unitSystem %in% c("in","english"), 4.5, 2.5),
+                   amplitude = 0.66,
+                   verbose = TRUE,
+                   toString = TRUE,
+                   checkargs = TRUE) {
+  t1 <- Sys.time()
    # for NSE in data.table / R CMD check
   .id <- NULL; allAirTempsDbl <- NULL; allPrecipsDbl <- NULL; awc <- NULL; cntryCode <- NULL; dataset <- NULL; elev <- NULL; latDD <- NULL; lonDD <- NULL; pApr <- NULL; pAug <- NULL; pDec <- NULL; pFeb <- NULL; pJan <- NULL; pJul <- NULL; pJun <- NULL; pMar <- NULL; pMay <- NULL; pNov <- NULL; pOct <- NULL; pSep <- NULL; pdEndYr <- NULL; pdStartYr <- NULL; results <- NULL; stationName <- NULL; tApr <- NULL; tAug <- NULL; tDec <- NULL; tFeb <- NULL; tJan <- NULL; tJul <- NULL; tJun <- NULL; tMar <- NULL; tMay <- NULL; tNov <- NULL; tOct<- NULL; tSep <- NULL
 
@@ -73,7 +108,6 @@ newhall_batch.default <- function(.data = NULL,
                                        by = .id],
                            on = ".id"]
 
-  t1 <- Sys.time()
   res <- batchframe[, list(awc = awc,
                            dataset = list(NewhallDataset(stationName = as.character(stationName), # String
                                                          country = as.character(cntryCode), # String
@@ -139,6 +173,110 @@ newhall_batch.default <- function(.data = NULL,
 
   res$.id <- NULL
   as.data.frame(res)
+}
+
+# data.frame -> data.frame
+batch2 <- function(.data, 
+                   unitSystem = "metric",
+                   soilAirOffset = ifelse(unitSystem %in% c("in","english"), 4.5, 2.5),
+                   amplitude = 0.66,
+                   verbose = TRUE,
+                   toString = TRUE,
+                   checkargs = TRUE) {
+  
+  t1 <- Sys.time()
+  x <- BASICSimulationModel()
+  
+  unitSystem <- match.arg(tolower(unitSystem), 
+                          choices =  c("metric","mm","cm","in","english"))
+  
+  if (unitSystem %in% c("metric","mm")) {
+    # "cm" is the internal convention in the NewhallDatasetMetadata for _millimeters_ of rainfall, degrees Celsius
+    unitSystem <- "cm"
+  } else if (unitSystem == "english") {
+    # "in" is the internal convention in the NewhallDatasetMetadata for inches of rainfall, degrees Fahrenheit
+    unitSystem <- "in"
+  }
+  
+  # if .data not specified (NULL), pathname required
+  if (is.null(.data) && !is.null(pathname)) {
+    .data <- pathname
+  }
+  
+  # minimum dataset includes all of the codes specified in colnames of batch file template
+  mincols <- !(.colnamesNewhallBatch() %in% colnames(.data))
+  
+  if (sum(mincols) > 0) {
+    stop(sprintf(
+      "columns %s are required in the Newhall batch CSV input format",
+      paste0(.colnamesNewhallBatch()[mincols], collapse = ", ")
+    ), call. = FALSE)
+  }
+  
+  # convert deg F to deg C
+  .doUnitsTemp <- function(x) if (unitSystem == "in") return((x - 32) * 5 / 9) else x
+  
+  # convert inches to _millimeters_
+  .doUnitsLength <- function(x) if (unitSystem == "in") return(x * 25.4) else x
+  
+  res <- x$runBatch(
+    rJava::.jarray(as.character(.data$stationID)),
+    rJava::.jarray(as.character(.data$stationName)),
+    rJava::.jarray(as.double(.data$latDD)),
+    rJava::.jarray(as.double(.data$lonDD)),
+    rJava::.jarray(rJava::.jchar(rep(rJava::.jchar(strtoi(charToRaw('N'), 16L)), nrow(.data)))),
+    rJava::.jarray(rJava::.jchar(rep(rJava::.jchar(strtoi(charToRaw('W'), 16L)), nrow(.data)))),
+    # rJava::.jarray(rJava::.jchar(c(rJava::.jchar(strtoi(charToRaw('N'), 16L)), rJava::.jchar(strtoi(charToRaw('S'), 16L))))[as.integer(.data$latDD < 0) + 1]),
+    # rJava::.jarray(rJava::.jchar(c(rJava::.jchar(strtoi(charToRaw('E'), 16L)), rJava::.jchar(strtoi(charToRaw('W'), 16L))))[as.integer(.data$latDD > 0) + 1]),
+    rJava::.jarray(as.double(.data$elev)),
+    rJava::.jarray(do.call('rbind', lapply(1:nrow(.data), 
+                                           function(i) as.double(.data[i,][, grep("^p[A-Z][a-z]{2}$", colnames(.data))]))), dispatch = TRUE),
+    rJava::.jarray(do.call('rbind', lapply(1:nrow(.data), 
+                                           function(i) as.double(.data[i,][, grep("t[A-Z][a-z]{2}$", colnames(.data))]))), dispatch = TRUE),
+    rJava::.jarray(as.integer(.data$pdStartYr)),
+    rJava::.jarray(as.integer(.data$pdEndYr)),
+    rJava::.jarray(rep(checkargs, nrow(.data))),
+    rJava::.jarray(as.double(.data$awc)),
+    rJava::.jarray(rep(soilAirOffset, nrow(.data))),
+    rJava::.jarray(rep(amplitude, nrow(.data)))
+  )
+  
+  b <- rJava::.jcast(res, "Lorg/psu/newhall/sim/NewhallBatchResults")
+  
+  # we can store the arrays of values as public fields in this new class designed to do the iteration and simplification of the data
+  fields <- c(
+    "annualRainfall",
+    "waterHoldingCapacity",
+    "annualWaterBalance",
+    "summerWaterBalance",
+    "dryDaysAfterSummerSolstice",
+    "moistDaysAfterWinterSolstice",
+    "numCumulativeDaysDry",
+    "numCumulativeDaysMoistDry",
+    "numCumulativeDaysMoist",
+    "numCumulativeDaysDryOver5C",
+    "numCumulativeDaysMoistDryOver5C",
+    "numCumulativeDaysMoistOver5C",
+    "numConsecutiveDaysMoistInSomeParts",
+    "numConsecutiveDaysMoistInSomePartsOver8C",
+    "temperatureRegime",
+    "moistureRegime",
+    "regimeSubdivision1",
+    "regimeSubdivision2"
+  )
+  fieldsmatrix <- c("meanPotentialEvapotranspiration","temperatureCalendar", "moistureCalendar")
+  
+  # convert to data frame
+  res <- as.data.frame(sapply(fields, function(n) rJava::.jfield(b, name = n)))
+  
+  if (verbose) {
+    deltat <- signif(difftime(Sys.time(), t1, units = "auto"), digits = 2)
+    message(sprintf(
+      "newhall_batch: ran n=%s simulations in %s %s",
+      nrow(res), deltat, attr(deltat, 'units')
+    ))
+  }
+  res
 }
 
 #' @export

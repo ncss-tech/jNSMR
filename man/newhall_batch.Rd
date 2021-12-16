@@ -17,10 +17,10 @@
   verbose = TRUE,
   toString = TRUE,
   checkargs = TRUE,
-  cores = 1,
-  file = paste0(tempfile(), ".grd"),
-  nrows = nrow(.data),
-  overwrite = TRUE
+  cores = NULL,
+  file = NULL,
+  nrows = NULL,
+  overwrite = NULL
 )
 
 \method{newhall_batch}{character}(
