@@ -45,7 +45,9 @@ prism_rast$lonDD <- cx[,1]
 prism_rast$latDD <- cx[,2]
 
 # crop for example
-bdy <- soilDB::fetchSDA_spatial(c("CA067","CA620","CA628", "CA630", "CA649", "CA654", "CA651"), "areasymbol", geom.src = "sapolygon")
+bdy <- soilDB::fetchSDA_spatial(c("CA067", "CA620", "CA628",
+                                  "CA630", "CA649", "CA654", 
+                                  "CA651"), "areasymbol", geom.src = "sapolygon")
                                 #c("CA067","CA620","CA628", "CA630", "CA649", "CA654", "CA651")
 x <- terra::crop(prism_rast, terra::vect(bdy))
 
@@ -69,20 +71,30 @@ x$stationID <-1:ncell(x)
 
 # S3 newhall_batch.SpatRaster method
 # system.time(res <- jNSMR::newhall_batch(x, nrows = 20, cores = 2))
-d <- as.data.frame(x)
-system.time(res <- jNSMR::newhall_batch(d))
+# d <- as.data.frame(x)
+# system.time(res <- jNSMR::newhall_batch(d))
+system.time(res <- jNSMR::newhall_batch(x))
 
-(res2 <- batch2(d)) |> system.time()
+# # plot(prism_rast)
+# plot(res$moistureRegime)
 
 # inspect result
-bb <- sf::st_as_sf(as(raster::extent(raster::raster(res)), 'SpatialPolygons'))
-sf::st_crs(bb) <- 4326
+ex <- terra::ext(res)
+bb <- sf::st_as_sf(wk::rct(ex$xmin, ex$ymin, ex$xmax, ex$ymax, crs = terra::crs(res)))
 sapoly <- soilDB::SDA_spatialQuery(bb, what = 'sapolygon')
-plot(res$NumCumulativeDaysDryOver5C, main = "# Cumulative Days Dry over 5degC\nw/ SAPOLYGON geometry")
+
+plot(res$numCumulativeDaysDryOver5C, 
+     main = "# Cumulative Days Dry over 5degC\nw/ SAPOLYGON geometry")
 plot(sf::st_geometry(sf::st_cast(bb, 'MULTILINESTRING')), add = TRUE, lwd = 2, col = "RED")
 plot(sf::st_geometry(sapoly), add = TRUE)
 
-# compare areasymbol-summaries of STR/SMR with distribution of classes
+plot(res$moistureRegime, 
+     main = "Moisture Regime \nw/ SAPOLYGON geometry")
+plot(sf::st_geometry(sf::st_cast(bb, 'MULTILINESTRING')), add = TRUE, lwd = 2, col = "RED")
+plot(sf::st_geometry(sapoly), add = TRUE)
+
+
+ # compare areasymbol-summaries of STR/SMR with distribution of classes
 res2 <- soilDB::SDA_query(sprintf( 
 "SELECT areasymbol, taxtempregime, SUM(comppct_r*muacres)/100 AS acres FROM legend
    INNER JOIN mapunit ON mapunit.lkey = legend.lkey
@@ -97,33 +109,41 @@ dstr <- dplyr::group_by(res2, areasymbol) |>
   dplyr::slice(1)
 sapoly2 <- dplyr::left_join(sapoly, dstr)
 
-plot(res$NumCumulativeDaysDryOver5C,
+plot(res$numCumulativeDaysMoistDryOver5C,
      main = "# Cumulative Days MoistDryOver5C\nw/ SAPOLYGON geometry")
 plot(sf::st_geometry(sapoly2), add=TRUE)
 plot(sapoly2['taxtempregime'])
 
-# data.frame interface
-prism_frame <- as.data.frame(terra::as.points(prism_rast))
-
 # PRISM info
-prism_frame$stationName <- 1:nrow(prism_frame)
-prism_frame$awc <- 200
-prism_frame$maatmast <- 1.2
-prism_frame$pdType <- "Normal"
-prism_frame$pdStartYr <- 1981
-prism_frame$pdEndYr <- 2010
-prism_frame$cntryCode <- "US"
+prism_rast$stationName <- 1:ncell(prism_rast)
+prism_rast$awc <- 200
+prism_rast$maatmast <- 1.2
+prism_rast$pdType <- "Normal"
+prism_rast$pdStartYr <- 1981
+prism_rast$pdEndYr <- 2010
+prism_rast$cntryCode <- "US"
 
 # boilerplate minimum metadata -- these are not used by the algorithm
-prism_frame$netType <- ""
-prism_frame$elev <- -9999
-prism_frame$stProvCode <- ""
-prism_frame$notes <- ""
-prism_frame$stationID <- 1:nrow(prism_frame)
+prism_rast$netType <- ""
+prism_rast$elev <- -9999
+prism_rast$stProvCode <- ""
+prism_rast$notes <- ""
+prism_rast$stationID <- 1:ncell(prism_rast)
+
+# data.frame interface
+# prism_frame <- as.data.frame(terra::as.points(prism_rast))
 
 # make test batch of prism point data values
-test_set <- prism_frame[round(runif(20000, 1, nrow(prism_frame))),]
+# test_set <- prism_frame[round(runif(20000, 1, nrow(prism_frame))),]
 
+# try this
+terra::writeRaster(prism_rast, "prism_in.tif", overwrite=TRUE)
+resbig <- jNSMR::newhall_batch(terra::rast("prism_in.tif"), nrows = 15)
+terra::writeRaster(resbig,  "newhall_results_20211217.tif", overwrite=TRUE)
+
+plot(resbig)
+
+system.time(res <- jNSMR::newhall_batch(x))
 # write to file
 afile <- tempfile()
 write.csv(test_set, file = afile) #"misc/prism_monthly.csv")
@@ -131,27 +151,27 @@ test_set <- read.csv(afile)#"misc/prism_monthly.csv")
 
 # read batch file(s), run simulations. 
 #  using newhall_batch.character S3 wrapper for vector of batch file paths
-system.time({res <- jNSMR::newhall_batch(afile)}) #"misc/prism_monthly.csv")
+system.time({res <- jNSMR::newhall_batch(test_set)}) #"misc/prism_monthly.csv")
 
 newsp <- sf::st_as_sf(cbind(test_set[,c('lonDD','latDD')], res), coords = c('lonDD','latDD'))
 sf::st_crs(newsp) <- sf::st_crs(4326)
-plot(newsp$geometry, col=factor(newsp$TemperatureRegime))
-plot(newsp$geometry, col=factor(newsp$MoistureRegime))
-plot(newsp$geometry, col=factor(newsp$RegimeSubdivision1))
-plot(newsp$geometry, col=factor(newsp$RegimeSubdivision2))
-newspsub <- subset(newsp, MoistureRegime %in% c("Xeric","Aridic","Ustic","Udic"))
-legnames <- factor(paste(newspsub$MoistureRegime))
+plot(newsp$geometry, col=factor(newsp$temperatureRegime))
+plot(newsp$geometry, col=factor(newsp$moistureRegime))
+plot(newsp$geometry, col=factor(newsp$regimeSubdivision1))
+plot(newsp$geometry, col=factor(newsp$regimeSubdivision2))
+newspsub <- subset(newsp, moistureRegime %in% c("Xeric","Aridic","Ustic","Udic"))
+legnames <- factor(paste(newspsub$moistureRegime))
 nlegnames <- unique(levels(legnames))
 nlegcolors <- rev(viridisLite::viridis(length(nlegnames)))
 plot(sf::st_transform(newspsub, sf::st_crs(5070))$geometry,
-     col = nlegcolors[match(legnames, nlegnames)], pch=".", cex=5)
+     col = nlegcolors[match(legnames, nlegnames)], pch=".", cex=2)
 plot(sf::st_transform(spData::us_states$geometry, sf::st_crs(5070)), add = TRUE)
 legend("topright", legend = nlegnames, pch=".", fill = nlegcolors)
 
-table(newspsub$RegimeSubdivision1)
+table(newspsub$regimeSubdivision1)
 
-newspsub2 <- subset(newsp, MoistureRegime %in% c("Aridic","Xeric","Ustic"))
-legnames <- factor(paste(newspsub2$RegimeSubdivision1, newspsub2$MoistureRegime))
+newspsub2 <- subset(newsp, !moistureRegime %in% c("Udic","Perudic","Undefined"))
+legnames <- factor(paste(newspsub2$regimeSubdivision1, newspsub2$moistureRegime))
 nlegnames <- unique(levels(legnames))
 nlegcolors <- viridisLite::viridis(length(nlegnames))
 plot(sf::st_transform(newspsub2, sf::st_crs(5070))$geometry,
@@ -166,4 +186,6 @@ plot(subset(mlra, LRRSYM == 'C')$geometry)
 plot(sf::st_transform(newspsub2, sf::st_crs(5070))$geometry,
      col = nlegcolors[match(legnames, nlegnames)], pch = ".", cex = 5, add=TRUE)
 legend("bottomleft", legend = nlegnames, pch=".", fill = nlegcolors)
+
+x <- subset(newsp, moistureRegime == "Aridic"))
 
