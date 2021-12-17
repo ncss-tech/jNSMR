@@ -160,6 +160,27 @@ batch1 <- function(.data = NULL,
       DryDaysAfterSummerSolstice = rJava::.jcall(x, 'I', "getDryDaysAfterSummerSolstice")
     )
   }
+  
+  fields <- c(
+    "annualRainfall",
+    "waterHoldingCapacity",
+    "annualWaterBalance",
+    "summerWaterBalance",
+    "dryDaysAfterSummerSolstice",
+    "moistDaysAfterWinterSolstice",
+    "numCumulativeDaysDry",
+    "numCumulativeDaysMoistDry",
+    "numCumulativeDaysMoist",
+    "numCumulativeDaysDryOver5C",
+    "numCumulativeDaysMoistDryOver5C",
+    "numCumulativeDaysMoistOver5C",
+    "numConsecutiveDaysMoistInSomeParts",
+    "numConsecutiveDaysMoistInSomePartsOver8C",
+    "temperatureRegime",
+    "moistureRegime",
+    "regimeSubdivision1",
+    "regimeSubdivision2"
+  )
 
   res <- cbind(res, res[, .format_results(results[[1]]), by = list(1:nrow(res))])
 
@@ -172,7 +193,7 @@ batch1 <- function(.data = NULL,
   }
 
   res$.id <- NULL
-  type.convert(as.data.frame(res), as.is = TRUE)
+  as.data.frame(res)
 }
 
 # data.frame -> data.frame
@@ -350,6 +371,27 @@ newhall_batch.character <- function(.data,
   
 }
 
+.setCats <- function(x) {
+  
+  # generic factor levels (does not work with chunked processing)
+  # # handle character results w/ standard factor levels
+
+  
+  # explicitly set factors (so each chunk uses same lookup table)
+  x$temperatureRegime  <- as.numeric(factor(x$temperatureRegime, levels = c("Pergelic", "Cryic", "Frigid", "Mesic", "Isomesic", 
+                                                                            "Thermic", "Isothermic", "Hyperthermic", "Isohyperthermic")))
+  x$moistureRegime     <- as.numeric(factor(x$moistureRegime, levels = c("Aridic", "Ustic", "Xeric", "Udic", "Perudic", "Undefined")))
+  x$regimeSubdivision1 <- as.numeric(factor(x$regimeSubdivision1, levels = c("Typic", "Weak", "Wet", "Dry", "Extreme", " ", 
+                                                                             "Xeric", "Udic", "Aridic")))
+  x$regimeSubdivision2 <- as.numeric(factor(x$regimeSubdivision2, levels = c("Aridic", "Udic", "Tempustic", 
+                                                                             "Xeric", "Tempudic", "Undefined",  
+                                                                             " ", "Tropustic", "Tropudic")))
+  
+  # convert anything else character -> factor -> numeric
+  x[sapply(x, is.character)] <- lapply(x[sapply(x, is.character)], factor)
+  suppressWarnings(lapply(x, as.numeric))
+}
+
 #' @param cores number of cores; used only for processing _SpatRaster_ or _Raster*_ input
 #' @param file path to write incremental raster processing output for large inputs that do not fit in memory; passed to `terra::writeStart()` and used only for processing _SpatRaster_ or _Raster*_ input; defaults to a temporary file created by `tempfile()` if needed
 #' @param nrows number of rows to use per block; passed to `terra::readValues()` `terra::writeValues()`; used only for processing _SpatRaster_ or _Raster*_ input; defaults to number of rows in dataset if needed
@@ -375,13 +417,23 @@ newhall_batch.SpatRaster <- function(.data,
   
   # create template brick
   out <- terra::rast(.data)
-  cnm <- c("nrow", "NumCumulativeDaysMoist",
-           "NumCumulativeDaysMoistDry", "NumCumulativeDaysMoistDryOver5C",
-           "NumConsecutiveDaysMoistInSomePartsOver8C", "NumCumulativeDaysDry",
-           "NumCumulativeDaysDryOver5C", "NumCumulativeDaysMoistOver5C",
-           "NumConsecutiveDaysMoistInSomeParts", "TemperatureRegime", "MoistureRegime",
-           "RegimeSubdivision1", "RegimeSubdivision2", "MoistDaysAfterWinterSolstice",
-           "DryDaysAfterSummerSolstice")
+  if (newhall_version() >= "1.6.3") {
+    cnm <- c("annualRainfall", "waterHoldingCapacity", "annualWaterBalance", 
+                             "summerWaterBalance", "dryDaysAfterSummerSolstice", "moistDaysAfterWinterSolstice", 
+                             "numCumulativeDaysDry", "numCumulativeDaysMoistDry", "numCumulativeDaysMoist", 
+                             "numCumulativeDaysDryOver5C", "numCumulativeDaysMoistDryOver5C", 
+                             "numCumulativeDaysMoistOver5C", "numConsecutiveDaysMoistInSomeParts", 
+                             "numConsecutiveDaysMoistInSomePartsOver8C", "temperatureRegime", 
+                             "moistureRegime", "regimeSubdivision1", "regimeSubdivision2")
+  } else {
+    cnm <- c("nrow", "numCumulativeDaysMoist",
+             "numCumulativeDaysMoistDry", "numCumulativeDaysMoistDryOver5C",
+             "numConsecutiveDaysMoistInSomePartsOver8C", "numCumulativeDaysDry",
+             "numCumulativeDaysDryOver5C", "numCumulativeDaysMoistOver5C",
+             "numConsecutiveDaysMoistInSomeParts", "temperatureRegime", "moistureRegime",
+             "regimeSubdivision1", "regimeSubdivision2", "moistDaysAfterWinterSolstice",
+             "dryDaysAfterSummerSolstice")
+  }
   terra::nlyr(out) <- length(cnm)
   names(out) <- cnm
   
@@ -393,11 +445,11 @@ newhall_batch.SpatRaster <- function(.data,
   if (cores > 1 && out_info$nrows*ncol(.data) > 1000) {
     cls <- parallel::makeCluster(cores)
     on.exit(parallel::stopCluster(cls))
-    
+
     # TODO: can blocks be parallelized?
     for(i in seq_along(start_row)) {
       if (n_row[i] > 0) {
-        
+
         blockdata <- terra::readValues(.data, row = start_row[i], nrows = n_row[i], dataframe = TRUE)
         ids <- 1:nrow(blockdata)
 
@@ -415,19 +467,17 @@ newhall_batch.SpatRaster <- function(.data,
               checkargs = checkargs
             )
           }))
-        
+
         # remove list columns
         r$dataset <- NULL
         r$results <- NULL
         r$output <- NULL
+
         
-        # TODO: handle character results w/ standard factor levels
-        r[sapply(r, is.character)] <- lapply(r[sapply(r, is.character)], factor)
-        
-        # for now we just write out the numeric representation
-        r <- suppressWarnings(lapply(r, as.numeric))
+        # explicitly set factors
+        r <- .setCats(r)
         terra::writeValues(out, do.call('cbind', r), start_row[i], nrows = n_row[i])
-        
+
       }
     }
   } else {
@@ -454,11 +504,9 @@ newhall_batch.SpatRaster <- function(.data,
         r2$results <- NULL
         r2$output <- NULL
         
-        # TODO: handle character results w/ standard factor levels
-        r2[sapply(r2, is.character)] <- lapply(r2[sapply(r2, is.character)], factor)
+        # explicitly set factors
+        r2 <- .setCats(r2)
         
-        # for now we just write out the numeric representation
-        r2 <- suppressWarnings(lapply(r2, as.numeric))
         terra::writeValues(out, do.call('cbind', r2), start_row[i], nrows = n_row[i])
       }
     }
