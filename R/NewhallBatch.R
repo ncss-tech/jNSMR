@@ -172,7 +172,7 @@ batch1 <- function(.data = NULL,
   }
 
   res$.id <- NULL
-  as.data.frame(res)
+  type.convert(as.data.frame(res), as.is = TRUE)
 }
 
 # data.frame -> data.frame
@@ -243,9 +243,9 @@ batch2 <- function(.data,
   res <- rJava::.jcall(x, "Lorg/psu/newhall/sim/NewhallBatchResults;", "runBatch2",
   # res <- x$runBatch2(
     rJava::.jarray(do.call('rbind', lapply(1:nrow(.data), 
-                                           function(i) c(0.0, as.double(.data[i,][, grep("t[A-Z][a-z]{2}$", colnames(.data))])))), dispatch = TRUE),
-    rJava::.jarray(do.call('rbind', lapply(1:nrow(.data), 
                                            function(i) c(0.0, as.double(.data[i,][, grep("^p[A-Z][a-z]{2}$", colnames(.data))])))), dispatch = TRUE),
+    rJava::.jarray(do.call('rbind', lapply(1:nrow(.data), 
+                                         function(i) c(0.0, as.double(.data[i,][, grep("t[A-Z][a-z]{2}$", colnames(.data))])))), dispatch = TRUE),
     rJava::.jarray(as.double(.data$latDD)),
     rJava::.jarray(as.double(.data$lonDD)),
     rJava::.jarray(rJava::.jchar(rep(rJava::.jchar(strtoi(charToRaw('N'), 16L)), nrow(.data)))),
@@ -293,7 +293,7 @@ batch2 <- function(.data,
       nrow(res), deltat, attr(deltat, 'units')
     ))
   }
-  res
+  type.convert(res, as.is = TRUE)
 }
 
 #' @export
@@ -375,12 +375,12 @@ newhall_batch.SpatRaster <- function(.data,
   
   # create template brick
   out <- terra::rast(.data)
-  cnm <- c("nrow", "NumCumulativeDaysMoist", 
-           "NumCumulativeDaysMoistDry", "NumCumulativeDaysMoistDryOver5C", 
-           "NumConsecutiveDaysMoistInSomePartsOver8C", "NumCumulativeDaysDry", 
-           "NumCumulativeDaysDryOver5C", "NumCumulativeDaysMoistOver5C", 
-           "NumConsecutiveDaysMoistInSomeParts", "TemperatureRegime", "MoistureRegime", 
-           "RegimeSubdivision1", "RegimeSubdivision2", "MoistDaysAfterWinterSolstice", 
+  cnm <- c("nrow", "NumCumulativeDaysMoist",
+           "NumCumulativeDaysMoistDry", "NumCumulativeDaysMoistDryOver5C",
+           "NumConsecutiveDaysMoistInSomePartsOver8C", "NumCumulativeDaysDry",
+           "NumCumulativeDaysDryOver5C", "NumCumulativeDaysMoistOver5C",
+           "NumConsecutiveDaysMoistInSomeParts", "TemperatureRegime", "MoistureRegime",
+           "RegimeSubdivision1", "RegimeSubdivision2", "MoistDaysAfterWinterSolstice",
            "DryDaysAfterSummerSolstice")
   terra::nlyr(out) <- length(cnm)
   names(out) <- cnm
