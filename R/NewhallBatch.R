@@ -387,8 +387,8 @@ newhall_batch.character <- function(.data,
                                                                              " ", "Tropustic", "Tropudic")))
   
   # convert anything else character -> factor -> numeric
-  x[sapply(x, is.character)] <- lapply(x[sapply(x, is.character)], factor)
-  suppressWarnings(lapply(x, as.numeric))
+  x[sapply(x, is.character)] <- lapply(x[sapply(x, is.character)], function(y) as.numeric(factor(y)))
+  x
 }
 
 #' @param cores number of cores; used only for processing _SpatRaster_ or _Raster*_ input
@@ -454,8 +454,10 @@ newhall_batch.SpatRaster <- function(.data,
 
         # parallel within-block processing
         sz <- round(nrow(blockdata) / cores) + 1
-        print(sz)
-        X <- split(blockdata, rep(seq(from = 1, to = floor(length(ids) / sz) + 1), each = sz)[1:length(ids)])
+        # print(sz)
+        X <- split(blockdata, rep(seq(
+          from = 1, to = floor(length(ids) / sz) + 1
+        ), each = sz)[1:length(ids)])
         r <- do.call('rbind', parallel::clusterApply(cls, X, function(x) {
             batch2(
               .data = x,

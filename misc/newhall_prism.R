@@ -4,7 +4,7 @@ library(terra)
 library(jNSMR)
 
 # PRISM resolution; either 4km or 800m
-RESOLUTION <- "800m"
+RESOLUTION <- "4km"
 
 # path to PRISM data
 PRISM_PATH <- file.path("~/Geodata/PRISM", RESOLUTION)
@@ -73,7 +73,7 @@ x$stationID <-1:ncell(x)
 # system.time(res <- jNSMR::newhall_batch(x, nrows = 20, cores = 2))
 # d <- as.data.frame(x)
 # system.time(res <- jNSMR::newhall_batch(d))
-system.time(res <- jNSMR::newhall_batch(x, nrows = 50))
+system.time(res <- jNSMR::newhall_batch(x))
 system.time(res <- jNSMR::newhall_batch(x, cores = 8, nrows = 75))
 
 # # plot(prism_rast)
@@ -94,8 +94,7 @@ plot(res$moistureRegime,
 plot(sf::st_geometry(sf::st_cast(bb, 'MULTILINESTRING')), add = TRUE, lwd = 2, col = "RED")
 plot(sf::st_geometry(sapoly), add = TRUE)
 
-
- # compare areasymbol-summaries of STR/SMR with distribution of classes
+# compare areasymbol-summaries of STR/SMR with distribution of classes
 res2 <- soilDB::SDA_query(sprintf( 
 "SELECT areasymbol, taxtempregime, SUM(comppct_r*muacres)/100 AS acres FROM legend
    INNER JOIN mapunit ON mapunit.lkey = legend.lkey
@@ -117,18 +116,18 @@ plot(sapoly2['taxtempregime'])
 
 # PRISM info
 prism_rast$stationName <- 1:ncell(prism_rast)
-prism_rast$awc <- 200
-prism_rast$maatmast <- 1.2
-prism_rast$pdType <- "Normal"
-prism_rast$pdStartYr <- 1981
-prism_rast$pdEndYr <- 2010
-prism_rast$cntryCode <- "US"
+prism_rast$awc <- rep(200, ncell(prism_rast))
+prism_rast$maatmast <- rep(1.2, ncell(prism_rast))
+prism_rast$pdType <- rep("Normal", ncell(prism_rast))
+prism_rast$pdStartYr <- rep(1981, ncell(prism_rast))
+prism_rast$pdEndYr <- rep(2010, ncell(prism_rast))
+prism_rast$cntryCode <- rep("US", ncell(prism_rast))
 
 # boilerplate minimum metadata -- these are not used by the algorithm
-prism_rast$netType <- ""
-prism_rast$elev <- -9999
-prism_rast$stProvCode <- ""
-prism_rast$notes <- ""
+prism_rast$netType <- rep("", ncell(prism_rast))
+prism_rast$elev <- rep(-9999, ncell(prism_rast))
+prism_rast$stProvCode <- rep("", ncell(prism_rast))
+prism_rast$notes <- rep("", ncell(prism_rast))
 prism_rast$stationID <- 1:ncell(prism_rast)
 
 # data.frame interface
@@ -139,7 +138,7 @@ prism_rast$stationID <- 1:ncell(prism_rast)
 
 # try this
 terra::writeRaster(prism_rast, "prism_in.tif", overwrite=TRUE)
-resbig <- jNSMR::newhall_batch(terra::rast("prism_in.tif"), nrows = 15)
+resbig <- newhall_batch(terra::rast("prism_in.tif"), cores = 3)
 terra::writeRaster(resbig,  "newhall_results_20211217.tif", overwrite=TRUE)
 
 plot(resbig)
@@ -190,3 +189,13 @@ legend("bottomleft", legend = nlegnames, pch=".", fill = nlegcolors)
 
 x <- subset(newsp, moistureRegime == "Aridic"))
 
+library(spData)
+data("us_states")
+levels()
+plot(resbig$moistureRegime, main = "Moisture Regime")
+plot(terra::vect(us_states), add = TRUE)
+
+x <- resbig$temperatureRegime
+setCats(x, layer = 1, value = data.frame(ID = 6, category = "Mesic"), 2)
+x
+plot(x)
