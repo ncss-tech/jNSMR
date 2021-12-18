@@ -453,7 +453,9 @@ newhall_batch.SpatRaster <- function(.data,
         ids <- 1:nrow(blockdata)
 
         # parallel within-block processing
-        X <- split(blockdata, rep(seq(from = 1, to = floor(length(ids) / 10000) + 1), each = 10000)[1:length(ids)])
+        sz <- round(nrow(blockdata) / cores) + 1
+        print(sz)
+        X <- split(blockdata, rep(seq(from = 1, to = floor(length(ids) / sz) + 1), each = sz)[1:length(ids)])
         r <- do.call('rbind', parallel::clusterApply(cls, X, function(x) {
             batch2(
               .data = x,
