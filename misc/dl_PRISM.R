@@ -8,7 +8,7 @@ library(raster)
 # download 4km or 800m data
 .download_month <- function(i, resolution = c("4km","800m"), annual = FALSE, keepZip = FALSE) {
   resolution <- match.arg(resolution, c("4km","800m"))
-  print(resolution)
+  # print(resolution)
   if(i == 1)
     annual = TRUE
   prism::get_prism_normals(mon = i, type = "ppt",
