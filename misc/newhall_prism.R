@@ -74,7 +74,7 @@ x$stationID <-1:ncell(x)
 # d <- as.data.frame(x)
 # system.time(res <- jNSMR::newhall_batch(d))
 system.time(res <- jNSMR::newhall_batch(x, nrows = 50))
-system.time(res <- jNSMR::newhall_batch(x, cores = 8))
+system.time(res <- jNSMR::newhall_batch(x, cores = 8, nrows = 75))
 
 # # plot(prism_rast)
 # plot(res$moistureRegime)
