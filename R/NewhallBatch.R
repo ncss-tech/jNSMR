@@ -29,7 +29,7 @@ newhall_batch.default <- function(.data = NULL,
                                   overwrite = NULL) {
   
   # if newer JAR is available, use the fastest batch method
-  if (newhall_version() >= "1.6.3") {
+  # if (newhall_version() >= "1.6.3") {
     batch2(
       .data,
       unitSystem = unitSystem,
@@ -39,19 +39,19 @@ newhall_batch.default <- function(.data = NULL,
       toString = toString,
       checkargs = checkargs
     )
-  } else {
-    # v1.6.1
-    batch1(
-      .data = .data,
-      pathname = pathname,
-      unitSystem = unitSystem,
-      soilAirOffset = soilAirOffset,
-      amplitude = amplitude,
-      verbose = verbose,
-      toString = toString,
-      checkargs = checkargs
-    )
-  }
+  # } else {
+  #   # v1.6.1
+  #   batch1(
+  #     .data = .data,
+  #     pathname = pathname,
+  #     unitSystem = unitSystem,
+  #     soilAirOffset = soilAirOffset,
+  #     amplitude = amplitude,
+  #     verbose = verbose,
+  #     toString = toString,
+  #     checkargs = checkargs
+  #   )
+  # }
 }
 
 batch1 <- function(.data = NULL,
@@ -375,7 +375,6 @@ newhall_batch.character <- function(.data,
   
   # generic factor levels (does not work with chunked processing)
   # # handle character results w/ standard factor levels
-
   
   # explicitly set factors (so each chunk uses same lookup table)
   x$temperatureRegime  <- as.numeric(factor(x$temperatureRegime, levels = c("Pergelic", "Cryic", "Frigid", "Mesic", "Isomesic", 
@@ -456,9 +455,8 @@ newhall_batch.SpatRaster <- function(.data,
         # parallel within-block processing
         X <- split(blockdata, rep(seq(from = 1, to = floor(length(ids) / 10000) + 1), each = 10000)[1:length(ids)])
         r <- do.call('rbind', parallel::clusterApply(cls, X, function(x) {
-            jNSMR::newhall_batch(
+            batch2(
               .data = x,
-              pathname = pathname,
               unitSystem = unitSystem,
               soilAirOffset = soilAirOffset,
               amplitude = amplitude,
@@ -467,23 +465,22 @@ newhall_batch.SpatRaster <- function(.data,
               checkargs = checkargs
             )
           }))
-
+        
         # remove list columns
         r$dataset <- NULL
         r$results <- NULL
         r$output <- NULL
 
-        
         # explicitly set factors
         r <- .setCats(r)
-        terra::writeValues(out, do.call('cbind', r), start_row[i], nrows = n_row[i])
+        terra::writeValues(out, do.call('cbind',r), start_row[i], nrows = n_row[i])
 
       }
     }
   } else {
     for(i in seq_along(start_row)) {
       if (n_row[i] > 0) {
-        r2 <- jNSMR::newhall_batch(
+        r2 <- newhall_batch.default(
           .data = terra::readValues(
             .data,
             row = start_row[i],
