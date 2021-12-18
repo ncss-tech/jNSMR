@@ -4,7 +4,7 @@ library(terra)
 library(jNSMR)
 
 # PRISM resolution; either 4km or 800m
-RESOLUTION <- "4km"
+RESOLUTION <- "800m"
 
 # path to PRISM data
 PRISM_PATH <- file.path("~/Geodata/PRISM", RESOLUTION)
@@ -19,7 +19,7 @@ if (length(bilfile) == 0) {
 }
 
 # capture file name components
-monthly.pattern <- ".*PRISM_([a-z]+)_(30yr_normal)_(\\d+[a-z]+)M2_(\\d{2})_bil\\.bil"
+monthly.pattern <- ".*PRISM_([a-z]+)_(30yr_normal)_(\\d+[a-z]+)M[23]_(\\d{2})_bil\\.bil"
 bilfile_sub <- bilfile[grep(monthly.pattern, bilfile)]
 bilmonth <- strsplit(gsub(monthly.pattern,  "\\1;\\2;\\3;\\4", bilfile_sub), ";")
 bil <- data.frame(bilfile_sub, do.call('rbind', bilmonth))
@@ -45,9 +45,9 @@ prism_rast$lonDD <- cx[,1]
 prism_rast$latDD <- cx[,2]
 
 # crop for example
-bdy <- soilDB::fetchSDA_spatial(c("CA067", "CA620", "CA628",
-                                  "CA630", "CA649", "CA654", 
-                                  "CA651"), "areasymbol", geom.src = "sapolygon")
+bdy <- soilDB::fetchSDA_spatial(#c("CA067", "CA620", "CA628",
+                                  c("CA630", "CA649"),#, "CA654", "CA651"), 
+                                  "areasymbol", geom.src = "sapolygon")
                                 #c("CA067","CA620","CA628", "CA630", "CA649", "CA654", "CA651")
 x <- terra::crop(prism_rast, terra::vect(bdy))
 
@@ -73,7 +73,8 @@ x$stationID <-1:ncell(x)
 # system.time(res <- jNSMR::newhall_batch(x, nrows = 20, cores = 2))
 # d <- as.data.frame(x)
 # system.time(res <- jNSMR::newhall_batch(d))
-system.time(res <- jNSMR::newhall_batch(x))
+system.time(res <- jNSMR::newhall_batch(x, nrows = 50))
+system.time(res <- jNSMR::newhall_batch(x, cores = 8))
 
 # # plot(prism_rast)
 # plot(res$moistureRegime)
