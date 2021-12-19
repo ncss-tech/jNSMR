@@ -373,23 +373,24 @@ newhall_batch.character <- function(.data,
 
 .setCats <- function(x) {
   
-  # generic factor levels (does not work with chunked processing)
-  # # handle character results w/ standard factor levels
-  
+  # handle character results w/ standard factor levels
+
   # explicitly set factors (so each chunk uses same lookup table)
-  x$temperatureRegime  <- as.numeric(factor(x$temperatureRegime, levels = c("Pergelic", "Cryic", "Frigid", "Mesic", "Isomesic", 
-                                                                            "Thermic", "Isothermic", "Hyperthermic", "Isohyperthermic")))
-  x$moistureRegime     <- as.numeric(factor(x$moistureRegime, levels = c("Aridic", "Ustic", "Xeric", "Udic", "Perudic", "Undefined")))
-  x$regimeSubdivision1 <- as.numeric(factor(x$regimeSubdivision1, levels = c("Typic", "Weak", "Wet", "Dry", "Extreme", " ", 
-                                                                             "Xeric", "Udic", "Aridic")))
-  x$regimeSubdivision2 <- as.numeric(factor(x$regimeSubdivision2, levels = c("Aridic", "Udic", "Tempustic", 
-                                                                             "Xeric", "Tempudic", "Undefined",  
-                                                                             " ", "Tropustic", "Tropudic")))
+  x$temperatureRegime  <- as.numeric(factor(x$temperatureRegime, levels = .str())) - 1
+  x$moistureRegime     <- as.numeric(factor(x$moistureRegime, levels = .smr())) - 1
+  x$regimeSubdivision1 <- as.numeric(factor(x$regimeSubdivision1, levels = .smrsub1())) - 1
+  x$regimeSubdivision2 <- as.numeric(factor(x$regimeSubdivision2, levels = .smrsub2())) - 1
   
   # convert anything else character -> factor -> numeric
-  x[sapply(x, is.character)] <- lapply(x[sapply(x, is.character)], function(y) as.numeric(factor(y)))
+  x[sapply(x, is.character)] <- lapply(x[sapply(x, is.character)], function(y) as.numeric(factor(y)) - 1)
   x
 }
+
+.str <- function() c("Pergelic", "Cryic", "Frigid", "Mesic", "Isomesic", "Thermic", "Isothermic", "Hyperthermic", "Isohyperthermic")
+.smr <- function()  c("Aridic", "Ustic", "Xeric", "Udic", "Perudic", "Undefined")
+.smrsub1 <- function() c("Typic", "Weak", "Wet", "Dry", "Extreme", "Xeric", "Udic", "Aridic", " ")
+.smrsub2 <- function() c("Aridic", "Tempustic", "Tropustic", "Tempudic", "Xeric", "Udic", "Tropudic", "Undefined", " ")
+
 
 #' @param cores number of cores; used only for processing _SpatRaster_ or _Raster*_ input
 #' @param file path to write incremental raster processing output for large inputs that do not fit in memory; passed to `terra::writeStart()` and used only for processing _SpatRaster_ or _Raster*_ input; defaults to a temporary file created by `tempfile()` if needed
@@ -477,7 +478,7 @@ newhall_batch.SpatRaster <- function(.data,
 
         # explicitly set factors
         r <- .setCats(r)
-        terra::writeValues(out, do.call('cbind',r), start_row[i], nrows = n_row[i])
+        terra::writeValues(out, as.matrix(r), start_row[i], nrows = n_row[i])
 
       }
     }
@@ -508,7 +509,7 @@ newhall_batch.SpatRaster <- function(.data,
         # explicitly set factors
         r2 <- .setCats(r2)
         
-        terra::writeValues(out, do.call('cbind', r2), start_row[i], nrows = n_row[i])
+        terra::writeValues(out, as.matrix(r2), start_row[i], nrows = n_row[i])
       }
     }
   }
@@ -517,7 +518,17 @@ newhall_batch.SpatRaster <- function(.data,
   terra::readStop(.data)
   
   # replace NaN with NA_real_
-  terra::values(out)[is.nan(terra::values(out))] <- NA_real_
+  # terra::values(out)[is.nan(terra::values(out))] <- NA_real_
+  
+  # factors in output object
+  l <- levels(out)
+  
+  l[[which(names(out) %in% "temperatureRegime")]] <- .str()
+  l[[which(names(out) %in% "moistureRegime")]] <- .smr()
+  l[[which(names(out) %in% "regimeSubdivision1")]] <- .smrsub1()
+  l[[which(names(out) %in% "regimeSubdivision2")]] <- .smrsub2()
+  
+  levels(out)<- l
   out
 }
 
