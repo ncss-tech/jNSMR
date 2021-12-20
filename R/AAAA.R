@@ -35,14 +35,15 @@ newhall_version <- function() {
   # newhall JAR setup: add to class path
   rJava::.jaddClassPath(jnf)
   
-  if (interactive()) {
-cat(paste0("jNSMR (", packageVersion("jNSMR"), ") -- R interface to the classic Newhall Simulation Model\nAdded JAR file (", basename(jnf), ") to Java class path."))
-  }
-  
 }
 
 #' @importFrom rJava .jfield .jnew
+#' @importFrom utils packageVersion
 .onAttach <- function(libname, pkgname) {
+  jas <- getOption("jNSMR.JAR_SUFFIX", default = "-1.6.3")
+  jnf <- .jnsm_jar_file(suffix = jas)
+  packageStartupMessage(paste0("jNSMR (", packageVersion("jNSMR"), ") -- R interface to the classic Newhall Simulation Model\nAdded JAR file (", basename(jnf), ") to Java class path."))
+  
   options(jNSMR.NSM_VERSION = rJava::.jfield(
     o = rJava::.jnew("org/psu/newhall/Newhall"),
     sig = "Ljava/lang/String;",

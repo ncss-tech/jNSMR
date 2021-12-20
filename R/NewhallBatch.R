@@ -1,6 +1,5 @@
 #' Run a Newhall simulation for each row in a CSV file
-#' @param .data a _data.frame_ or _character_ vector of paths (used as `pathname`)
-#' @param pathname path(s) to CSV file(s) with Newhall batch format and required columns; default `NULL`
+#' @param .data a _data.frame_ or _character_ vector of paths to CSV files
 #' @param unitSystem Default: `"metric"` OR `"mm"` OR `"cm"` use _millimeters_ of rainfall (default for the BASIC model); set to `unitSystem="english"` OR `unitSystem="in"` to transform English (inches of precipitation; degrees Fahrenheit) inputs to metric (millimeters of precipitation; degrees Celsius) before running simulation
 #' @param soilAirOffset air-soil temperature offset. Conventionally for jNSM: `2.5` for metric units (default); `4.5` for english units.
 #' @param amplitude difference in amplitude between soil and air temperature sine waves. Default `0.66`
@@ -16,7 +15,6 @@
 #' @rdname newhall_batch
 #' @export
 newhall_batch.default <- function(.data = NULL,
-                                  pathname = NULL,
                                   unitSystem = "metric",
                                   soilAirOffset = ifelse(unitSystem %in% c("in","english"), 4.5, 2.5),
                                   amplitude = 0.66,
@@ -43,7 +41,6 @@ newhall_batch.default <- function(.data = NULL,
   #   # v1.6.1
   #   batch1(
   #     .data = .data,
-  #     pathname = pathname,
   #     unitSystem = unitSystem,
   #     soilAirOffset = soilAirOffset,
   #     amplitude = amplitude,
@@ -55,7 +52,6 @@ newhall_batch.default <- function(.data = NULL,
 }
 
 batch1 <- function(.data = NULL,
-                   pathname = NULL,
                    unitSystem = "metric",
                    soilAirOffset = ifelse(unitSystem %in% c("in","english"), 4.5, 2.5),
                    amplitude = 0.66,
@@ -74,13 +70,6 @@ batch1 <- function(.data = NULL,
     # "in" is the internal convention in the NewhallDatasetMetadata for inches of rainfall, degrees Fahrenheit
     unitSystem <- "in"
   }
-
-  # if .data not specified (NULL), pathname required
-  if (is.null(.data) && !is.null(pathname)) {
-    .data <- pathname
-  }
-
-
 
   # minimum dataset includes all of the codes specified in colnames of batch file template
   mincols <- !(.colnamesNewhallBatch() %in% colnames(.data))
@@ -197,6 +186,8 @@ batch1 <- function(.data = NULL,
 }
 
 # data.frame -> data.frame
+#'
+#' @importFrom utils type.convert
 batch2 <- function(.data, 
                    unitSystem = "metric",
                    soilAirOffset = ifelse(unitSystem %in% c("in","english"), 4.5, 2.5),
@@ -217,11 +208,6 @@ batch2 <- function(.data,
   } else if (unitSystem == "english") {
     # "in" is the internal convention in the NewhallDatasetMetadata for inches of rainfall, degrees Fahrenheit
     unitSystem <- "in"
-  }
-  
-  # if .data not specified (NULL), pathname required
-  if (is.null(.data) && !is.null(pathname)) {
-    .data <- pathname
   }
   
   # minimum dataset includes all of the codes specified in colnames of batch file template
@@ -319,7 +305,6 @@ batch2 <- function(.data,
 
 #' @export
 newhall_batch <- function(.data,
-                          pathname = NULL,
                           unitSystem = "metric",
                           soilAirOffset = ifelse(unitSystem %in% c("in", "english"), 4.5, 2.5),
                           amplitude = 0.66,
@@ -336,7 +321,6 @@ newhall_batch <- function(.data,
 #' @rdname newhall_batch
 #' @export
 newhall_batch.character <- function(.data,
-                                    pathname = NULL,
                                     unitSystem = "metric",
                                     soilAirOffset = ifelse(unitSystem %in% c("in", "english"), 4.5, 2.5),
                                     amplitude = 0.66,
@@ -361,7 +345,6 @@ newhall_batch.character <- function(.data,
   }
   
   newhall_batch.default(.data, 
-                        pathname = pathname,
                         unitSystem = unitSystem,
                         soilAirOffset = soilAirOffset,
                         amplitude = amplitude,
@@ -401,7 +384,6 @@ newhall_batch.character <- function(.data,
 #' @importFrom terra rast readStart writeStart readValues writeValues writeStop readStop `nlyr<-`
 #' @importFrom parallel makeCluster stopCluster parRapply
 newhall_batch.SpatRaster <- function(.data, 
-                                     pathname = NULL,
                                      unitSystem = "metric",
                                      soilAirOffset = ifelse(unitSystem %in% c("in","english"), 4.5, 2.5),
                                      amplitude = 0.66,
@@ -492,7 +474,6 @@ newhall_batch.SpatRaster <- function(.data,
             nrows = n_row[i],
             dataframe = TRUE
           ),
-          pathname = pathname,
           unitSystem = unitSystem,
           soilAirOffset = soilAirOffset,
           amplitude = amplitude,
@@ -536,7 +517,6 @@ newhall_batch.SpatRaster <- function(.data,
 #' @rdname newhall_batch
 #' @importFrom terra rast
 newhall_batch.RasterBrick <- function(.data, 
-                                      pathname = NULL,
                                       unitSystem = "metric",
                                       soilAirOffset = ifelse(unitSystem %in% c("in","english"), 4.5, 2.5),
                                       amplitude = 0.66,
@@ -549,7 +529,6 @@ newhall_batch.RasterBrick <- function(.data,
                                       overwrite = TRUE) {
   stopifnot(requireNamespace("terra"))
   newhall_batch.SpatRaster(terra::rast(.data), 
-                           pathname = pathname,
                            unitSystem = unitSystem,
                            soilAirOffset = soilAirOffset,
                            amplitude = amplitude,
