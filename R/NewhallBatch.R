@@ -431,16 +431,24 @@ newhall_batch.SpatRaster <- function(.data,
     # TODO: can blocks be parallelized?
     for(i in seq_along(start_row)) {
       if (n_row[i] > 0) {
-
-        blockdata <- terra::readValues(.data, row = start_row[i], nrows = n_row[i], dataframe = TRUE)
+        st <- Sys.time()
+        blockdata <- terra::readValues(.data,
+                                       row = start_row[i],
+                                       nrows = n_row[i],
+                                       dataframe = TRUE)
         ids <- 1:nrow(blockdata)
-
+        skip.idx <- which(is.na(blockdata$awc))
+        
+        if (length(skip.idx) > 0) {
+          blockcomplete <- blockdata[-skip.idx,]
+        } else blockcomplete <- blockdata
+        
+        cids <- 1:nrow(blockcomplete)
+        sz <- round(nrow(blockcomplete) / cores) + 1
+        X <- split(blockcomplete, f = rep(seq(from = 1, to = floor(length(cids) / sz) + 1), 
+                                          each = sz)[1:length(cids)])
+        
         # parallel within-block processing
-        sz <- round(nrow(blockdata) / cores) + 1
-        # print(sz)
-        X <- split(blockdata, rep(seq(
-          from = 1, to = floor(length(ids) / sz) + 1
-        ), each = sz)[1:length(ids)])
         r <- do.call('rbind', parallel::clusterApply(cls, X, function(x) {
             batch2(
               .data = x,
@@ -458,22 +466,40 @@ newhall_batch.SpatRaster <- function(.data,
         r$results <- NULL
         r$output <- NULL
 
+        # fill skipped NA cells 
+        r.na <- r[0,][1:length(skip.idx),]
+        r <- rbind(r, r.na)[order(c(ids[!ids %in% skip.idx], skip.idx)),]
+        
         # explicitly set factors
         r <- .setCats(r)
+        
         terra::writeValues(out, as.matrix(r), start_row[i], nrows = n_row[i])
-
+        
+        cat(paste0(
+          "Batch ", i, " of ", length(start_row), " (n=",nrow(blockcomplete),") done in ",
+          round(as.numeric(Sys.time() - st, units = "secs")), " seconds\n"
+        ))
       }
     }
   } else {
     for(i in seq_along(start_row)) {
       if (n_row[i] > 0) {
+        dataall <- terra::readValues(
+          .data,
+          row = start_row[i],
+          nrows = n_row[i],
+          dataframe = TRUE
+        )
+        ids <- 1:nrow(dataall)
+        
+        skip.idx <- which(is.na(dataall$awc))
+        
+        if (length(skip.idx) > 0) {
+          datacomplete <- dataall[-skip.idx,]
+        } else datacomplete <- dataall
+        
         r2 <- newhall_batch.default(
-          .data = terra::readValues(
-            .data,
-            row = start_row[i],
-            nrows = n_row[i],
-            dataframe = TRUE
-          ),
+          .data = datacomplete,
           unitSystem = unitSystem,
           soilAirOffset = soilAirOffset,
           amplitude = amplitude,
@@ -486,6 +512,10 @@ newhall_batch.SpatRaster <- function(.data,
         r2$dataset <- NULL
         r2$results <- NULL
         r2$output <- NULL
+        
+        # fill skipped NA cells 
+        r.na <- r2[0,][1:length(skip.idx),]
+        r2 <- rbind(r2, r.na)[order(c(ids[!ids %in% skip.idx], skip.idx)),]
         
         # explicitly set factors
         r2 <- .setCats(r2)
