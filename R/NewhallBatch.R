@@ -406,7 +406,7 @@ newhall_batch.SpatRaster <- function(.data,
                                      nrows = nrow(.data),
                                      overwrite = TRUE) {
   stopifnot(requireNamespace("terra"))
-  terra::readStart(.data)
+  suppressWarnings(terra::readStart(.data))
   
   # create template brick
   out <- terra::rast(.data)
@@ -432,15 +432,15 @@ newhall_batch.SpatRaster <- function(.data,
   
   out_info <- terra::writeStart(out, filename = file, overwrite = overwrite)
   
-  start_row <- seq(1, out_info$nrows, nrows)
-  n_row <- diff(c(start_row, out_info$nrows + 1))
+  # start_row out_info<- seq(1, sum(out_info$nrows), nrows)
+  n_row <- out_info$nrows # diff(c(start_row, out_info$nrows + 1))
   
-  if (cores > 1 && out_info$nrows*ncol(.data) > 1000) {
+  if (cores > 1) {
     cls <- parallel::makeCluster(cores)
     on.exit(parallel::stopCluster(cls))
 
     # TODO: can blocks be parallelized?
-    for(i in seq_along(start_row)) {
+    for(i in seq_along(n_row)) {
       if (n_row[i] > 0) {
         st <- Sys.time()
         blockdata <- terra::readValues(.data,
