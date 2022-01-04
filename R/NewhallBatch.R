@@ -467,7 +467,7 @@ newhall_batch.SpatRaster <- function(.data,
         r$output <- NULL
 
         # fill skipped NA cells 
-        r.na <- r[0,][1:length(skip.idx),]
+        r.na <- r[0, , drop = FALSE][1:length(skip.idx), , drop = FALSE]
         r <- rbind(r, r.na)[order(c(ids[!ids %in% skip.idx], skip.idx)),]
         
         # explicitly set factors
@@ -514,7 +514,7 @@ newhall_batch.SpatRaster <- function(.data,
         r2$output <- NULL
         
         # fill skipped NA cells 
-        r.na <- r2[0,][1:length(skip.idx),]
+        r.na <- r2[0, , drop = FALSE][1:length(skip.idx), , drop = FALSE]
         r2 <- rbind(r2, r.na)[order(c(ids[!ids %in% skip.idx], skip.idx)),]
         
         # explicitly set factors
