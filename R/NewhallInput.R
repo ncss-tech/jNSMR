@@ -42,7 +42,8 @@ newhall_writeBatchOutput <- function(output_file, pathname = NULL, input_file = 
 }
 
 .colnamesNewhallBatch <- function() {
-  c("stationName","latDD","lonDD","elev","tJan","tFeb","tMar","tApr","tMay","tJun","tJul","tAug","tSep","tOct","tNov","tDec","pJan","pFeb","pMar","pApr","pMay","pJun","pJul","pAug","pSep","pOct","pNov","pDec","pdType","pdStartYr","pdEndYr","awc","maatmast","cntryCode","notes","stationID")
+  c("latDD","lonDD","tJan","tFeb","tMar","tApr","tMay","tJun","tJul","tAug","tSep","tOct","tNov","tDec","pJan","pFeb","pMar","pApr","pMay","pJun","pJul","pAug","pSep","pOct","pNov","pDec","awc","elev")
+  #,"stationName","pdType","pdStartYr","pdEndYr","maatmast","cntryCode","notes","stationID")
 }
 
 .newhall_batch_template <-
