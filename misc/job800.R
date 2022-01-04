@@ -48,7 +48,7 @@ quantile(values(r2$awc), na.rm = TRUE)
 r2$stationName <- NULL; r2$stationID <- NULL; r2$notes <- NULL; r2$stProvCode <- NULL; r2$netType <- NULL; r2$cntryCode <- NULL; r2$pdEndYr <- NULL; r2$pdStartYr <- NULL; r2$pdType <- NULL; r2$maatmast <- NULL
 
 # system.time(resbig <- newhall_batch(r2))
-system.time(resbig <- newhall_batch(r2,  cores=6, nrows = ifelse(test, 40, 2)))
+system.time(resbig <- newhall_batch(r2, cores = 6, nrows = ifelse(test, 40, 2)))
 
 terra::writeRaster(resbig, filename = "newhall_800m_100mmAWS.tif", overwrite = TRUE)
 
