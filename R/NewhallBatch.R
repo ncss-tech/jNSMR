@@ -291,8 +291,9 @@ batch2 <- function(.data,
   fieldsmatrix <- c("meanPotentialEvapotranspiration","temperatureCalendar", "moistureCalendar")
   
   # convert to data frame
-  res <- as.data.frame(sapply(fields, function(n) rJava::.jfield(b, name = n)))
-  
+  res <- lapply(fields, function(n) rJava::.jfield(b, name = n))
+  res <- lapply(res, function(x) {if (length(x) == 0) return(rep(NA, length(res[[1]]))); x})
+  res <- as.data.frame(res)
   if (verbose) {
     deltat <- signif(difftime(Sys.time(), t1, units = "auto"), digits = 2)
     message(sprintf(
@@ -355,6 +356,16 @@ newhall_batch.character <- function(.data,
 }
 
 .setCats <- function(x) {
+  x <- as.data.frame(x)
+  
+  if (length(x$temperatureRegime) == 0)
+    x$temperatureRegime <- rep(NA, nrow(x))
+  if (length(x$moistureRegime) == 0)
+    x$moistureRegime <- rep(NA, nrow(x))
+  if (length(x$regimeSubdivision1) == 0)
+    x$regimeSubdivision1 <- rep(NA, nrow(x))
+  if (length(x$regimeSubdivision2) == 0)
+    x$regimeSubdivision2 <- rep(NA, nrow(x))
   
   # handle character results w/ standard factor levels
 
@@ -449,7 +460,7 @@ newhall_batch.SpatRaster <- function(.data,
                                           each = sz)[1:length(cids)])
         
         # parallel within-block processing
-        r <- do.call('rbind', parallel::clusterApply(cls, X, function(x) {
+        r <- data.table::rbindlist(parallel::clusterApply(cls, X, function(x) {
             batch2(
               .data = x,
               unitSystem = unitSystem,
@@ -459,7 +470,7 @@ newhall_batch.SpatRaster <- function(.data,
               toString = toString,
               checkargs = checkargs
             )
-          }))
+          }), use.names = TRUE, fill = TRUE)
         
         # remove list columns
         r$dataset <- NULL
