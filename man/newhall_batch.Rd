@@ -10,7 +10,6 @@
 \usage{
 \method{newhall_batch}{default}(
   .data = NULL,
-  pathname = NULL,
   unitSystem = "metric",
   soilAirOffset = ifelse(unitSystem \%in\% c("in", "english"), 4.5, 2.5),
   amplitude = 0.66,
@@ -25,7 +24,6 @@
 
 \method{newhall_batch}{character}(
   .data,
-  pathname = NULL,
   unitSystem = "metric",
   soilAirOffset = ifelse(unitSystem \%in\% c("in", "english"), 4.5, 2.5),
   amplitude = 0.66,
@@ -40,7 +38,6 @@
 
 \method{newhall_batch}{SpatRaster}(
   .data,
-  pathname = NULL,
   unitSystem = "metric",
   soilAirOffset = ifelse(unitSystem \%in\% c("in", "english"), 4.5, 2.5),
   amplitude = 0.66,
@@ -48,14 +45,13 @@
   toString = FALSE,
   checkargs = TRUE,
   cores = 1,
-  file = paste0(tempfile(), ".grd"),
+  file = paste0(tempfile(), ".tif"),
   nrows = nrow(.data),
   overwrite = TRUE
 )
 
 \method{newhall_batch}{RasterBrick}(
   .data,
-  pathname = NULL,
   unitSystem = "metric",
   soilAirOffset = ifelse(unitSystem \%in\% c("in", "english"), 4.5, 2.5),
   amplitude = 0.66,
@@ -69,9 +65,7 @@
 )
 }
 \arguments{
-\item{.data}{a \emph{data.frame} or \emph{character} vector of paths (used as \code{pathname})}
-
-\item{pathname}{path(s) to CSV file(s) with Newhall batch format and required columns; default \code{NULL}}
+\item{.data}{a \emph{data.frame} or \emph{character} vector of paths to CSV files}
 
 \item{unitSystem}{Default: \code{"metric"} OR \code{"mm"} OR \code{"cm"} use \emph{millimeters} of rainfall (default for the BASIC model); set to \code{unitSystem="english"} OR \code{unitSystem="in"} to transform English (inches of precipitation; degrees Fahrenheit) inputs to metric (millimeters of precipitation; degrees Celsius) before running simulation}
 
