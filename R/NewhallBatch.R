@@ -299,8 +299,9 @@ batch2 <- function(.data,
     message(sprintf(
       "newhall_batch: ran n=%s simulations in %s %s",
       nrow(res), deltat, attr(deltat, 'units')
-    ))
+    ))          
   }
+  colnames(res) <- fields #, fieldsmatrix
   type.convert(res, as.is = TRUE)
 }
 
@@ -402,7 +403,7 @@ newhall_batch.SpatRaster <- function(.data,
                                      toString = FALSE,
                                      checkargs = TRUE, 
                                      cores = 1,
-                                     file = paste0(tempfile(), ".grd"),
+                                     file = paste0(tempfile(), ".tif"),
                                      nrows = nrow(.data),
                                      overwrite = TRUE) {
   stopifnot(requireNamespace("terra"))
@@ -432,8 +433,9 @@ newhall_batch.SpatRaster <- function(.data,
   
   out_info <- terra::writeStart(out, filename = file, overwrite = overwrite)
   
-  # start_row out_info<- seq(1, sum(out_info$nrows), nrows)
-  n_row <- out_info$nrows # diff(c(start_row, out_info$nrows + 1))
+  start_row <- lapply(out_info$nrows, function(x) seq(1, sum(x), nrows))
+  n_row <- lapply(seq_along(start_row), function(i) diff(c(start_row[[i]], out_info$nrows[i] + 1)))
+  n_set <- sum(sapply(start_row, length))
   
   if (cores > 1) {
     cls <- parallel::makeCluster(cores)
@@ -441,97 +443,110 @@ newhall_batch.SpatRaster <- function(.data,
 
     # TODO: can blocks be parallelized?
     for(i in seq_along(n_row)) {
-      if (n_row[i] > 0) {
-        st <- Sys.time()
-        blockdata <- terra::readValues(.data,
-                                       row = start_row[i],
-                                       nrows = n_row[i],
-                                       dataframe = TRUE)
-        ids <- 1:nrow(blockdata)
-        skip.idx <- which(is.na(blockdata$awc))
-        
-        if (length(skip.idx) > 0) {
-          blockcomplete <- blockdata[-skip.idx,]
-        } else blockcomplete <- blockdata
-        
-        cids <- 1:nrow(blockcomplete)
-        sz <- round(nrow(blockcomplete) / cores) + 1
-        X <- split(blockcomplete, f = rep(seq(from = 1, to = floor(length(cids) / sz) + 1), 
-                                          each = sz)[1:length(cids)])
-        
-        # parallel within-block processing
-        r <- data.table::rbindlist(parallel::clusterApply(cls, X, function(x) {
-            batch2(
-              .data = x,
-              unitSystem = unitSystem,
-              soilAirOffset = soilAirOffset,
-              amplitude = amplitude,
-              verbose = verbose,
-              toString = toString,
-              checkargs = checkargs
-            )
-          }), use.names = TRUE, fill = TRUE)
-        
-        # remove list columns
-        r$dataset <- NULL
-        r$results <- NULL
-        r$output <- NULL
-
-        # fill skipped NA cells 
-        r.na <- r[0, , drop = FALSE][1:length(skip.idx), , drop = FALSE]
-        r <- rbind(r, r.na)[order(c(ids[!ids %in% skip.idx], skip.idx)),]
-        
-        # explicitly set factors
-        r <- .setCats(r)
-        
-        terra::writeValues(out, as.matrix(r), start_row[i], nrows = n_row[i])
-        
-        cat(paste0(
-          "Batch ", i, " of ", length(start_row), " (n=",nrow(blockcomplete),") done in ",
-          round(as.numeric(Sys.time() - st, units = "secs")), " seconds\n"
-        ))
+      for(j in seq_along(n_row[[i]])) {
+        if (n_row[[i]][j] > 0) {
+          st <- Sys.time()
+          blockdata <- terra::readValues(.data,
+                                         row = start_row[[i]][j],
+                                         nrows = n_row[[i]][j],
+                                         dataframe = TRUE)
+          ids <- 1:nrow(blockdata)
+          skip.idx <- which(is.na(blockdata$awc))
+          
+          if (length(skip.idx) > 0) {
+            blockcomplete <- blockdata[-skip.idx,]
+          } else blockcomplete <- blockdata
+          
+          cids <- 1:nrow(blockcomplete)
+          sz <- round(nrow(blockcomplete) / cores) + 1
+          X <- split(blockcomplete, f = rep(seq(from = 1, to = floor(length(cids) / sz) + 1), 
+                                            each = sz)[1:length(cids)])
+          
+          # parallel within-block processing
+          r <- data.table::rbindlist(parallel::clusterApply(cls, X, function(x, unitSystem,
+                                                                             soilAirOffset,
+                                                                             amplitude,
+                                                                             verbose,
+                                                                             toString,
+                                                                             checkargs) {
+              jNSMR:::batch2(
+                .data = x,
+                unitSystem = unitSystem,
+                soilAirOffset = soilAirOffset,
+                amplitude = amplitude,
+                verbose = verbose,
+                toString = toString,
+                checkargs = checkargs
+              )
+            }, unitSystem = unitSystem,
+               soilAirOffset = soilAirOffset,
+               amplitude = amplitude,
+               verbose = verbose,
+               toString = toString,
+               checkargs = checkargs), use.names = TRUE, fill = TRUE)
+          
+          # fill skipped NA cells 
+          r.na <- r[0, , drop = FALSE][1:length(skip.idx), , drop = FALSE]
+          r <- rbind(r, r.na)[order(c(ids[!ids %in% skip.idx], skip.idx)),]
+          
+          # explicitly set factors
+          r <- .setCats(r)
+          
+          st2 <- Sys.time()
+          terra::writeValues(out, as.matrix(r), start_row[[i]][j], nrows = n_row[[i]][j])
+          st3 <- Sys.time()
+          
+          deltat <- signif(difftime(Sys.time(), st, units = "auto"), 2)
+          message(paste0(
+            "Batch ", i * j, " of ", n_set, " (n=",
+            nrow(blockcomplete), " on ", cores, " cores) done in ",
+            deltat, " ", attr(deltat, 'units')
+          ))
+        }
       }
     }
   } else {
-    for(i in seq_along(start_row)) {
-      if (n_row[i] > 0) {
-        dataall <- terra::readValues(
-          .data,
-          row = start_row[i],
-          nrows = n_row[i],
-          dataframe = TRUE
-        )
-        ids <- 1:nrow(dataall)
-        
-        skip.idx <- which(is.na(dataall$awc))
-        
-        if (length(skip.idx) > 0) {
-          datacomplete <- dataall[-skip.idx,]
-        } else datacomplete <- dataall
-        
-        r2 <- newhall_batch.default(
-          .data = datacomplete,
-          unitSystem = unitSystem,
-          soilAirOffset = soilAirOffset,
-          amplitude = amplitude,
-          verbose = verbose,
-          toString = toString,
-          checkargs = checkargs
-        )
-        
-        # remove list columns
-        r2$dataset <- NULL
-        r2$results <- NULL
-        r2$output <- NULL
-        
-        # fill skipped NA cells 
-        r.na <- r2[0, , drop = FALSE][1:length(skip.idx), , drop = FALSE]
-        r2 <- rbind(r2, r.na)[order(c(ids[!ids %in% skip.idx], skip.idx)),]
-        
-        # explicitly set factors
-        r2 <- .setCats(r2)
-        
-        terra::writeValues(out, as.matrix(r2), start_row[i], nrows = n_row[i])
+    for(i in seq_along(n_row)) {
+      for(j in seq_along(n_row[[i]])) {
+        if (n_row[[i]][j] > 0) {
+          dataall <- terra::readValues(
+            .data,
+            row = start_row[[i]][j],
+            nrows = n_row[[i]][j],
+            dataframe = TRUE
+          )
+          ids <- 1:nrow(dataall)
+          
+          skip.idx <- which(is.na(dataall$awc))
+          
+          if (length(skip.idx) > 0) {
+            datacomplete <- dataall[-skip.idx,]
+          } else datacomplete <- dataall
+          
+          r2 <- newhall_batch.default(
+            .data = datacomplete,
+            unitSystem = unitSystem,
+            soilAirOffset = soilAirOffset,
+            amplitude = amplitude,
+            verbose = verbose,
+            toString = toString,
+            checkargs = checkargs
+          )
+          
+          # remove list columns
+          r2$dataset <- NULL
+          r2$results <- NULL
+          r2$output <- NULL
+          
+          # fill skipped NA cells 
+          r.na <- r2[0, , drop = FALSE][1:length(skip.idx), , drop = FALSE]
+          r2 <- rbind(r2, r.na)[order(c(ids[!ids %in% skip.idx], skip.idx)),]
+          
+          # explicitly set factors
+          r2 <- .setCats(r2)
+          
+          terra::writeValues(out, as.matrix(r2), start_row[[i]][j], nrows = n_row[[i]][j])
+        }
       }
     }
   }
