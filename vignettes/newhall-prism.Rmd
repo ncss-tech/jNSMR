@@ -24,7 +24,7 @@ library(terra)
 # run jNSMR on prism monthly 30yr normals
 
 # path to PRISM data
-PRISM_PATH <- "~/Geodata/PRISM"
+PRISM_PATH <- tempdir() #"~/Geodata/PRISM"
 prism::prism_set_dl_dir(PRISM_PATH)
 
 # PRISM resolution; either 4km or 800m
@@ -47,6 +47,7 @@ Download PRISM data (if needed)
                     annual = annual, keepZip = keepZip)
   TRUE
 }
+
 bilfile <- list.files(PRISM_PATH, "\\.bil$", recursive = TRUE)
 
 # only download the PRISM data if it can't be found in PRISM_PATH
@@ -60,7 +61,7 @@ if (length(bilfile) == 0) {
 }
 
 # capture file name components
-monthly.pattern <- ".*PRISM_([a-z]+)_(30yr_normal)_(\\d+[a-z]+)M2_(\\d{2})_bil\\.bil"
+monthly.pattern <- ".*PRISM_([a-z]+)_(30yr_normal)_(\\d+[a-z]+)M[23]_(\\d{2})_bil\\.bil"
 bilfile_sub <- bilfile[grep(monthly.pattern, bilfile)]
 bilmonth <- strsplit(gsub(monthly.pattern,  "\\1;\\2;\\3;\\4", bilfile_sub), ";")
 bil <- data.frame(bilfile_sub, do.call('rbind', bilmonth))
@@ -171,4 +172,8 @@ nlegnames <- unique(levels(legnames))
 nlegcolors <- c("ORANGE","RED","TAN","YELLOW","SALMON")
 plot(newspsub2, col = nlegcolors[match(legnames, nlegnames)], pch=".", cex=5)
 legend("bottomleft", legend = nlegnames, pch=".", fill = nlegcolors)
+```
+
+```{r, echo=FALSE}
+unlink(PRISM_PATH, recursive = TRUE)
 ```
