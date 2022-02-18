@@ -68,9 +68,7 @@ jobs:
       - name: Install system dependencies (macOS)
         if: runner.os == 'macOS'
         run: |
-          brew install pkg-config
           brew install gdal
-        shell: Rscript {0}
 
 
       - name: Install dependencies
