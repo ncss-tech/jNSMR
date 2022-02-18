@@ -431,10 +431,10 @@ newhall_batch.SpatRaster <- function(.data,
   terra::nlyr(out) <- length(cnm)
   names(out) <- cnm
   
-  out_info <- terra::writeStart(out, filename = file, overwrite = overwrite)
-  
-  start_row <- lapply(out_info$nrows, function(x) seq(1, sum(x), nrows))
-  n_row <- lapply(seq_along(start_row), function(i) diff(c(start_row[[i]], out_info$nrows[i] + 1)))
+  out_info <- terra::writeStart(out, filename = file, overwrite = overwrite, progress = 0)
+  outrows <- c(out_info$row, nrow(out))
+  start_row <- lapply(1:out_info$n, function(i) seq(outrows[i], outrows[i + 1], nrows))
+  n_row <- lapply(seq_along(start_row), function(i) diff(c(start_row[[i]], outrows[i+1])))
   n_set <- sum(sapply(start_row, length))
   
   if (cores > 1) {
@@ -442,6 +442,7 @@ newhall_batch.SpatRaster <- function(.data,
     on.exit(parallel::stopCluster(cls))
 
     # TODO: can blocks be parallelized?
+    count <- 1
     for(i in seq_along(n_row)) {
       for(j in seq_along(n_row[[i]])) {
         if (n_row[[i]][j] > 0) {
@@ -457,33 +458,45 @@ newhall_batch.SpatRaster <- function(.data,
             blockcomplete <- blockdata[-skip.idx,]
           } else blockcomplete <- blockdata
           
-          cids <- 1:nrow(blockcomplete)
-          sz <- round(nrow(blockcomplete) / cores) + 1
-          X <- split(blockcomplete, f = rep(seq(from = 1, to = floor(length(cids) / sz) + 1), 
-                                            each = sz)[1:length(cids)])
-          
-          # parallel within-block processing
-          r <- data.table::rbindlist(parallel::clusterApply(cls, X, function(x, unitSystem,
-                                                                             soilAirOffset,
-                                                                             amplitude,
-                                                                             verbose,
-                                                                             toString,
-                                                                             checkargs) {
-              jNSMR:::batch2(
-                .data = x,
-                unitSystem = unitSystem,
-                soilAirOffset = soilAirOffset,
-                amplitude = amplitude,
-                verbose = verbose,
-                toString = toString,
-                checkargs = checkargs
-              )
-            }, unitSystem = unitSystem,
-               soilAirOffset = soilAirOffset,
-               amplitude = amplitude,
-               verbose = verbose,
-               toString = toString,
-               checkargs = checkargs), use.names = TRUE, fill = TRUE)
+          if (nrow(blockcomplete) > 0) {
+            # parallel within-block processing
+            cids <- 1:nrow(blockcomplete)
+            sz <- round(nrow(blockcomplete) / cores) + 1
+            X <- split(blockcomplete, f = rep(seq(from = 1, to = floor(length(cids) / sz) + 1), 
+                                              each = sz)[1:length(cids)])
+            r <- data.table::rbindlist(parallel::clusterApply(cls, X, function(x, unitSystem,
+                                                                               soilAirOffset,
+                                                                               amplitude,
+                                                                               verbose,
+                                                                               toString,
+                                                                               checkargs) {
+                batch2(
+                  .data = x,
+                  unitSystem = unitSystem,
+                  soilAirOffset = soilAirOffset,
+                  amplitude = amplitude,
+                  verbose = verbose,
+                  toString = toString,
+                  checkargs = checkargs
+                )
+              }, unitSystem = unitSystem,
+                 soilAirOffset = soilAirOffset,
+                 amplitude = amplitude,
+                 verbose = verbose,
+                 toString = toString,
+                 checkargs = checkargs), use.names = TRUE, fill = TRUE)
+          } else {
+            r <- data.frame(annualRainfall = logical(0), waterHoldingCapacity = logical(0), 
+                            annualWaterBalance = logical(0), summerWaterBalance = logical(0), 
+                            dryDaysAfterSummerSolstice = logical(0), moistDaysAfterWinterSolstice = logical(0), 
+                            numCumulativeDaysDry = logical(0), numCumulativeDaysMoistDry = logical(0), 
+                            numCumulativeDaysMoist = logical(0), numCumulativeDaysDryOver5C = logical(0), 
+                            numCumulativeDaysMoistDryOver5C = logical(0), numCumulativeDaysMoistOver5C = logical(0), 
+                            numConsecutiveDaysMoistInSomeParts = logical(0), numConsecutiveDaysMoistInSomePartsOver8C = logical(0), 
+                            temperatureRegime = logical(0), moistureRegime = logical(0), 
+                            regimeSubdivision1 = logical(0), regimeSubdivision2 = logical(0),
+                            stringsAsFactors = FALSE)
+          }
           
           # fill skipped NA cells 
           r.na <- r[0, , drop = FALSE][1:length(skip.idx), , drop = FALSE]
@@ -498,10 +511,11 @@ newhall_batch.SpatRaster <- function(.data,
           
           deltat <- signif(difftime(Sys.time(), st, units = "auto"), 2)
           message(paste0(
-            "Batch ", i * j, " of ", n_set, " (n=",
+            "Batch ", count, " of ", n_set, " (n=",
             nrow(blockcomplete), " on ", cores, " cores) done in ",
             deltat, " ", attr(deltat, 'units')
           ))
+          count <- count + 1
         }
       }
     }
@@ -553,9 +567,6 @@ newhall_batch.SpatRaster <- function(.data,
   
   out <- terra::writeStop(out)
   terra::readStop(.data)
-  
-  # replace NaN with NA_real_
-  # terra::values(out)[is.nan(terra::values(out))] <- NA_real_
   
   # factors in output object
   l <- levels(out)
