@@ -35,11 +35,18 @@ jobs:
           path: ${{ env.R_LIBS_USER }}
           key: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-${{ hashFiles('.github/depends.Rds') }}
           restore-keys: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-
-
+          
+      - name: Install system dependencies (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          brew install gdal
+           
       - name: Install dependencies
         run: |
+          Sys.setenv("R_REMOTES_NO_ERRORS_FROM_WARNINGS" = "true")
           install.packages(c("remotes"))
           remotes::install_deps(dependencies = TRUE)
+          install.packages("terra", repos = "https://rspatial.r-universe.dev")
           remotes::install_cran("covr")
         shell: Rscript {0}
 
