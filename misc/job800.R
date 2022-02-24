@@ -7,9 +7,9 @@ r <- terra::rast("prism_in_800.tif")
 # r <- aggregate(r, 20)
 
 # # # NA-masked static AWC
-v <- rep(NA, ncell(r))
-v[!is.na(values(r$pJan))] <- 200
-values(r$awc) <- v
+# v <- rep(NA, ncell(r))
+# v[!is.na(values(r$pJan))] <- 200
+# values(r$awc) <- v
 
 # ISSR-800 AWC
 # download.file(
@@ -17,26 +17,21 @@ values(r$awc) <- v
 #   destfile = "water_storage.tif",
 #   mode = "wb"
 # )
-# awc <- rast("water_storage.tif")
-# terra::crs(awc) <- "EPSG:5070"
-# awc <- project(awc, r)
+awc <- rast("water_storage.tif")
+terra::crs(awc) <- "EPSG:5070"
+awc <- project(awc, r)
 
 # global mean is near the default newhall value of 200mm
-# mean(values(awc) * 10, na.rm = TRUE)
+mean(values(awc) * 10, na.rm = TRUE)
 #> [1] 197.82760 # 200 (mm water) is default
 
 # # +/- 1 standard deviation ~[100,300]mm
-# sd(values(awc)*10, na.rm=T)
+sd(values(awc)*10, na.rm=T)
 # #> [1] 97.52501
  
 # # convert cm -> mm?
-# v <- values(awc) * 10
-# r$awc <- rep(NA, ncell(r))
-# values(r$awc) <- v
-
-# testing blocks of missing data
-# v[1:45000] <- NA
-# values(awc) <- v
+v <- values(awc) * 10
+r$awc <- v#rep(NA, ncell(r))
 
 plot(r$awc)
 
@@ -51,10 +46,10 @@ r2$stationName <- NULL; r2$stationID <- NULL; r2$notes <- NULL; r2$stProvCode <-
 
 #system.time(resbig <- newhall_batch(r2))
 system.time(resbig <-  newhall_batch(r2,
-                                     cores = 3,
-                                     nrows = ifelse(ncell(r2) > 100000, 8, 40)))
-
-terra::writeRaster(resbig, filename = "newhall_800m_200mm.tif", overwrite = TRUE)
+                                     cores = 6, 
+                                     amplitude = 1,
+                                     nrows = ifelse(ncell(r2) > 100000, 16, 40)))
+terra::writeRaster(resbig, filename = "newhall_800m_amplitude1_AWS.tif", overwrite = TRUE)
 
 # 44% of the full raster is NA
 # sum(is.na(values(r$pJan))) / ncell(r)

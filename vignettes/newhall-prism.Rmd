@@ -54,7 +54,7 @@ bilfile <- list.files(PRISM_PATH, "\\.bil$", recursive = TRUE)
 if (length(bilfile) == 0) {
   
   # download by month
-  res <- lapply(1:12, .download_month, resolution="4km")
+  res <- lapply(1:12, .download_month, resolution=RESOLUTION)
   
   # get the monthly files only (hardcoded for 30yr normals for now)
   bilfile <- list.files(PRISM_PATH, "\\.bil$", recursive = TRUE)

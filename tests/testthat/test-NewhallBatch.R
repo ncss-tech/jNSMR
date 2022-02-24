@@ -36,7 +36,7 @@ test_that("newhall_batch() raster interfaces", {
   r$stationName <- 1:(terra::ncell(r))
   r$awc <- 200
   r$maatmast <- 1.2
-  r$pdType <- "Normal"
+  # r$pdType <- "Normal"
   r$pdStartYr <- 1981
   r$pdEndYr <- 2010
   r$cntryCode <- "US"
@@ -49,4 +49,8 @@ test_that("newhall_batch() raster interfaces", {
   r$stationID <- 1:(terra::ncell(r))
   res <- newhall_batch(r)
   expect_true(inherits(res, 'SpatRaster'))
+  
+  # test sum of monthly PET annualPotentialEvapotranspiration
+  expect_true(.subset2(coef(lm(terra::values(res$annualRainfall - res$annualPotentialEvapotranspiration) ~
+                               terra::values(res$annualWaterBalance))), 2) - 1 < 1e-6)
 })
