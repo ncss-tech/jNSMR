@@ -1,3 +1,17 @@
+# jNSMR 0.0.0.9010
+
+ - New JAR file v1.6.4: adds a new result `annualPotentialEvapotranspiration` (sum of mean monthly PET) to _NewhallBatchResults_ class
+ 
+# jNSMR 0.0.0.9009
+
+ - Fixed multicore support in `newhall_batch(<SpatRaster>)`
+ 
+ - Optimization of `newhall_batch(<SpatRaster>)` method to skip `NA` rows and use less memory/fewer inputs
+ 
+# jNSMR 0.0.0.9008
+ 
+ - New JAR file v1.6.3: optimizes interface for batching in Java using simpler data structures better suited to high throughput
+ 
 # jNSMR 0.0.0.9007
 
  - Add SpatRaster and RasterBrick `newhall_batch()` methods for raster input 
@@ -12,7 +26,7 @@
 
  - Deprecated the JDOM API (JAR v1.6.1 provides legacy support for XML file formats etc.)
  
- - New JAR file v1.6.2 supports command-line inputs for running models
+ - New JAR file v1.6.2: supports command-line inputs for running models
 
 # jNSMR 0.0.0.9004
 

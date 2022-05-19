@@ -7,6 +7,7 @@ public class NewhallBatchResults {
   public double[] waterHoldingCapacity;
   public double[] annualWaterBalance;
   public double[] summerWaterBalance;
+  public double[] annualPotentialEvapotranspiration;
   public double[][] meanPotentialEvapotranspiration;
   public int[] dryDaysAfterSummerSolstice;
   public int[] moistDaysAfterWinterSolstice;
@@ -37,6 +38,7 @@ public class NewhallBatchResults {
     
     this.annualWaterBalance = new double[n];
     this.summerWaterBalance = new double[n];
+    this.annualPotentialEvapotranspiration = new double[n];
     this.meanPotentialEvapotranspiration = new double[n][12];
     
     this.dryDaysAfterSummerSolstice = new int[n];
@@ -88,27 +90,28 @@ public class NewhallBatchResults {
       this.summerWaterBalance[i] = nr[i].getSummerWaterBalance();
       
       // unpacking lists -> matrices
-      ///List<Double> mpe = nr[i].getMeanPotentialEvapotranspiration();
+      List<Double> mpe = nr[i].getMeanPotentialEvapotranspiration();
       double[] pet = new double[12];
-      //for (int j = 0; j < 12; j++) {
-      //  pet[j] = mpe.get(j);
-      //}
+      double apet = 0.0;
+      for (int j = 0; j < 12; j++) {
+        pet[j] = mpe.get(j);
+        apet += pet[j];
+      }
       this.meanPotentialEvapotranspiration[i] = pet;
+      this.annualPotentialEvapotranspiration[i] = apet;
       
       // calendars (12 30-day months stored as int[360])      
-      //ArrayList<Character> tc = nr[i].getTemperatureCalendar();
+      ArrayList<Character> tc = nr[i].getTemperatureCalendar();
+      ArrayList<Integer> mc = nr[i].getMoistureCalendar();
       int[] tcal = new int[360];
-      //for (int j = 0; j < 360; j++) {
-      //  tcal[j] = Character.getNumericValue(tc.get(j));
-      //}
-      this.temperatureCalendar[i] = tcal;
-      
-      //ArrayList<Integer> mc = nr[i].getMoistureCalendar();
       int[] mcal = new int[360];
-      //for (int j = 0; j < 360; j++) {
-      //  mcal[j] = mc.get(j);
-      //}
+      for (int j = 0; j < 360; j++) {
+        tcal[j] = Character.getNumericValue(tc.get(j));
+        mcal[j] = mc.get(j);
+      }
+      this.temperatureCalendar[i] = tcal;
       this.moistureCalendar[i] = mcal;
+      
     }
   }
   

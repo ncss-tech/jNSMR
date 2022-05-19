@@ -30,13 +30,13 @@ test_that("newhall_batch() raster interfaces", {
                              "tFeb", "tMar", "tApr", "tMay", "tJun", "tJul", "tAug", "tSep", 
                              "tOct", "tNov", "tDec", "pJan", "pFeb", "pMar", "pApr", "pMay", 
                              "pJun", "pJul", "pAug", "pSep", "pOct", "pNov", "pDec"))
-  r <- terra::rast(lapply(x2, function(a) terra::rast(matrix(a, 3, 4), crs="")))
+  r <- terra::rast(lapply(x2, function(a) terra::rast(matrix(a, nrow = 9, ncol = 12), crs="")))
   
   # PRISM info
   r$stationName <- 1:(terra::ncell(r))
   r$awc <- 200
   r$maatmast <- 1.2
-  r$pdType <- "Normal"
+  # r$pdType <- "Normal"
   r$pdStartYr <- 1981
   r$pdEndYr <- 2010
   r$cntryCode <- "US"
@@ -49,4 +49,13 @@ test_that("newhall_batch() raster interfaces", {
   r$stationID <- 1:(terra::ncell(r))
   res <- newhall_batch(r)
   expect_true(inherits(res, 'SpatRaster'))
+  # test sum of monthly PET annualPotentialEvapotranspiration
+  expect_true(.subset2(coef(lm(terra::values(res$annualRainfall - res$annualPotentialEvapotranspiration) ~
+                               terra::values(res$annualWaterBalance))), 2) - 1 < 1e-6)
+  skip_on_cran()
+  
+  # multicore
+  res2 <- newhall_batch(r, cores = 2)
+  expect_equal(nrow(res2), nrow(res))
+  
 })

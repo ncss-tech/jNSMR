@@ -60,7 +60,7 @@ batch1 <- function(.data = NULL,
                    checkargs = TRUE) {
   t1 <- Sys.time()
    # for NSE in data.table / R CMD check
-  .id <- NULL; allAirTempsDbl <- NULL; allPrecipsDbl <- NULL; awc <- NULL; cntryCode <- NULL; dataset <- NULL; elev <- NULL; latDD <- NULL; lonDD <- NULL; pApr <- NULL; pAug <- NULL; pDec <- NULL; pFeb <- NULL; pJan <- NULL; pJul <- NULL; pJun <- NULL; pMar <- NULL; pMay <- NULL; pNov <- NULL; pOct <- NULL; pSep <- NULL; pdEndYr <- NULL; pdStartYr <- NULL; results <- NULL; stationName <- NULL; tApr <- NULL; tAug <- NULL; tDec <- NULL; tFeb <- NULL; tJan <- NULL; tJul <- NULL; tJun <- NULL; tMar <- NULL; tMay <- NULL; tNov <- NULL; tOct<- NULL; tSep <- NULL
+  .id <- NULL; allAirTempsDbl <- NULL; allPrecipsDbl <- NULL; awc <- NULL; cntryCode <- NULL; dataset <- NULL; elev <- NULL; latDD <- NULL; lonDD <- NULL; pApr <- NULL; pAug <- NULL; pDec <- NULL; pFeb <- NULL; pJan <- NULL; pJul <- NULL; pJun <- NULL; pMar <- NULL; pMay <- NULL; pNov <- NULL; pOct <- NULL; pSep <- NULL; pdEndYr <- NULL; pdStartYr <- NULL; results <- NULL; stationName <- NULL; tApr <- NULL; tAug <- NULL; tDec <- NULL; tFeb <- NULL; tJan <- NULL; tJul <- NULL; tJun <- NULL; tMar <- NULL; tMay <- NULL; tNov <- NULL; tOct <- NULL; tSep <- NULL
 
   unitSystem <- match.arg(tolower(unitSystem), choices =  c("metric","mm","cm","in","english"))
   if (unitSystem %in% c("metric","mm")) {
@@ -272,6 +272,7 @@ batch2 <- function(.data,
     "annualRainfall",
     "waterHoldingCapacity",
     "annualWaterBalance",
+    "annualPotentialEvapotranspiration",
     "summerWaterBalance",
     "dryDaysAfterSummerSolstice",
     "moistDaysAfterWinterSolstice",
@@ -371,17 +372,17 @@ newhall_batch.character <- function(.data,
   # handle character results w/ standard factor levels
 
   # explicitly set factors (so each chunk uses same lookup table)
-  x$temperatureRegime  <- as.numeric(factor(x$temperatureRegime, levels = .str())) - 1
-  x$moistureRegime     <- as.numeric(factor(x$moistureRegime, levels = .smr())) - 1
+  x$temperatureRegime <- as.numeric(factor(x$temperatureRegime, levels = .str())) - 1
+  x$moistureRegime <- as.numeric(factor(x$moistureRegime, levels = .smr())) - 1
   x$regimeSubdivision1 <- as.numeric(factor(x$regimeSubdivision1, levels = .smrsub1())) - 1
   x$regimeSubdivision2 <- as.numeric(factor(x$regimeSubdivision2, levels = .smrsub2())) - 1
-  
+  # print(colnames(x)[sapply(x, is.character)])
   # convert anything else character -> factor -> numeric
-  x[sapply(x, is.character)] <- lapply(x[sapply(x, is.character)], function(y) as.numeric(factor(y)) - 1)
+  # x[sapply(x, is.character)] <- lapply(x[sapply(x, is.character)], function(y) as.numeric(factor(y)) - 1)
   x
 }
 
-.str <- function() c("Pergelic", "Cryic", "Frigid", "Mesic", "Isomesic", "Thermic", "Isothermic", "Hyperthermic", "Isohyperthermic")
+.str <- function() c("Pergelic", "Cryic", "Frigid", "Mesic", "Thermic", "Hyperthermic", "Isofrigid", "Isomesic", "Isothermic", "Isohyperthermic")
 .smr <- function()  c("Aridic", "Ustic", "Xeric", "Udic", "Perudic", "Undefined")
 .smrsub1 <- function() c("Typic", "Weak", "Wet", "Dry", "Extreme", "Xeric", "Udic", "Aridic", " ")
 .smrsub2 <- function() c("Aridic", "Tempustic", "Tropustic", "Tempudic", "Xeric", "Udic", "Tropudic", "Undefined", " ")
@@ -412,7 +413,7 @@ newhall_batch.SpatRaster <- function(.data,
   # create template brick
   out <- terra::rast(.data)
   if (newhall_version() >= "1.6.3") {
-    cnm <- c("annualRainfall", "waterHoldingCapacity", "annualWaterBalance", 
+    cnm <- c("annualRainfall", "waterHoldingCapacity", "annualWaterBalance", "annualPotentialEvapotranspiration",
                              "summerWaterBalance", "dryDaysAfterSummerSolstice", "moistDaysAfterWinterSolstice", 
                              "numCumulativeDaysDry", "numCumulativeDaysMoistDry", "numCumulativeDaysMoist", 
                              "numCumulativeDaysDryOver5C", "numCumulativeDaysMoistDryOver5C", 
@@ -434,7 +435,7 @@ newhall_batch.SpatRaster <- function(.data,
   out_info <- terra::writeStart(out, filename = file, overwrite = overwrite, progress = 0)
   outrows <- c(out_info$row, nrow(out))
   start_row <- lapply(1:out_info$n, function(i) seq(outrows[i], outrows[i + 1], nrows))
-  n_row <- lapply(seq_along(start_row), function(i) diff(c(start_row[[i]], outrows[i+1])))
+  n_row <- lapply(seq_along(start_row), function(i) diff(c(start_row[[i]], outrows[i + 1])) + 1)
   n_set <- sum(sapply(start_row, length))
   
   if (cores > 1) {
@@ -443,8 +444,8 @@ newhall_batch.SpatRaster <- function(.data,
 
     # TODO: can blocks be parallelized?
     count <- 1
-    for(i in seq_along(n_row)) {
-      for(j in seq_along(n_row[[i]])) {
+    for (i in seq_along(n_row)) {
+      for (j in seq_along(n_row[[i]])) {
         if (n_row[[i]][j] > 0) {
           st <- Sys.time()
           blockdata <- terra::readValues(.data,
@@ -488,6 +489,7 @@ newhall_batch.SpatRaster <- function(.data,
           } else {
             r <- data.frame(annualRainfall = logical(0), waterHoldingCapacity = logical(0), 
                             annualWaterBalance = logical(0), summerWaterBalance = logical(0), 
+                            annualPotentialEvapotranspiration = logical(0), 
                             dryDaysAfterSummerSolstice = logical(0), moistDaysAfterWinterSolstice = logical(0), 
                             numCumulativeDaysDry = logical(0), numCumulativeDaysMoistDry = logical(0), 
                             numCumulativeDaysMoist = logical(0), numCumulativeDaysDryOver5C = logical(0), 
@@ -520,8 +522,8 @@ newhall_batch.SpatRaster <- function(.data,
       }
     }
   } else {
-    for(i in seq_along(n_row)) {
-      for(j in seq_along(n_row[[i]])) {
+    for (i in seq_along(n_row)) {
+      for (j in seq_along(n_row[[i]])) {
         if (n_row[[i]][j] > 0) {
           dataall <- terra::readValues(
             .data,
@@ -576,7 +578,7 @@ newhall_batch.SpatRaster <- function(.data,
   l[[which(names(out) %in% "regimeSubdivision1")]] <- .smrsub1()
   l[[which(names(out) %in% "regimeSubdivision2")]] <- .smrsub2()
   
-  levels(out)<- l
+  levels(out) <- l
   out
 }
 
