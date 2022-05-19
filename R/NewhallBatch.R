@@ -435,7 +435,7 @@ newhall_batch.SpatRaster <- function(.data,
   out_info <- terra::writeStart(out, filename = file, overwrite = overwrite, progress = 0)
   outrows <- c(out_info$row, nrow(out))
   start_row <- lapply(1:out_info$n, function(i) seq(outrows[i], outrows[i + 1], nrows))
-  n_row <- lapply(seq_along(start_row), function(i) diff(c(start_row[[i]], outrows[i + 1])))
+  n_row <- lapply(seq_along(start_row), function(i) diff(c(start_row[[i]], outrows[i + 1])) + 1)
   n_set <- sum(sapply(start_row, length))
   
   if (cores > 1) {

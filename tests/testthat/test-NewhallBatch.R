@@ -49,8 +49,13 @@ test_that("newhall_batch() raster interfaces", {
   r$stationID <- 1:(terra::ncell(r))
   res <- newhall_batch(r)
   expect_true(inherits(res, 'SpatRaster'))
-  
   # test sum of monthly PET annualPotentialEvapotranspiration
   expect_true(.subset2(coef(lm(terra::values(res$annualRainfall - res$annualPotentialEvapotranspiration) ~
                                terra::values(res$annualWaterBalance))), 2) - 1 < 1e-6)
+  skip_on_cran()
+  
+  # multicore
+  res2 <- newhall_batch(r, cores = 2)
+  expect_equal(nrow(res2), nrow(res))
+  
 })
