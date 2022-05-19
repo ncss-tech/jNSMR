@@ -273,7 +273,7 @@ batch2 <- function(.data,
     "annualRainfall",
     "waterHoldingCapacity",
     "annualWaterBalance",
-    # "annualPotentialEvapotranspiration",
+    "annualPotentialEvapotranspiration",
     "summerWaterBalance",
     "dryDaysAfterSummerSolstice",
     "moistDaysAfterWinterSolstice",
@@ -413,8 +413,8 @@ newhall_batch.SpatRaster <- function(.data,
   
   # create template brick
   out <- terra::rast(.data)
-  if (newhall_version() == "1.6.3") {
-    cnm <- c("annualRainfall", "waterHoldingCapacity", "annualWaterBalance", #"annualPotentialEvapotranspiration",
+  if (newhall_version() >= "1.6.4") {
+    cnm <- c("annualRainfall", "waterHoldingCapacity", "annualWaterBalance", "annualPotentialEvapotranspiration",
                              "summerWaterBalance", "dryDaysAfterSummerSolstice", "moistDaysAfterWinterSolstice", 
                              "numCumulativeDaysDry", "numCumulativeDaysMoistDry", "numCumulativeDaysMoist", 
                              "numCumulativeDaysDryOver5C", "numCumulativeDaysMoistDryOver5C", 
@@ -490,7 +490,7 @@ newhall_batch.SpatRaster <- function(.data,
           } else {
             r <- data.frame(annualRainfall = logical(0), waterHoldingCapacity = logical(0), 
                             annualWaterBalance = logical(0), summerWaterBalance = logical(0), 
-                            #annualPotentialEvapotranspiration = logical(0), 
+                            annualPotentialEvapotranspiration = logical(0), 
                             dryDaysAfterSummerSolstice = logical(0), moistDaysAfterWinterSolstice = logical(0), 
                             numCumulativeDaysDry = logical(0), numCumulativeDaysMoistDry = logical(0), 
                             numCumulativeDaysMoist = logical(0), numCumulativeDaysDryOver5C = logical(0), 
