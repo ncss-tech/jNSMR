@@ -22,7 +22,7 @@ public class NewhallResults {
   private int numConsecutiveDaysMoistInSomePartsOver8C;
   private ArrayList<Character> temperatureCalendar;
   private ArrayList<Integer> moistureCalendar;
-  private ArrayList<Double> soilTempCalendar;
+  //private ArrayList<Double> soilTempCalendar;
   private ArrayList<Integer> nsd;
   private ArrayList<Integer> ncpm;
   private String temperatureRegime;
@@ -33,7 +33,7 @@ public class NewhallResults {
 
   public NewhallResults(double arf, double whc, double[] mpe, int nccd, int nccm, int[] ntd, int[] iday,
           double[] nd, double[] nsd, int[] ncpm, String trr, String ans, String div, String q, double awb, double swb,
-          List<Double> soilTempCalendar, String flxFile) {
+          /*List<Double> soilTempCalendar,*/ String flxFile) {
 
     this.annualRainfall = arf;
     this.waterHoldingCapacity = whc;
@@ -240,22 +240,22 @@ public class NewhallResults {
     return waterHoldingCapacity;
   }
 
-  public ArrayList<Double> getSoilTempCalendar() {
-    return soilTempCalendar;
-  }
+  //public ArrayList<Double> getSoilTempCalendar() {
+  //  return soilTempCalendar;
+  //}
 
-  public ArrayList<Double> getSoilTempAverages() {
+  /*public ArrayList<Double> getSoilTempAverages() {
     ArrayList<Double> soilTempAverages = new ArrayList<Double>(12);
     for (int i = 0; i < 12; i++) {
       double monthAverage = 0.0;
-      for (int j = 0; j < 30; j++) {
+      for (int j = 0; ji < 30; j++) {
         monthAverage += soilTempCalendar.get(i * 30 + j);
       }
       monthAverage /= 30.0;
       soilTempAverages.add(i, monthAverage);
     }
     return soilTempAverages;
-  }
+  }*/
 
   public String getRegimeSubdivision1() {
     return regimeSubdivision1;

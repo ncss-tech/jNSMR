@@ -89,7 +89,6 @@ public class CSVFileParser {
     }
     ndm.setAmplitude(BASICSimulationModelConstants.fcd);
     ndm.setMlraId(-1);
-    ndm.setNotes(new ArrayList<String>());
     ndm.getNotes().add("Results generated from legacy Newhall input format.");
 
     this.dataset.setMetadata(ndm);

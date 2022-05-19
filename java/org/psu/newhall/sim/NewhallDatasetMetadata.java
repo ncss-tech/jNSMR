@@ -2,6 +2,7 @@ package org.psu.newhall.sim;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.ArrayList;
 
 public class NewhallDatasetMetadata {
 
@@ -83,7 +84,7 @@ public class NewhallDatasetMetadata {
     this.contribCountry = "";
     this.contribEmail = "";
     this.contribPhone = "";
-    this.notes = Collections.EMPTY_LIST;
+    this.notes = new ArrayList<>();
     this.runDate = "";
     this.modelVersion = "";
     this.unitSystem = "";
