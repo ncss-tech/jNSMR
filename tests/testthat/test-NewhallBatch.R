@@ -30,7 +30,7 @@ test_that("newhall_batch() raster interfaces", {
                              "tFeb", "tMar", "tApr", "tMay", "tJun", "tJul", "tAug", "tSep", 
                              "tOct", "tNov", "tDec", "pJan", "pFeb", "pMar", "pApr", "pMay", 
                              "pJun", "pJul", "pAug", "pSep", "pOct", "pNov", "pDec"))
-  r <- terra::rast(lapply(x2, function(a) terra::rast(matrix(a, 3, 4), crs="")))
+  r <- terra::rast(lapply(x2, function(a) terra::rast(matrix(a, nrow = 9, ncol = 12), crs="")))
   
   # PRISM info
   r$stationName <- 1:(terra::ncell(r))
