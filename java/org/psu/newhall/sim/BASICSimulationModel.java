@@ -253,33 +253,12 @@
      wt += cs;
      dif = st - wt;
 
-
-
-
      String trr = "";
      for (int i4 = 1; i4 <= 10; i4++) {
        if (reg[i4]) {
          trr = BASICSimulationModelConstants.tempRegimes[i4 - 1];
        }
      }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
      double whc = waterHoldingCapacity;
      double fsl = whc / 64.0D;
@@ -312,8 +291,6 @@
        cd[i7] = 0.0D;
      }
 
-
-
      int msw = -1;
      int sib = 0;
      double sir = 0.0D;
@@ -339,8 +316,6 @@
      int ncsp = 0;
      int ncwp = 0;
 
-
-
      double[] nbd = new double[7];
      double[] ned = new double[7];
      double[] nbd8 = new double[7];
@@ -352,20 +327,14 @@
        ned8[i8] = 0.0D;
      }
 
-
-
      int[] iday = new int[361];
      for (int i9 = 1; i9 <= 360; i9++) {
        iday[i9] = 0;
      }
 
-
-
      int swp = -1;
      int gogr = 0;
-
-
-
+     
      boolean noMpeGreaterThanPrecip = true;
      for (int i11 = 1; i11 <= 12; i11++) {
        if (mpe[i11] > precip[i11]) {
