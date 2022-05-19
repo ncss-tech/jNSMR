@@ -7,9 +7,9 @@ r <- terra::rast("prism_in_800.tif")
 # r <- aggregate(r, 20)
 
 # # # NA-masked static AWC
-# v <- rep(NA, ncell(r))
-# v[!is.na(values(r$pJan))] <- 200
-# values(r$awc) <- v
+v <- rep(NA, ncell(r))
+v[!is.na(values(r$pJan))] <- 200
+values(r$awc) <- v
 
 # ISSR-800 AWC
 # download.file(
@@ -37,8 +37,9 @@ plot(r$awc)
 
 # test extent
 if(test) r2 <- crop(r, ext(r) / 40) else r2 <- r
-
+r2 <- crop(r, vect("D:/CA732/Geodata/CA732_Derived.sqlite", "ca732_wbdhu12"))
 plot(r2$awc)
+plot(vect("D:/CA732/Geodata/CA732_Derived.sqlite", "ca732_b"), add = T)
 plot(density(values(r2$awc), na.rm = TRUE))
 quantile(values(r2$awc), na.rm = TRUE)
 
@@ -47,9 +48,8 @@ r2$stationName <- NULL; r2$stationID <- NULL; r2$notes <- NULL; r2$stProvCode <-
 #system.time(resbig <- newhall_batch(r2))
 system.time(resbig <-  newhall_batch(r2,
                                      cores = 6, 
-                                     amplitude = 1,
                                      nrows = ifelse(ncell(r2) > 100000, 16, 40)))
-terra::writeRaster(resbig, filename = "newhall_800m_amplitude1_AWS.tif", overwrite = TRUE)
+terra::writeRaster(resbig, filename = "newhall_ca732_800m_200mm.tif", overwrite = TRUE)
 
 # 44% of the full raster is NA
 # sum(is.na(values(r$pJan))) / ncell(r)
@@ -59,4 +59,4 @@ plot(resbig$temperatureRegime)
 plot(resbig$moistureRegime)
 plot(resbig$regimeSubdivision1)
 plot(resbig$regimeSubdivision2)
-
+plot(vect("D:/CA732/Geodata/CA732_Derived.sqlite", "ca732_b"), add = T)

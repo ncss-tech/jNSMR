@@ -29,10 +29,12 @@ newhall_version <- function() {
 
   # allow an option to add additional characters to jar file name (custom jar file)
   jas <- getOption("jNSMR.JAR_SUFFIX", default = "-1.6.4")
-
+  
+  # jnf0 <- .jnsm_jar_file()
   jnf <- .jnsm_jar_file(suffix = jas)
   
   # newhall JAR setup: add to class path
+  # rJava::.jaddClassPath(jnf0) 
   rJava::.jaddClassPath(jnf)
   
 }
