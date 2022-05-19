@@ -36,8 +36,11 @@ newhall_readBatchInput <- function(pathname) {
 #' @importFrom utils write.csv
 newhall_writeBatchOutput <- function(output_file, pathname = NULL, input_file = pathname,
                                      batch_results = newhall_batch(input_file)) {
-  res <- batch_results[,"output", drop=FALSE]
-  res$output <- as.character(res$output)
+  res <- batch_results
+  if ("output" %in% colnames(batch_results)) {
+    res <- batch_results[, "output", drop = FALSE]
+    res$output <- as.character(res$output)
+  } 
   write.csv(as.data.frame(res), file = output_file)
 }
 

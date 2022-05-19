@@ -6,8 +6,8 @@
 #' @export
 #' @importFrom rJava .jnew
 XMLFileParser <- function(pathname) {
-    rJava::.jnew("org/psu/newhall/util/XMLFileParser",
-                 rJava::.jnew("java/io/File", pathname))
+  if (newhall_version() == "1.6.1") rJava::.jnew("org/psu/newhall/util/XMLFileParser", rJava::.jnew("java/io/File", pathname))
+  else message("XMLFileParser only available with Newhall v1.6.1 JAR")
 }
 
 #' Create an instance of _CSVFileParser_
@@ -16,8 +16,7 @@ XMLFileParser <- function(pathname) {
 #' @export
 #' @importFrom rJava .jnew
 CSVFileParser <- function(pathname) {
-  rJava::.jnew("org/psu/newhall/util/CSVFileParser",
-               rJava::.jnew("java/io/File", pathname))
+  rJava::.jnew("org/psu/newhall/util/CSVFileParser", rJava::.jnew("java/io/File", pathname))
 }
 
 #' Create an instance of _NewhallDataset_ from XML or CSV file
@@ -28,10 +27,15 @@ CSVFileParser <- function(pathname) {
 #' @importFrom rJava .jcall
 NewhallDatasetFromPath <- function(pathname, .parser = XMLFileParser) {
   subpar <- as.character(substitute(.parser))
-
-  rJava::.jcall(obj = .parser(pathname),
-                returnSig = "Lorg/psu/newhall/sim/NewhallDataset;",
-                method = ifelse(as.character(as.name(subpar)) == "CSVFileParser", "getDatset","getDataset"))
+  rJava::.jcall(
+    obj = .parser(pathname),
+    returnSig = "Lorg/psu/newhall/sim/NewhallDataset;",
+    method = ifelse(
+      as.character(as.name(subpar)) == "CSVFileParser",
+      "getDatset",
+      "getDataset"
+    )
+  )
 }
 
 # convenience methods supply .parser argument
@@ -39,7 +43,8 @@ NewhallDatasetFromPath <- function(pathname, .parser = XMLFileParser) {
 #' @export
 #' @rdname NewhallDatasetFromPath
 xml_NewhallDataset <- function(pathname) {
-  NewhallDatasetFromPath(pathname = pathname, .parser = XMLFileParser)
+  if (newhall_version() == "1.6.1") NewhallDatasetFromPath(pathname = pathname, .parser = XMLFileParser) 
+  else message("xml_NewhallDataset only available with Newhall v1.6.1 JAR")
 }
 
 #' @export

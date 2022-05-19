@@ -50,6 +50,11 @@ test_that("newhall_simulation() works", {
   )
 
   expect_equal(ndmeta$getContribFirstName(), "Josephine")
-
-  newhall_CSVResultsExporter(newhall_simulation(dataset = input_direct), tempfile())
+  d <- input_direct
+  r <- newhall_simulation(dataset = input_direct)
+  tf <- tempfile()
+  newhall_CSVResultsExporter(r, tf)
+  expect_message(newhall_XMLResultsExporter(d, r, tf))
+  expect_message(newhall_XMLStringResultsExporter(d, r))
+  unlink(tf)
 })

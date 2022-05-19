@@ -4,18 +4,16 @@
 \alias{newhall_GUI}
 \title{Open the Java Newhall Graphical User Interface}
 \usage{
-newhall_GUI(intern = FALSE, wait = FALSE)
+newhall_GUI(command_only = FALSE)
 }
 \arguments{
-\item{intern}{passed to \code{system()}; when \code{TRUE} return a character result containing output. Default \code{FALSE} returns invisibly.}
-
-\item{wait}{passed to \code{system()} default \code{FALSE} with \code{intern=FALSE} will not interrupt R session.}
+\item{command_only}{If \code{TRUE} return the command that would be executed to run GUI}
 }
 \value{
 If \code{intern=TRUE} (default), the output of the command, one line per character string. \code{0} if successful. If the command could not be run for any reason, the value is 127 and a warning is issued.
 }
 \description{
-Open the Java Newhall Graphical User Interface
+This function must be called interactively.
 }
 \details{
 See documentation for \code{system()} return result for limitations on line length, error conditions, etc.
