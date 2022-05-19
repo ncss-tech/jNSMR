@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">jNSMR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.9008</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.9010</span>
       </span>
     </div>
 
@@ -43,7 +43,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -86,12 +86,12 @@
 </h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ncss-tech.github.io/jNSMR">jNSMR</a></span><span class="op">)</span>
-<span class="co">#&gt; jNSMR (0.0.0.9008) -- R interface to the classic Newhall Simulation Model</span>
-<span class="co">#&gt; Added JAR file (newhall-1.6.3.jar) to Java class path.</span>
+<span class="co">#&gt; jNSMR (0.0.0.9010) -- R interface to the classic Newhall Simulation Model</span>
+<span class="co">#&gt; Added JAR file (newhall-1.6.4.jar) to Java class path.</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://docs.ropensci.org/prism/" class="external-link">prism</a></span><span class="op">)</span>
 <span class="co">#&gt; Be sure to set the download folder using `prism_set_dl_dir()`.</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/terra/" class="external-link">terra</a></span><span class="op">)</span>
-<span class="co">#&gt; terra version 1.4.22</span>
+<span class="co">#&gt; terra 1.5.35</span>
 
 <span class="co"># run jNSMR on prism monthly 30yr normals</span>
 
@@ -122,7 +122,7 @@
 <span id="cb2-18"><a href="#cb2-18"></a><span class="cf">if</span> (<span class="kw">length</span>(bilfile) <span class="op">==</span><span class="st"> </span><span class="dv">0</span>) {</span>
 <span id="cb2-19"><a href="#cb2-19"></a>  </span>
 <span id="cb2-20"><a href="#cb2-20"></a>  <span class="co"># download by month</span></span>
-<span id="cb2-21"><a href="#cb2-21"></a>  res &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">12</span>, .download_month, <span class="dt">resolution=</span><span class="st">"4km"</span>)</span>
+<span id="cb2-21"><a href="#cb2-21"></a>  res &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">12</span>, .download_month, <span class="dt">resolution=</span>RESOLUTION)</span>
 <span id="cb2-22"><a href="#cb2-22"></a>  </span>
 <span id="cb2-23"><a href="#cb2-23"></a>  <span class="co"># get the monthly files only (hardcoded for 30yr normals for now)</span></span>
 <span id="cb2-24"><a href="#cb2-24"></a>  bilfile &lt;-<span class="st"> </span><span class="kw">list.files</span>(PRISM_PATH, <span class="st">"</span><span class="ch">\\</span><span class="st">.bil$"</span>, <span class="dt">recursive =</span> <span class="ot">TRUE</span>)</span>
@@ -298,7 +298,7 @@
 <span class="va">prism_frame</span><span class="op">$</span><span class="va">stationID</span> <span class="op">&lt;-</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/dimensions.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">prism_frame</span><span class="op">)</span>
 
 <span class="co"># make test batch of prism point data values</span>
-<span class="va">test_set</span> <span class="op">&lt;-</span> <span class="va">prism_frame</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">20000</span>, <span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/pkg/terra/man/dimensions.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">prism_frame</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,<span class="op">]</span></code></pre></div>
+<span class="va">test_set</span> <span class="op">&lt;-</span> <span class="va">prism_frame</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/math-generics.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">20000</span>, <span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/pkg/terra/man/dimensions.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">prism_frame</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,<span class="op">]</span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="run-simulations">Run simulations<a class="anchor" aria-label="anchor" href="#run-simulations"></a>
@@ -306,7 +306,7 @@
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># run simulations</span>
 <span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">jNSMR</span><span class="fu">::</span><span class="fu"><a href="../reference/newhall_batch.html">newhall_batch</a></span><span class="op">(</span><span class="va">test_set</span><span class="op">)</span> 
-<span class="co">#&gt; newhall_batch: ran n=20000 simulations in 45 secs</span></code></pre></div>
+<span class="co">#&gt; newhall_batch: ran n=20000 simulations in 39 secs</span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="results">Results<a class="anchor" aria-label="anchor" href="#results"></a>
@@ -344,7 +344,7 @@
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">newspsub</span><span class="op">$</span><span class="va">regimeSubdivision1</span><span class="op">)</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt;  Aridic     Dry Extreme   Typic    Udic    Weak     Wet   Xeric </span>
-<span class="co">#&gt;      15    1578     347   13437      21    2746    1372      15</span>
+<span class="co">#&gt;      14    1581     324   13430      16    2786    1356      14</span>
 <span class="va">newspsub2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">newsp</span>, <span class="va">newsp</span><span class="op">$</span><span class="va">moistureRegime</span> <span class="op"><a href="https://rdrr.io/pkg/terra/man/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Aridic"</span>,<span class="st">"Xeric"</span><span class="op">)</span><span class="op">)</span>
 <span class="va">legnames</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">newspsub2</span><span class="op">$</span><span class="va">regimeSubdivision1</span>, <span class="va">newspsub2</span><span class="op">$</span><span class="va">moistureRegime</span><span class="op">)</span><span class="op">)</span>
 <span class="va">nlegnames</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/factors.html" class="external-link">levels</a></span><span class="op">(</span><span class="va">legnames</span><span class="op">)</span><span class="op">)</span>
@@ -372,7 +372,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
 </div>
 
       </footer>
