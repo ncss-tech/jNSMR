@@ -1,20 +1,15 @@
-/*    */ package org.psu.newhall;
-/*    */
-/*    */ // import javax.swing.UIManager;
-/*    */ // import org.psu.newhall.ui.DefaultNewhallFrame;
-         import java.io.File;
-         import java.util.Arrays;
-         import java.util.stream.Stream;
-         import java.util.stream.Collectors;
-/*    */ import org.psu.newhall.sim.*;
-         import org.psu.newhall.util.*;
-/*    */ public class Newhall
-/*    */ {
-/*  8 */   public static String NSM_VERSION = "1.6.3";
-/*    */
-/*    */
-/*    */
-/*    */   public static void main(String[] args) {
+package org.psu.newhall;
+import java.io.File;
+import java.util.Arrays;
+import java.util.stream.Stream;
+import java.util.stream.Collectors;
+import org.psu.newhall.sim.*;
+import org.psu.newhall.util.*;
+
+ public class Newhall {
+   public static String NSM_VERSION = "1.6.4";
+
+   public static void main(String[] args) {
 
              if (args.length < 4) {
                System.out.println("This is Java Newhall Simulation Model v"+NSM_VERSION);
@@ -28,18 +23,6 @@
                                                                       Double.parseDouble(args[3]));
                System.out.println(nr.toString());
              }
-
-
-/* 13 */     //System.setProperty("com.apple.mrj.application.apple.menu.about.name", "Newhall");
-/*    */     //try {
-/* 16 */     //  UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-/* 17 */     //} catch (Exception e) {
-/* 18 */     //  System.out.println(e);
-/*    */     //}
-/*    */
-/* 21 */     //DefaultNewhallFrame dnf = new DefaultNewhallFrame();
-/* 22 */     //dnf.setLocation(100, 100);
-/* 23 */     //dnf.setVisible(true);
 
 
              /* //Single model run example
@@ -63,11 +46,6 @@
                 NewhallResults nr = BASICSimulationModel.runSimulation(nhd, 200);
                 System.out.println(nr.toString()); */
 
-/*    */   }
-/*    */ }
+   }
+}
 
-
-/* Location:              /home/andrew/workspace/jNSMR/inst/jNSM/jNSM_v1.6.1_public_bundle/libs/newhall-1.6.1.jar!/org/psu/newhall/Newhall.class
- * Java compiler version: 5 (49.0)
- * JD-Core Version:       1.1.3
- */
