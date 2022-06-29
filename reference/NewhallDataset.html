@@ -57,68 +57,93 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">NewhallDataset</span><span class="op">(</span>
-  <span class="va">stationName</span>,
-  <span class="va">country</span>,
-  <span class="va">latDD</span>,
-  <span class="va">lonDD</span>,
-  <span class="va">elev</span>,
-  <span class="va">allPrecipsDbl</span>,
-  <span class="va">allAirTempsDbl</span>,
-  <span class="va">pdbegin</span>,
-  <span class="va">pdend</span>,
-  <span class="va">smcsawc</span>,
-  checkargs <span class="op">=</span> <span class="cn">TRUE</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">NewhallDataset</span><span class="op">(</span></span>
+<span>  <span class="va">stationName</span>,</span>
+<span>  <span class="va">country</span>,</span>
+<span>  <span class="va">latDD</span>,</span>
+<span>  <span class="va">lonDD</span>,</span>
+<span>  <span class="va">elev</span>,</span>
+<span>  <span class="va">allPrecipsDbl</span>,</span>
+<span>  <span class="va">allAirTempsDbl</span>,</span>
+<span>  <span class="va">pdbegin</span>,</span>
+<span>  <span class="va">pdend</span>,</span>
+<span>  <span class="va">smcsawc</span>,</span>
+<span>  checkargs <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>stationName</dt>
 <dd><p><em>character</em>; station name</p></dd>
+
+
 <dt>country</dt>
 <dd><p><em>character</em>; country</p></dd>
+
+
 <dt>latDD</dt>
 <dd><p><em>double</em>; latitude decimal degrees</p></dd>
+
+
 <dt>lonDD</dt>
 <dd><p><em>double</em>; longitude decimal degrees</p></dd>
+
+
 <dt>elev</dt>
 <dd><p><em>double</em>; station elevation</p></dd>
+
+
 <dt>allPrecipsDbl</dt>
 <dd><p><em>double</em>; length <code>12</code> precipitation, monthly (millimeters of water)</p></dd>
+
+
 <dt>allAirTempsDbl</dt>
 <dd><p><em>double</em>; length <code>12</code> air temperature, monthly (degrees celsius)</p></dd>
+
+
 <dt>pdbegin</dt>
 <dd><p><em>integer</em>; beginning year</p></dd>
+
+
 <dt>pdend</dt>
 <dd><p><em>integer</em>; ending year</p></dd>
+
+
 <dt>smcsawc</dt>
 <dd><p><em>double</em>; soil moisture control section available water capacity (millimeters)</p></dd>
+
+
 <dt>checkargs</dt>
 <dd><p><em>logical</em>; check argument length and data types? Default: <code>FALSE</code></p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>an instance of <em>NewhallDataset</em></p>
+    
+
+<p>an instance of <em>NewhallDataset</em></p>
+
+
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">input_direct</span> <span class="op">&lt;-</span> <span class="fu">NewhallDataset</span><span class="op">(</span></span>
-<span class="r-in">  stationName <span class="op">=</span> <span class="st">"WILLIAMSPORT"</span>,</span>
-<span class="r-in">  country <span class="op">=</span> <span class="st">"US"</span>,</span>
-<span class="r-in">  latDD <span class="op">=</span> <span class="fl">41.24</span>,</span>
-<span class="r-in">  lonDD <span class="op">=</span> <span class="op">-</span><span class="fl">76.92</span>,</span>
-<span class="r-in">  elev <span class="op">=</span> <span class="fl">158.0</span>,</span>
-<span class="r-in">  allPrecipsDbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">44.2</span>, <span class="fl">40.39</span>, <span class="fl">113.54</span>, <span class="fl">96.77</span>, <span class="fl">95</span>, <span class="fl">98.55</span>,</span>
-<span class="r-in">                    <span class="fl">66.04</span>, <span class="fl">13.46</span>, <span class="fl">54.86</span>, <span class="fl">6.35</span>, <span class="fl">17.53</span>, <span class="fl">56.39</span><span class="op">)</span>,</span>
-<span class="r-in">  allAirTempsDbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">2.17</span>, <span class="fl">0.89</span>, <span class="fl">3.72</span>, <span class="fl">9.11</span>, <span class="fl">16.28</span>, <span class="fl">21.11</span>,</span>
-<span class="r-in">                     <span class="fl">22.83</span>, <span class="fl">21.94</span>, <span class="fl">19.78</span>, <span class="fl">10.5</span>, <span class="fl">5.33</span>, <span class="op">-</span><span class="fl">1.06</span><span class="op">)</span>,</span>
-<span class="r-in">  pdbegin <span class="op">=</span> <span class="fl">1930</span>,</span>
-<span class="r-in">  pdend <span class="op">=</span> <span class="fl">1930</span>,</span>
-<span class="r-in">  smcsawc <span class="op">=</span> <span class="fl">200.0</span></span>
-<span class="r-in"><span class="op">)</span></span>
-<span class="r-in"></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">input_direct</span> <span class="op">&lt;-</span> <span class="fu">NewhallDataset</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  stationName <span class="op">=</span> <span class="st">"WILLIAMSPORT"</span>,</span></span>
+<span class="r-in"><span>  country <span class="op">=</span> <span class="st">"US"</span>,</span></span>
+<span class="r-in"><span>  latDD <span class="op">=</span> <span class="fl">41.24</span>,</span></span>
+<span class="r-in"><span>  lonDD <span class="op">=</span> <span class="op">-</span><span class="fl">76.92</span>,</span></span>
+<span class="r-in"><span>  elev <span class="op">=</span> <span class="fl">158.0</span>,</span></span>
+<span class="r-in"><span>  allPrecipsDbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">44.2</span>, <span class="fl">40.39</span>, <span class="fl">113.54</span>, <span class="fl">96.77</span>, <span class="fl">95</span>, <span class="fl">98.55</span>,</span></span>
+<span class="r-in"><span>                    <span class="fl">66.04</span>, <span class="fl">13.46</span>, <span class="fl">54.86</span>, <span class="fl">6.35</span>, <span class="fl">17.53</span>, <span class="fl">56.39</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  allAirTempsDbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">2.17</span>, <span class="fl">0.89</span>, <span class="fl">3.72</span>, <span class="fl">9.11</span>, <span class="fl">16.28</span>, <span class="fl">21.11</span>,</span></span>
+<span class="r-in"><span>                     <span class="fl">22.83</span>, <span class="fl">21.94</span>, <span class="fl">19.78</span>, <span class="fl">10.5</span>, <span class="fl">5.33</span>, <span class="op">-</span><span class="fl">1.06</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  pdbegin <span class="op">=</span> <span class="fl">1930</span>,</span></span>
+<span class="r-in"><span>  pdend <span class="op">=</span> <span class="fl">1930</span>,</span></span>
+<span class="r-in"><span>  smcsawc <span class="op">=</span> <span class="fl">200.0</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -133,7 +158,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
       </footer></div>

@@ -57,95 +57,166 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="co"># S3 method for default</span>
-<span class="fu">newhall_batch</span><span class="op">(</span>
-  .data <span class="op">=</span> <span class="cn">NULL</span>,
-  unitSystem <span class="op">=</span> <span class="st">"metric"</span>,
-  soilAirOffset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">unitSystem</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"in"</span>, <span class="st">"english"</span><span class="op">)</span>, <span class="fl">4.5</span>, <span class="fl">2.5</span><span class="op">)</span>,
-  amplitude <span class="op">=</span> <span class="fl">0.66</span>,
-  verbose <span class="op">=</span> <span class="cn">TRUE</span>,
-  toString <span class="op">=</span> <span class="cn">TRUE</span>,
-  checkargs <span class="op">=</span> <span class="cn">TRUE</span>,
-  cores <span class="op">=</span> <span class="cn">NULL</span>,
-  file <span class="op">=</span> <span class="cn">NULL</span>,
-  nrows <span class="op">=</span> <span class="cn">NULL</span>,
-  overwrite <span class="op">=</span> <span class="cn">NULL</span>
-<span class="op">)</span>
-
-<span class="co"># S3 method for character</span>
-<span class="fu">newhall_batch</span><span class="op">(</span>
-  <span class="va">.data</span>,
-  unitSystem <span class="op">=</span> <span class="st">"metric"</span>,
-  soilAirOffset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">unitSystem</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"in"</span>, <span class="st">"english"</span><span class="op">)</span>, <span class="fl">4.5</span>, <span class="fl">2.5</span><span class="op">)</span>,
-  amplitude <span class="op">=</span> <span class="fl">0.66</span>,
-  verbose <span class="op">=</span> <span class="cn">TRUE</span>,
-  toString <span class="op">=</span> <span class="cn">TRUE</span>,
-  checkargs <span class="op">=</span> <span class="cn">TRUE</span>,
-  cores <span class="op">=</span> <span class="fl">1</span>,
-  file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">".grd"</span><span class="op">)</span>,
-  nrows <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">.data</span><span class="op">)</span>,
-  overwrite <span class="op">=</span> <span class="cn">TRUE</span>
-<span class="op">)</span>
-
-<span class="co"># S3 method for SpatRaster</span>
-<span class="fu">newhall_batch</span><span class="op">(</span>
-  <span class="va">.data</span>,
-  unitSystem <span class="op">=</span> <span class="st">"metric"</span>,
-  soilAirOffset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">unitSystem</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"in"</span>, <span class="st">"english"</span><span class="op">)</span>, <span class="fl">4.5</span>, <span class="fl">2.5</span><span class="op">)</span>,
-  amplitude <span class="op">=</span> <span class="fl">0.66</span>,
-  verbose <span class="op">=</span> <span class="cn">TRUE</span>,
-  toString <span class="op">=</span> <span class="cn">FALSE</span>,
-  checkargs <span class="op">=</span> <span class="cn">TRUE</span>,
-  cores <span class="op">=</span> <span class="fl">1</span>,
-  file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">".tif"</span><span class="op">)</span>,
-  nrows <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">.data</span><span class="op">)</span>,
-  overwrite <span class="op">=</span> <span class="cn">TRUE</span>
-<span class="op">)</span>
-
-<span class="co"># S3 method for RasterBrick</span>
-<span class="fu">newhall_batch</span><span class="op">(</span>
-  <span class="va">.data</span>,
-  unitSystem <span class="op">=</span> <span class="st">"metric"</span>,
-  soilAirOffset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">unitSystem</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"in"</span>, <span class="st">"english"</span><span class="op">)</span>, <span class="fl">4.5</span>, <span class="fl">2.5</span><span class="op">)</span>,
-  amplitude <span class="op">=</span> <span class="fl">0.66</span>,
-  verbose <span class="op">=</span> <span class="cn">TRUE</span>,
-  toString <span class="op">=</span> <span class="cn">TRUE</span>,
-  checkargs <span class="op">=</span> <span class="cn">TRUE</span>,
-  cores <span class="op">=</span> <span class="fl">1</span>,
-  file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">".grd"</span><span class="op">)</span>,
-  nrows <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">.data</span><span class="op">)</span>,
-  overwrite <span class="op">=</span> <span class="cn">TRUE</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for default</span></span>
+<span><span class="fu">newhall_batch</span><span class="op">(</span></span>
+<span>  .data <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  unitSystem <span class="op">=</span> <span class="st">"metric"</span>,</span>
+<span>  soilAirOffset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">unitSystem</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"in"</span>, <span class="st">"english"</span><span class="op">)</span>, <span class="fl">4.5</span>, <span class="fl">2.5</span><span class="op">)</span>,</span>
+<span>  amplitude <span class="op">=</span> <span class="fl">0.66</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  toString <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  checkargs <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  cores <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  file <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  nrows <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  overwrite <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for character</span></span>
+<span><span class="fu">newhall_batch</span><span class="op">(</span></span>
+<span>  <span class="va">.data</span>,</span>
+<span>  unitSystem <span class="op">=</span> <span class="st">"metric"</span>,</span>
+<span>  soilAirOffset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">unitSystem</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"in"</span>, <span class="st">"english"</span><span class="op">)</span>, <span class="fl">4.5</span>, <span class="fl">2.5</span><span class="op">)</span>,</span>
+<span>  amplitude <span class="op">=</span> <span class="fl">0.66</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  toString <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  checkargs <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  cores <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">".grd"</span><span class="op">)</span>,</span>
+<span>  nrows <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">.data</span><span class="op">)</span>,</span>
+<span>  overwrite <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for SpatRaster</span></span>
+<span><span class="fu">newhall_batch</span><span class="op">(</span></span>
+<span>  <span class="va">.data</span>,</span>
+<span>  unitSystem <span class="op">=</span> <span class="st">"metric"</span>,</span>
+<span>  soilAirOffset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">unitSystem</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"in"</span>, <span class="st">"english"</span><span class="op">)</span>, <span class="fl">4.5</span>, <span class="fl">2.5</span><span class="op">)</span>,</span>
+<span>  amplitude <span class="op">=</span> <span class="fl">0.66</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  toString <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  checkargs <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  cores <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">".tif"</span><span class="op">)</span>,</span>
+<span>  nrows <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">.data</span><span class="op">)</span>,</span>
+<span>  overwrite <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for RasterBrick</span></span>
+<span><span class="fu">newhall_batch</span><span class="op">(</span></span>
+<span>  <span class="va">.data</span>,</span>
+<span>  unitSystem <span class="op">=</span> <span class="st">"metric"</span>,</span>
+<span>  soilAirOffset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">unitSystem</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"in"</span>, <span class="st">"english"</span><span class="op">)</span>, <span class="fl">4.5</span>, <span class="fl">2.5</span><span class="op">)</span>,</span>
+<span>  amplitude <span class="op">=</span> <span class="fl">0.66</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  toString <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  checkargs <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  cores <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">".grd"</span><span class="op">)</span>,</span>
+<span>  nrows <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">.data</span><span class="op">)</span>,</span>
+<span>  overwrite <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>.data</dt>
-<dd><p>a <em>data.frame</em> or <em>character</em> vector of paths to CSV files</p></dd>
+<dd><p>a <em>data.frame</em> or <em>character</em> vector of paths to CSV files; or a SpatRaster or RasterStack containin the same data elements and names as included in the batch <code>data.frame</code>/CSV format</p></dd>
+
+
 <dt>unitSystem</dt>
 <dd><p>Default: <code>"metric"</code> OR <code>"mm"</code> OR <code>"cm"</code> use <em>millimeters</em> of rainfall (default for the BASIC model); set to <code>unitSystem="english"</code> OR <code>unitSystem="in"</code> to transform English (inches of precipitation; degrees Fahrenheit) inputs to metric (millimeters of precipitation; degrees Celsius) before running simulation</p></dd>
+
+
 <dt>soilAirOffset</dt>
 <dd><p>air-soil temperature offset. Conventionally for jNSM: <code>2.5</code> for metric units (default); <code>4.5</code> for english units.</p></dd>
+
+
 <dt>amplitude</dt>
 <dd><p>difference in amplitude between soil and air temperature sine waves. Default <code>0.66</code></p></dd>
+
+
 <dt>verbose</dt>
 <dd><p>print message about number of simulations and elapsed time</p></dd>
+
+
 <dt>toString</dt>
 <dd><p>call <code><a href="https://rdrr.io/r/base/toString.html" class="external-link">toString()</a></code> method on each <em>NewhallResults</em> object and store in <code>output</code> column of result?</p></dd>
+
+
 <dt>checkargs</dt>
 <dd><p><em>logical</em>; check argument length and data types for each run? Default: <code>TRUE</code></p></dd>
+
+
 <dt>cores</dt>
 <dd><p>number of cores; used only for processing <em>SpatRaster</em> or <em>Raster*</em> input</p></dd>
+
+
 <dt>file</dt>
 <dd><p>path to write incremental raster processing output for large inputs that do not fit in memory; passed to <code><a href="https://rdrr.io/pkg/terra/man/readwrite.html" class="external-link">terra::writeStart()</a></code> and used only for processing <em>SpatRaster</em> or <em>Raster*</em> input; defaults to a temporary file created by <code><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile()</a></code> if needed</p></dd>
+
+
 <dt>nrows</dt>
 <dd><p>number of rows to use per block; passed to <code><a href="https://rdrr.io/pkg/terra/man/readwrite.html" class="external-link">terra::readValues()</a></code> <code><a href="https://rdrr.io/pkg/terra/man/readwrite.html" class="external-link">terra::writeValues()</a></code>; used only for processing <em>SpatRaster</em> or <em>Raster*</em> input; defaults to number of rows in dataset if needed</p></dd>
+
+
 <dt>overwrite</dt>
 <dd><p>logical; overwrite <code>file</code>? passed to <code><a href="https://rdrr.io/pkg/terra/man/readwrite.html" class="external-link">terra::writeStart()</a></code>; defaults to <code>TRUE</code> if needed</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>a <em>data.frame</em> containing list columns with Java Objects for <em>NewhallDataset</em>, <em>NewhallResults</em>.  If <code>toString=TRUE</code> the column <code>output</code> is a <em>character</em> containing the <code><a href="https://rdrr.io/r/base/toString.html" class="external-link">toString()</a></code> output from <em>NewhallResults</em></p>
+    
+
+<p>When input is a data.frame or character vector of paths to CSV files, result is a a <em>data.frame</em> with key model outputs (see details) containing list columns with Java Objects for <em>NewhallDataset</em>, <em>NewhallResults</em>.  If <code>toString=TRUE</code> the column <code>output</code> is a <em>character</em> containing the <code><a href="https://rdrr.io/r/base/toString.html" class="external-link">toString()</a></code> output from <em>NewhallResults</em></p>
+
+
+
+<p>For <code>SpatRaster</code> input returns a <code>SpatRaster</code> containing numeric and categorical model outputs. <code>RasterStack</code> inputs are first converted to <code>SpatRaster</code>, and a <code>SpatRaster</code> is returned</p>
+    </div>
+    <div id="details">
+    <h2>Details</h2>
+    
+<div class="section">
+<h3 id="dry-v-s-moist">Dry v.s. Moist<a class="anchor" aria-label="anchor" href="#dry-v-s-moist"></a></h3>
+
+
+<p>The concept of "dry" versus "moist" is expressed only semi-quantitatively in the Newhall model with three different categories of moisture being recognized: "moist", "moist/dry" and "dry."</p>
+<p>Of interest to the classification of climate regimes of a soil are not only when/where the soil is dry but how that moisture or lack thereof corresponds with prevailing temperature conditions.</p>
+</div>
+
+<div class="section">
+<h3 id="standard-model-output-fields-and-their-definitions-in-the-latest-available-jar-file-include-">Standard model output fields and their definitions in the latest available JAR file include:<a class="anchor" aria-label="anchor" href="#standard-model-output-fields-and-their-definitions-in-the-latest-available-jar-file-include-"></a></h3>
+
+<ul><li><p><code>"annualRainfall"</code> - sum of monthly precipitation values over the year</p></li>
+<li><p><code>"waterHoldingCapacity"</code> - total water storage of soil profile in units of length (<code>mm</code>). Default: <code>200</code> millimeters (8 inches) of water storage. This is approximately the average water storage when calculated using SSURGO available water capacities and depths for the soils in CONUS.</p></li>
+<li><p><code>"annualWaterBalance"</code> - sum of difference of precipitation and estimated mean potential evapotranspiration by month</p></li>
+<li><p><code>"annualPotentialEvapotranspiration"</code> - sum of mean monthly potential evapotranspiration</p></li>
+<li><p><code>"summerWaterBalance"</code> - sum of (summer months only) difference of precipitation and estimated mean potential evapotranspiration by month</p></li>
+<li><p><code>"dryDaysAfterSummerSolstice"</code> - number of days "dry" after June 21; used in definition of Xeric moisture regime</p></li>
+<li><p><code>"moistDaysAfterWinterSolstice"</code> - number of days "dry" after December 21; used in definition of Xeric moisture regime</p></li>
+<li><p><code>"numCumulativeDaysDry"</code> - cumulative number of "dry" days per year</p></li>
+<li><p><code>"numCumulativeDaysMoistDry"</code> - cumulative number of days "intermediate between moist and dry" per year</p></li>
+<li><p><code>"numCumulativeDaysMoist"</code> - cumulative number of days "moist" per year</p></li>
+<li><p><code>"numCumulativeDaysDryOver5C"</code> - cumulative number of days dry per year when the soil temperature is over 5 degrees C</p></li>
+<li><p><code>"numCumulativeDaysMoistDryOver5C"</code> - cumulative number of days intermediate between moist and dry per year when the soil temperature is over 5 degrees C</p></li>
+<li><p><code>"numCumulativeDaysMoistOver5C"</code> - cumulative number of days moist per year when the soil temperature is over 5 degrees C</p></li>
+<li><p><code>"numConsecutiveDaysMoistInSomeParts"</code> - maximum number of consecutive days per year where some parts of the profile are moist</p></li>
+<li><p><code>"numConsecutiveDaysMoistInSomePartsOver8C"</code> - maximum number of consecutive days per year where some parts of the profile are moist and the soil temperature is over 8 degrees C</p></li>
+<li><p><code>"temperatureRegime"</code> - estimated Soil Temperature Regime; one of "Pergelic", "Cryic", "Frigid", "Mesic", "Thermic", "Hyperthermic", "Isofrigid", "Isomesic", "Isothermic", or "Isohyperthermic"</p></li>
+<li><p><code>"moistureRegime"</code> - estimated Soil Moisture Regime; one of "Aridic", "Ustic", "Xeric", "Udic", "Perudic", or "Undefined"</p></li>
+<li><p><code>"regimeSubdivision1"</code> - estimated "Moisture Regime Subdivision #1"; one of "Typic", "Weak", "Wet", "Dry", "Extreme", "Xeric", "Udic", "Aridic", or " " (See van Wambecke and Newhall, 1981)</p></li>
+<li><p><code>"regimeSubdivision2"</code> - estimated "Moisture Regime subdivision #2"; one of "Aridic", "Tempustic", "Tropustic", "Tempudic", "Xeric", "Udic", "Tropudic", "Undefined",  or " " (See van Wambecke and Newhall, 1981)</p></li>
+</ul><p>"Years" are based on uniform 12 months with 30 days each for a total of 360 days (no leap years).</p>
+<p>The following elements have a many:1 relationship with model runs and are not (yet) included in the standard output, but can be accessed using an rJava object reference to a <code>NewhallResults</code> class.</p><ul><li><p><code>"meanPotentialEvapotranspiration"</code> - estimated mean monthly potential evapotranspiration</p></li>
+<li><p><code>"temperatureCalendar"</code> - compressed (360 day) grid "calendar" showing days above 5 and 8 degrees C</p></li>
+<li><p><code>"moistureCalendar"</code> - compressed (360 day) grid "calendar" showing moist, moist/dry and dry days.</p></li>
+</ul></div>
+
+    </div>
+    <div id="references">
+    <h2>References</h2>
+    <p>van Wambeke, A. and Newhall, F. and United States Soil Management Support Services (1981) Calculated Soil Moisture and Temperature Regimes of South America: A Compilation of Soil Climatic Regimes calculated by using a mathematical model developed by F. Newhall (Soil Conservation Service, USDA, 1972). SMSS : Technical Monograph : Soil management support services. New York State College of Agriculture and Life Sciences, Cornell University, Department of Agronomy. Available online: <a href="https://books.google.com/books?id=jwtIAAAAYAAJ" class="external-link">https://books.google.com/books?id=jwtIAAAAYAAJ</a></p>
     </div>
     <div id="see-also">
     <h2>See also</h2>
@@ -164,7 +235,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
       </footer></div>

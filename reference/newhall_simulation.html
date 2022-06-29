@@ -57,34 +57,51 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">newhall_simulation</span><span class="op">(</span>
-  <span class="va">dataset</span>,
-  smcsawc <span class="op">=</span> <span class="fl">200</span>,
-  soilAirOffset <span class="op">=</span> <span class="fl">2.5</span>,
-  amplitude <span class="op">=</span> <span class="fl">0.66</span>,
-  bsm <span class="op">=</span> <span class="fu"><a href="BASICSimulationModel.html">BASICSimulationModel</a></span><span class="op">(</span><span class="op">)</span>,
-  toString <span class="op">=</span> <span class="cn">FALSE</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">newhall_simulation</span><span class="op">(</span></span>
+<span>  <span class="va">dataset</span>,</span>
+<span>  smcsawc <span class="op">=</span> <span class="fl">200</span>,</span>
+<span>  soilAirOffset <span class="op">=</span> <span class="fl">2.5</span>,</span>
+<span>  amplitude <span class="op">=</span> <span class="fl">0.66</span>,</span>
+<span>  bsm <span class="op">=</span> <span class="fu"><a href="BASICSimulationModel.html">BASICSimulationModel</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  toString <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>dataset</dt>
 <dd><p>a <em>NewhallDataset</em> <code>jobjRef</code></p></dd>
+
+
 <dt>smcsawc</dt>
 <dd><p>Default: <code>200</code></p></dd>
+
+
 <dt>soilAirOffset</dt>
 <dd><p>air-soil temperature offset. Conventionally for jNSM: <code>2.5</code> for metric units (default); <code>4.5</code> for english units.</p></dd>
+
+
 <dt>amplitude</dt>
 <dd><p>Default: <code>0.66</code> amplitude difference between soil and air temperature sine waves</p></dd>
+
+
 <dt>bsm</dt>
 <dd><p><code>jobjRef</code> for <em>BASICSimulationModel</em>; Default: <code><a href="BASICSimulationModel.html">BASICSimulationModel()</a></code></p></dd>
+
+
 <dt>toString</dt>
 <dd><p>logical; return <em>NewhallResults</em> (Default: <code>FALSE</code>), or if <code>TRUE</code> call <code>result.toString()</code> to get formatted standard output as <em>character</em>?</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p><em>NewhallResults</em><code>jobjRef</code></p>
+    
+
+<p><em>NewhallResults</em></p>
+<p></p>
+<p><code>jobjRef</code></p>
+
+
     </div>
 
   </div>
@@ -99,7 +116,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
       </footer></div>

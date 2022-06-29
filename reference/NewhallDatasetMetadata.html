@@ -57,91 +57,144 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">NewhallDatasetMetadata</span><span class="op">(</span>
-  <span class="va">stationName</span>,
-  stationId <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">stationName</span><span class="op">)</span><span class="op">)</span>,
-  elev <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">stationName</span><span class="op">)</span><span class="op">)</span>,
-  stationStateProvidence <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">stationName</span><span class="op">)</span><span class="op">)</span>,
-  stationCountry <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">stationName</span><span class="op">)</span><span class="op">)</span>,
-  mlraName <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">stationName</span><span class="op">)</span><span class="op">)</span>,
-  mlraId <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">stationName</span><span class="op">)</span><span class="op">)</span>,
-  contribFirstName <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">stationName</span><span class="op">)</span><span class="op">)</span>,
-  contribLastName <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">stationName</span><span class="op">)</span><span class="op">)</span>,
-  contribTitle <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">stationName</span><span class="op">)</span><span class="op">)</span>,
-  contribOrg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">stationName</span><span class="op">)</span><span class="op">)</span>,
-  contribAddress <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">stationName</span><span class="op">)</span><span class="op">)</span>,
-  contribCity <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">stationName</span><span class="op">)</span><span class="op">)</span>,
-  contribStateProvidence <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">stationName</span><span class="op">)</span><span class="op">)</span>,
-  contribPostal <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">stationName</span><span class="op">)</span><span class="op">)</span>,
-  contribCountry <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">stationName</span><span class="op">)</span><span class="op">)</span>,
-  contribEmail <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">stationName</span><span class="op">)</span><span class="op">)</span>,
-  contribPhone <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">stationName</span><span class="op">)</span><span class="op">)</span>,
-  notes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">stationName</span><span class="op">)</span><span class="op">)</span>,
-  runDate <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date</a></span><span class="op">(</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">stationName</span><span class="op">)</span><span class="op">)</span>,
-  modelVersion <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="newhall_version.html">newhall_version</a></span><span class="op">(</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">stationName</span><span class="op">)</span><span class="op">)</span>,
-  unitSystem <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"metric"</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">stationName</span><span class="op">)</span><span class="op">)</span>,
-  soilAirOffset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1.2</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">stationName</span><span class="op">)</span><span class="op">)</span>,
-  amplitude <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0.66</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">stationName</span><span class="op">)</span><span class="op">)</span>,
-  network <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">stationName</span><span class="op">)</span><span class="op">)</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">NewhallDatasetMetadata</span><span class="op">(</span></span>
+<span>  <span class="va">stationName</span>,</span>
+<span>  stationId <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">stationName</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  elev <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">stationName</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  stationStateProvidence <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">stationName</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  stationCountry <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">stationName</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  mlraName <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">stationName</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  mlraId <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">stationName</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  contribFirstName <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">stationName</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  contribLastName <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">stationName</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  contribTitle <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">stationName</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  contribOrg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">stationName</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  contribAddress <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">stationName</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  contribCity <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">stationName</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  contribStateProvidence <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">stationName</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  contribPostal <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">stationName</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  contribCountry <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">stationName</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  contribEmail <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">stationName</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  contribPhone <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">stationName</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  notes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">stationName</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  runDate <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date</a></span><span class="op">(</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">stationName</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  modelVersion <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="newhall_version.html">newhall_version</a></span><span class="op">(</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">stationName</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  unitSystem <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"metric"</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">stationName</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  soilAirOffset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1.2</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">stationName</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  amplitude <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0.66</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">stationName</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  network <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">stationName</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>stationName</dt>
 <dd><p><em>character</em>; station name</p></dd>
+
+
 <dt>stationId</dt>
 <dd><p><em>character</em>; station ID</p></dd>
+
+
 <dt>elev</dt>
 <dd><p><em>double</em>; station elevation</p></dd>
+
+
 <dt>stationStateProvidence</dt>
 <dd><p><em>character</em>; station state / providence</p></dd>
+
+
 <dt>stationCountry</dt>
 <dd><p><em>character</em>; station country</p></dd>
+
+
 <dt>mlraName</dt>
 <dd><p><em>character</em>; Major Land Resource Area (MLRA) name</p></dd>
+
+
 <dt>mlraId</dt>
 <dd><p><em>integer</em>; Major Land Resource Area ID</p></dd>
+
+
 <dt>contribFirstName</dt>
 <dd><p><em>character</em>; contributor first name</p></dd>
+
+
 <dt>contribLastName</dt>
 <dd><p><em>character</em>; contributor last name</p></dd>
+
+
 <dt>contribTitle</dt>
 <dd><p><em>character</em>; contributor title</p></dd>
+
+
 <dt>contribOrg</dt>
 <dd><p><em>character</em>; contributor organization</p></dd>
+
+
 <dt>contribAddress</dt>
 <dd><p><em>character</em>; contributor address</p></dd>
+
+
 <dt>contribCity</dt>
 <dd><p><em>character</em>; contributor city</p></dd>
+
+
 <dt>contribStateProvidence</dt>
 <dd><p><em>character</em>; contributor state / providence</p></dd>
+
+
 <dt>contribPostal</dt>
 <dd><p><em>character</em>; contributor postal code</p></dd>
+
+
 <dt>contribCountry</dt>
 <dd><p><em>character</em>; contributor country</p></dd>
+
+
 <dt>contribEmail</dt>
 <dd><p><em>character</em>; contributor email</p></dd>
+
+
 <dt>contribPhone</dt>
 <dd><p><em>character</em>; contributor phone</p></dd>
+
+
 <dt>notes</dt>
 <dd><p><em>character</em> (may have length &gt;1); notes</p></dd>
+
+
 <dt>runDate</dt>
 <dd><p><em>character</em>; run date</p></dd>
+
+
 <dt>modelVersion</dt>
 <dd><p><em>character</em>; model version</p></dd>
+
+
 <dt>unitSystem</dt>
 <dd><p><em>character</em>; unit system either "cm" or "in"</p></dd>
+
+
 <dt>soilAirOffset</dt>
 <dd><p><em>double</em>; soil-air temperature offset</p></dd>
+
+
 <dt>amplitude</dt>
 <dd><p><em>double</em>; soil-air temperature amplitude</p></dd>
+
+
 <dt>network</dt>
 <dd><p><em>character</em>; network</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>an instance of <em>NewhallDatasetMetadata</em></p>
+    
+
+<p>an instance of <em>NewhallDatasetMetadata</em></p>
+
+
     </div>
 
   </div>
@@ -156,7 +209,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
       </footer></div>
