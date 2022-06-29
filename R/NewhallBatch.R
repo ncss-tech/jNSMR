@@ -1,5 +1,5 @@
 #' Run a Newhall simulation for each row in a CSV file
-#' @param .data a _data.frame_ or _character_ vector of paths to CSV files
+#' @param .data a _data.frame_ or _character_ vector of paths to CSV files; or a SpatRaster or RasterStack containin the same data elements and names as included in the batch `data.frame`/CSV format
 #' @param unitSystem Default: `"metric"` OR `"mm"` OR `"cm"` use _millimeters_ of rainfall (default for the BASIC model); set to `unitSystem="english"` OR `unitSystem="in"` to transform English (inches of precipitation; degrees Fahrenheit) inputs to metric (millimeters of precipitation; degrees Celsius) before running simulation
 #' @param soilAirOffset air-soil temperature offset. Conventionally for jNSM: `2.5` for metric units (default); `4.5` for english units.
 #' @param amplitude difference in amplitude between soil and air temperature sine waves. Default `0.66`
@@ -7,13 +7,51 @@
 #' @param toString call `toString()` method on each _NewhallResults_ object and store in `output` column of result?
 #' @param checkargs _logical_; check argument length and data types for each run? Default: `TRUE`
 #' @seealso csv_writeNewhallBatch
-#' @return a _data.frame_ containing list columns with Java Objects for _NewhallDataset_, _NewhallResults_.  If `toString=TRUE` the column `output` is a _character_ containing the `toString()` output from _NewhallResults_
+#' @return When input is a data.frame or character vector of paths to CSV files, result is a a _data.frame_ with key model outputs (see details) containing list columns with Java Objects for _NewhallDataset_, _NewhallResults_.  If `toString=TRUE` the column `output` is a _character_ containing the `toString()` output from _NewhallResults_
 #' @export
 #'
 #' @importFrom data.table data.table rbindlist
 #' @aliases newhall_batch
 #' @rdname newhall_batch
 #' @export
+#' @references van Wambeke, A. and Newhall, F. and United States Soil Management Support Services (1981) Calculated Soil Moisture and Temperature Regimes of South America: A Compilation of Soil Climatic Regimes calculated by using a mathematical model developed by F. Newhall (Soil Conservation Service, USDA, 1972). SMSS : Technical Monograph : Soil management support services. New York State College of Agriculture and Life Sciences, Cornell University, Department of Agronomy. Available online: <https://books.google.com/books?id=jwtIAAAAYAAJ>
+#' @details
+#' 
+#' #### Dry v.s. Moist
+#' 
+#' The concept of "dry" versus "moist" is expressed only semi-quantitatively in the Newhall model with three different categories of moisture being recognized: "moist", "moist/dry" and "dry."
+#' 
+#' Of interest to the classification of climate regimes of a soil are not only when/where the soil is dry but how that moisture or lack thereof corresponds with prevailing temperature conditions.
+#' 
+#' #### Standard model output fields and their definitions in the latest available JAR file include:
+#' 
+#'  - `"annualRainfall"` - sum of monthly precipitation values over the year
+#'  - `"waterHoldingCapacity"` - total water storage of soil profile in units of length (`mm`). Default: `200` millimeters (8 inches) of water storage. This is approximately the average water storage when calculated using SSURGO available water capacities and depths for the soils in CONUS.
+#'  - `"annualWaterBalance"` - sum of difference of precipitation and estimated mean potential evapotranspiration by month
+#'  - `"annualPotentialEvapotranspiration"` - sum of mean monthly potential evapotranspiration
+#'  - `"summerWaterBalance"` - sum of (summer months only) difference of precipitation and estimated mean potential evapotranspiration by month
+#'  - `"dryDaysAfterSummerSolstice"` - number of days "dry" after June 21; used in definition of Xeric moisture regime
+#'  - `"moistDaysAfterWinterSolstice"` - number of days "dry" after December 21; used in definition of Xeric moisture regime
+#'  - `"numCumulativeDaysDry"` - cumulative number of "dry" days per year
+#'  - `"numCumulativeDaysMoistDry"` - cumulative number of days "intermediate between moist and dry" per year
+#'  - `"numCumulativeDaysMoist"` - cumulative number of days "moist" per year
+#'  - `"numCumulativeDaysDryOver5C"` - cumulative number of days dry per year when the soil temperature is over 5 degrees C
+#'  - `"numCumulativeDaysMoistDryOver5C"` - cumulative number of days intermediate between moist and dry per year when the soil temperature is over 5 degrees C
+#'  - `"numCumulativeDaysMoistOver5C"` - cumulative number of days moist per year when the soil temperature is over 5 degrees C
+#'  - `"numConsecutiveDaysMoistInSomeParts"` - maximum number of consecutive days per year where some parts of the profile are moist
+#'  - `"numConsecutiveDaysMoistInSomePartsOver8C"` - maximum number of consecutive days per year where some parts of the profile are moist and the soil temperature is over 8 degrees C
+#'  - `"temperatureRegime"` - estimated Soil Temperature Regime; one of "Pergelic", "Cryic", "Frigid", "Mesic", "Thermic", "Hyperthermic", "Isofrigid", "Isomesic", "Isothermic", or "Isohyperthermic"
+#'  - `"moistureRegime"` - estimated Soil Moisture Regime; one of "Aridic", "Ustic", "Xeric", "Udic", "Perudic", or "Undefined"
+#'  - `"regimeSubdivision1"` - estimated "Moisture Regime Subdivision #1"; one of "Typic", "Weak", "Wet", "Dry", "Extreme", "Xeric", "Udic", "Aridic", or " " (See van Wambecke and Newhall, 1981)
+#'  - `"regimeSubdivision2"` - estimated "Moisture Regime subdivision #2"; one of "Aridic", "Tempustic", "Tropustic", "Tempudic", "Xeric", "Udic", "Tropudic", "Undefined",  or " " (See van Wambecke and Newhall, 1981)
+#'  
+#'  "Years" are based on uniform 12 months with 30 days each for a total of 360 days (no leap years).
+#' 
+#' The following elements have a many:1 relationship with model runs and are not (yet) included in the standard output, but can be accessed using an rJava object reference to a `NewhallResults` class.
+#'  - `"meanPotentialEvapotranspiration"` - estimated mean monthly potential evapotranspiration
+#'  - `"temperatureCalendar"` - compressed (360 day) grid "calendar" showing days above 5 and 8 degrees C
+#'  - `"moistureCalendar"` - compressed (360 day) grid "calendar" showing moist, moist/dry and dry days.
+#'  
 newhall_batch.default <- function(.data = NULL,
                                   unitSystem = "metric",
                                   soilAirOffset = ifelse(unitSystem %in% c("in","english"), 4.5, 2.5),
@@ -395,8 +433,9 @@ newhall_batch.character <- function(.data,
 #' @param overwrite logical; overwrite `file`? passed to `terra::writeStart()`; defaults to `TRUE` if needed
 #' @export
 #' @rdname newhall_batch
+#' @return For `SpatRaster` input returns a `SpatRaster` containing numeric and categorical model outputs. `RasterStack` inputs are first converted to `SpatRaster`, and a `SpatRaster` is returned
 #' @importFrom terra rast readStart writeStart readValues writeValues writeStop readStop `nlyr<-`
-#' @importFrom parallel makeCluster stopCluster parRapply
+#' @importFrom parallel makeCluster stopCluster clusterApply
 newhall_batch.SpatRaster <- function(.data, 
                                      unitSystem = "metric",
                                      soilAirOffset = ifelse(unitSystem %in% c("in","english"), 4.5, 2.5),
