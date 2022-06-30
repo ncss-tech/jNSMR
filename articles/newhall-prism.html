@@ -306,7 +306,7 @@
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># run simulations</span></span>
 <span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">jNSMR</span><span class="fu">::</span><span class="fu"><a href="../reference/newhall_batch.html">newhall_batch</a></span><span class="op">(</span><span class="va">test_set</span><span class="op">)</span> </span>
-<span><span class="co">#&gt; newhall_batch: ran n=20000 simulations in 40 secs</span></span></code></pre></div>
+<span><span class="co">#&gt; newhall_batch: ran n=20000 simulations in 42 secs</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="results">Results<a class="anchor" aria-label="anchor" href="#results"></a>
@@ -344,7 +344,7 @@
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">newspsub</span><span class="op">$</span><span class="va">regimeSubdivision1</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Aridic     Dry Extreme   Typic    Udic    Weak     Wet   Xeric </span></span>
-<span><span class="co">#&gt;       9    1566     324   13450       8    2769    1383      17</span></span>
+<span><span class="co">#&gt;      13    1564     347   13351      11    2791    1397      21</span></span>
 <span><span class="va">newspsub2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">newsp</span>, <span class="va">newsp</span><span class="op">$</span><span class="va">moistureRegime</span> <span class="op"><a href="https://rdrr.io/pkg/terra/man/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Aridic"</span>,<span class="st">"Xeric"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">legnames</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">newspsub2</span><span class="op">$</span><span class="va">regimeSubdivision1</span>, <span class="va">newspsub2</span><span class="op">$</span><span class="va">moistureRegime</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">nlegnames</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/factors.html" class="external-link">levels</a></span><span class="op">(</span><span class="va">legnames</span><span class="op">)</span><span class="op">)</span></span>
