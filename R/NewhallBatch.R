@@ -14,7 +14,12 @@
 #' @aliases newhall_batch
 #' @rdname newhall_batch
 #' @export
-#' @references van Wambeke, A. and Newhall, F. and United States Soil Management Support Services (1981) Calculated Soil Moisture and Temperature Regimes of South America: A Compilation of Soil Climatic Regimes calculated by using a mathematical model developed by F. Newhall (Soil Conservation Service, USDA, 1972). SMSS : Technical Monograph : Soil management support services. New York State College of Agriculture and Life Sciences, Cornell University, Department of Agronomy. Available online: <https://books.google.com/books?id=jwtIAAAAYAAJ>
+#' 
+#' @references 
+#' van Wambeke, A. and Newhall, F. and United States Soil Management Support Services (1981) Calculated Soil Moisture and Temperature Regimes of South America: A Compilation of Soil Climatic Regimes calculated by using a mathematical model developed by F. Newhall (Soil Conservation Service, USDA, 1972). SMSS : Technical Monograph : Soil management support services. New York State College of Agriculture and Life Sciences, Cornell University, Department of Agronomy. Available online: <https://books.google.com/books?id=jwtIAAAAYAAJ>
+#' Thornthwaite, C. W. (1948). An Approach toward a Rational Classification of Climate. Geographical Review, 38(1), 55–94. https://doi.org/10.2307/210739
+#' Newhall, F., Berdanier, C. (1996) Calculation of soil moisture regimes from the climatic record. National Soil Survey Center, Natural Resources Conservation Service, U.S. Dept. of Agriculture. Available online: <https://www.nrcs.usda.gov/Internet/FSE_DOCUMENTS/nrcs142p2_052248.pdf>
+#' 
 #' @details
 #' 
 #' #### Dry v.s. Moist
@@ -27,30 +32,30 @@
 #' 
 #'  - `"annualRainfall"` - sum of monthly precipitation values over the year
 #'  - `"waterHoldingCapacity"` - total water storage of soil profile in units of length (`mm`). Default: `200` millimeters (8 inches) of water storage. This is approximately the average water storage when calculated using SSURGO available water capacities and depths for the soils in CONUS.
-#'  - `"annualWaterBalance"` - sum of difference of precipitation and estimated mean potential evapotranspiration by month
-#'  - `"annualPotentialEvapotranspiration"` - sum of mean monthly potential evapotranspiration
+#'  - `"annualWaterBalance"` - sum of difference of precipitation and estimated mean potential evapotranspiration (Thornthwaite, 1948) by month
+#'  - `"annualPotentialEvapotranspiration"` - sum of mean monthly potential evapotranspiration (Thornthwaite, 1948)
 #'  - `"summerWaterBalance"` - sum of (summer months only) difference of precipitation and estimated mean potential evapotranspiration by month
 #'  - `"dryDaysAfterSummerSolstice"` - number of days "dry" after June 21; used in definition of Xeric moisture regime
-#'  - `"moistDaysAfterWinterSolstice"` - number of days "dry" after December 21; used in definition of Xeric moisture regime
+#'  - `"moistDaysAfterWinterSolstice"` - number of days "moist" after December 21; used in definition of Xeric moisture regime
 #'  - `"numCumulativeDaysDry"` - cumulative number of "dry" days per year
 #'  - `"numCumulativeDaysMoistDry"` - cumulative number of days "intermediate between moist and dry" per year
 #'  - `"numCumulativeDaysMoist"` - cumulative number of days "moist" per year
-#'  - `"numCumulativeDaysDryOver5C"` - cumulative number of days dry per year when the soil temperature is over 5 degrees C
-#'  - `"numCumulativeDaysMoistDryOver5C"` - cumulative number of days intermediate between moist and dry per year when the soil temperature is over 5 degrees C
-#'  - `"numCumulativeDaysMoistOver5C"` - cumulative number of days moist per year when the soil temperature is over 5 degrees C
-#'  - `"numConsecutiveDaysMoistInSomeParts"` - maximum number of consecutive days per year where some parts of the profile are moist
-#'  - `"numConsecutiveDaysMoistInSomePartsOver8C"` - maximum number of consecutive days per year where some parts of the profile are moist and the soil temperature is over 8 degrees C
+#'  - `"numCumulativeDaysDryOver5C"` - cumulative number of days "dry" per year when the _soil temperature is over 5 degrees C_
+#'  - `"numCumulativeDaysMoistDryOver5C"` - cumulative number of days "intermediate between moist and dry" per year when the _soil temperature is over 5 degrees C_
+#'  - `"numCumulativeDaysMoistOver5C"` - cumulative number of days "moist" per year when the _soil temperature is over 5 degrees C_
+#'  - `"numConsecutiveDaysMoistInSomeParts"` - maximum number of consecutive days per year where some parts of the profile are "moist"
+#'  - `"numConsecutiveDaysMoistInSomePartsOver8C"` - maximum number of consecutive days per year where some parts of the profile are "moist" _and_ the _soil temperature is over 8 degrees C_
 #'  - `"temperatureRegime"` - estimated Soil Temperature Regime; one of "Pergelic", "Cryic", "Frigid", "Mesic", "Thermic", "Hyperthermic", "Isofrigid", "Isomesic", "Isothermic", or "Isohyperthermic"
 #'  - `"moistureRegime"` - estimated Soil Moisture Regime; one of "Aridic", "Ustic", "Xeric", "Udic", "Perudic", or "Undefined"
-#'  - `"regimeSubdivision1"` - estimated "Moisture Regime Subdivision #1"; one of "Typic", "Weak", "Wet", "Dry", "Extreme", "Xeric", "Udic", "Aridic", or " " (See van Wambecke and Newhall, 1981)
-#'  - `"regimeSubdivision2"` - estimated "Moisture Regime subdivision #2"; one of "Aridic", "Tempustic", "Tropustic", "Tempudic", "Xeric", "Udic", "Tropudic", "Undefined",  or " " (See van Wambecke and Newhall, 1981)
+#'  - `"regimeSubdivision1"` - estimated "Moisture Regime Subdivision #1"; one of "Typic", "Weak", "Wet", "Dry", "Extreme", "Xeric", "Udic", "Aridic", or " " (See van Wambecke et al., 1981)
+#'  - `"regimeSubdivision2"` - estimated "Moisture Regime subdivision #2"; one of "Aridic", "Tempustic", "Tropustic", "Tempudic", "Xeric", "Udic", "Tropudic", "Undefined",  or " " (See van Wambecke et al., 1981)
 #'  
-#'  "Years" are based on uniform 12 months with 30 days each for a total of 360 days (no leap years).
+#' "Years" are based on uniform 12 months with 30 days each for a total of 360 days (no leap years).
 #' 
 #' The following elements have a many:1 relationship with model runs and are not (yet) included in the standard output, but can be accessed using an rJava object reference to a `NewhallResults` class.
-#'  - `"meanPotentialEvapotranspiration"` - estimated mean monthly potential evapotranspiration
+#'  - `"meanPotentialEvapotranspiration"` - estimated mean monthly potential evapotranspiration (Thornthwaite, 1948)
 #'  - `"temperatureCalendar"` - compressed (360 day) grid "calendar" showing days above 5 and 8 degrees C
-#'  - `"moistureCalendar"` - compressed (360 day) grid "calendar" showing moist, moist/dry and dry days.
+#'  - `"moistureCalendar"` - compressed (360 day) grid "calendar" showing "moist", "moist/dry" and "dry" days.
 #'  
 newhall_batch.default <- function(.data = NULL,
                                   unitSystem = "metric",
