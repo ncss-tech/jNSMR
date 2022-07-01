@@ -16,9 +16,7 @@
 #' @seealso
 #'  - `BASICSimulationModel()`: create an instance of the Java Newhall Simulation Model
 #'  - `newhall_simulation()`: run a single Newhall model instance, return `NewhallResults` object
-#'  - `csv_writeNewhallBatch()`: a wrapper function around `newhall_batch()` to write results to CSV
-#'
-#' @return When input is a data.frame or character vector of paths to CSV files, result is a a _data.frame_ with key model outputs (see details) containing list columns with Java Objects for _NewhallDataset_, _NewhallResults_.  If `toString=TRUE` the column `output` is a _character_ containing the `toString()` output from _NewhallResults_
+#' @return When input is a _data.frame_ or _character_ vector of paths to CSV files, result is a a _data.frame_ with key model outputs (see details) containing list columns with Java Objects for _NewhallDataset_, _NewhallResults_.  If `toString=TRUE` the column `output` is a _character_ containing the `toString()` output from _NewhallResults_
 #' @export
 #'
 #' @importFrom data.table data.table rbindlist
@@ -463,7 +461,7 @@ newhall_batch.character <- function(.data,
 #' @param overwrite logical; overwrite `file`? passed to `terra::writeStart()`; defaults to `TRUE` if needed
 #' @export
 #' @rdname newhall_batch
-#' @return For `SpatRaster` input returns a `SpatRaster` containing numeric and categorical model outputs. `RasterStack` inputs are first converted to `SpatRaster`, and a `SpatRaster` is returned
+#' @return For `SpatRaster` input returns a `SpatRaster` containing numeric and categorical model outputs. `RasterBrick` inputs are first converted to `SpatRaster`, and a `SpatRaster` is returned
 #' @importFrom terra rast readStart writeStart readValues writeValues writeStop readStop `nlyr<-`
 #' @importFrom parallel makeCluster stopCluster clusterApply
 newhall_batch.SpatRaster <- function(.data,
@@ -505,7 +503,7 @@ newhall_batch.SpatRaster <- function(.data,
   out_info <- terra::writeStart(out, filename = file, overwrite = overwrite, progress = 0)
   outrows <- c(out_info$row, nrow(out))
   start_row <- lapply(1:out_info$n, function(i) out_info$row[i] + c(0, (seq_len((out_info$nrows[i]) / nrows) * nrows)))
-  n_row <- lapply(seq_along(start_row), function(i) diff(c(start_row[[i]]-1, outrows[i+1])))
+  n_row <- lapply(seq_along(start_row), function(i) diff(c(start_row[[i]] - 1, outrows[i + 1])))
   n_set <- sum(sapply(start_row, length))
 
   if (cores > 1) {

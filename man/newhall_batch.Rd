@@ -88,9 +88,9 @@
 \item{overwrite}{logical; overwrite \code{file}? passed to \code{terra::writeStart()}; defaults to \code{TRUE} if needed}
 }
 \value{
-When input is a data.frame or character vector of paths to CSV files, result is a a \emph{data.frame} with key model outputs (see details) containing list columns with Java Objects for \emph{NewhallDataset}, \emph{NewhallResults}.  If \code{toString=TRUE} the column \code{output} is a \emph{character} containing the \code{toString()} output from \emph{NewhallResults}
+When input is a \emph{data.frame} or \emph{character} vector of paths to CSV files, result is a a \emph{data.frame} with key model outputs (see details) containing list columns with Java Objects for \emph{NewhallDataset}, \emph{NewhallResults}.  If \code{toString=TRUE} the column \code{output} is a \emph{character} containing the \code{toString()} output from \emph{NewhallResults}
 
-For \code{SpatRaster} input returns a \code{SpatRaster} containing numeric and categorical model outputs. \code{RasterStack} inputs are first converted to \code{SpatRaster}, and a \code{SpatRaster} is returned
+For \code{SpatRaster} input returns a \code{SpatRaster} containing numeric and categorical model outputs. \code{RasterBrick} inputs are first converted to \code{SpatRaster}, and a \code{SpatRaster} is returned
 }
 \description{
 \code{newhall_batch()} provides an interface to multiple runs of the jNSM \code{BASICSimulationModel()} for the CSV batch file input format used in jNSM 1.6.0, plus the \code{SpatRaster} and \code{RasterStack} R object types.
@@ -166,6 +166,5 @@ Newhall, F., Berdanier, C. (1996) Calculation of soil moisture regimes from the 
 \itemize{
 \item \code{BASICSimulationModel()}: create an instance of the Java Newhall Simulation Model
 \item \code{newhall_simulation()}: run a single Newhall model instance, return \code{NewhallResults} object
-\item \code{csv_writeNewhallBatch()}: a wrapper function around \code{newhall_batch()} to write results to CSV
 }
 }
