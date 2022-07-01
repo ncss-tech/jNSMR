@@ -6,7 +6,7 @@
 \alias{newhall_batch.character}
 \alias{newhall_batch.SpatRaster}
 \alias{newhall_batch.RasterBrick}
-\title{Run a Newhall simulation for each row in a CSV file}
+\title{Run Newhall Soil Climate Simulations}
 \usage{
 \method{newhall_batch}{default}(
   .data = NULL,
@@ -93,12 +93,31 @@ When input is a data.frame or character vector of paths to CSV files, result is 
 For \code{SpatRaster} input returns a \code{SpatRaster} containing numeric and categorical model outputs. \code{RasterStack} inputs are first converted to \code{SpatRaster}, and a \code{SpatRaster} is returned
 }
 \description{
-Run a Newhall simulation for each row in a CSV file
+\code{newhall_batch()} provides an interface to multiple runs of the jNSM \code{BASICSimulationModel()} for the CSV batch file input format used in jNSM 1.6.0, plus the \code{SpatRaster} and \code{RasterStack} R object types.
+\itemize{
+\item \verb{newhall_batch(<character>)} - one or more paths to jNSM Comma-Separated Value '.csv' batch files; see details for required column names
+\item \verb{newhall_batch(<SpatRaster>)} - a \code{SpatRaster} object, containing the required column names as layers
+\item \verb{newhall_batch(<RasterStack>)}- a \code{RasterStack} object, containing the required column names as layers
+}
 }
 \details{
+\subsection{Required inputs}{
+
+The main inputs to the model are monthly precipitation and air temperature for each site, the location, the soil available water storage, and the elevation.
+
+The following columns and names are required in the input data/object:
+\itemize{
+\item Latitude and Longitude in WGS84 Decimal Degrees: "latDD", "lonDD"
+\item Monthly Air Temperature (degrees C or F): "tJan", "tFeb", "tMar", "tApr", "tMay", "tJun", "tJul", "tAug", "tSep", "tOct", "tNov", "tDec"
+\item Monthly Precipitation (millimeters or inches of rain): "pJan", "pFeb", "pMar", "pApr", "pMay", "pJun", "pJul", "pAug", "pSep", "pOct", "pNov", "pDec"
+\item Profile Available Water Storage (millimeters; Default \code{200}): "awc"
+\item Elevation (meters or feet): "elev"
+}
+}
+
 \subsection{Dry v.s. Moist}{
 
-The concept of "dry" versus "moist" is expressed only semi-quantitatively in the Newhall model with three different categories of moisture being recognized: "moist", "moist/dry" and "dry."
+The concept of "dry" versus "moist" is expressed semi-quantitatively in the Newhall model with three different categories of moisture being recognized: "moist", "moist/dry" and "dry."
 
 Of interest to the classification of climate regimes of a soil are not only when/where the soil is dry but how that moisture or lack thereof corresponds with prevailing temperature conditions.
 }
@@ -138,9 +157,15 @@ The following elements have a many:1 relationship with model runs and are not (y
 }
 \references{
 van Wambeke, A. and Newhall, F. and United States Soil Management Support Services (1981) Calculated Soil Moisture and Temperature Regimes of South America: A Compilation of Soil Climatic Regimes calculated by using a mathematical model developed by F. Newhall (Soil Conservation Service, USDA, 1972). SMSS : Technical Monograph : Soil management support services. New York State College of Agriculture and Life Sciences, Cornell University, Department of Agronomy. Available online: \url{https://books.google.com/books?id=jwtIAAAAYAAJ}
+
 Thornthwaite, C. W. (1948). An Approach toward a Rational Classification of Climate. Geographical Review, 38(1), 55–94. https://doi.org/10.2307/210739
+
 Newhall, F., Berdanier, C. (1996) Calculation of soil moisture regimes from the climatic record. National Soil Survey Center, Natural Resources Conservation Service, U.S. Dept. of Agriculture. Available online: \url{https://www.nrcs.usda.gov/Internet/FSE_DOCUMENTS/nrcs142p2_052248.pdf}
 }
 \seealso{
-csv_writeNewhallBatch
+\itemize{
+\item \code{BASICSimulationModel()}: create an instance of the Java Newhall Simulation Model
+\item \code{newhall_simulation()}: run a single Newhall model instance, return \code{NewhallResults} object
+\item \code{csv_writeNewhallBatch()}: a wrapper function around \code{newhall_batch()} to write results to CSV
+}
 }
