@@ -175,11 +175,11 @@ newhall_batch(&amp;lt;RasterStack&amp;gt;)- a RasterStack object, containing the
     <h2>Value</h2>
     
 
-<p>When input is a data.frame or character vector of paths to CSV files, result is a a <em>data.frame</em> with key model outputs (see details) containing list columns with Java Objects for <em>NewhallDataset</em>, <em>NewhallResults</em>.  If <code>toString=TRUE</code> the column <code>output</code> is a <em>character</em> containing the <code><a href="https://rdrr.io/r/base/toString.html" class="external-link">toString()</a></code> output from <em>NewhallResults</em></p>
+<p>When input is a <em>data.frame</em> or <em>character</em> vector of paths to CSV files, result is a a <em>data.frame</em> with key model outputs (see details) containing list columns with Java Objects for <em>NewhallDataset</em>, <em>NewhallResults</em>.  If <code>toString=TRUE</code> the column <code>output</code> is a <em>character</em> containing the <code><a href="https://rdrr.io/r/base/toString.html" class="external-link">toString()</a></code> output from <em>NewhallResults</em></p>
 
 
 
-<p>For <code>SpatRaster</code> input returns a <code>SpatRaster</code> containing numeric and categorical model outputs. <code>RasterStack</code> inputs are first converted to <code>SpatRaster</code>, and a <code>SpatRaster</code> is returned</p>
+<p>For <code>SpatRaster</code> input returns a <code>SpatRaster</code> containing numeric and categorical model outputs. <code>RasterBrick</code> inputs are first converted to <code>SpatRaster</code>, and a <code>SpatRaster</code> is returned</p>
     </div>
     <div id="details">
     <h2>Details</h2>
@@ -244,7 +244,6 @@ newhall_batch(&amp;lt;RasterStack&amp;gt;)- a RasterStack object, containing the
     <div class="dont-index">
 <ul><li><p><code><a href="BASICSimulationModel.html">BASICSimulationModel()</a></code>: create an instance of the Java Newhall Simulation Model</p></li>
 <li><p><code><a href="newhall_simulation.html">newhall_simulation()</a></code>: run a single Newhall model instance, return <code>NewhallResults</code> object</p></li>
-<li><p><code>csv_writeNewhallBatch()</code>: a wrapper function around <code>newhall_batch()</code> to write results to CSV</p></li>
 </ul></div>
     </div>
 
