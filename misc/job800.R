@@ -21,14 +21,14 @@ awc <- rast("water_storage.tif")
 terra::crs(awc) <- "EPSG:5070"
 awc <- project(awc, r)
 
-# global mean is near the default newhall value of 200mm
+# global mean for all of conus is near the default newhall value of 200mm
 mean(values(awc) * 10, na.rm = TRUE)
 #> [1] 197.82760 # 200 (mm water) is default
 
 # # +/- 1 standard deviation ~[100,300]mm
 sd(values(awc)*10, na.rm=T)
 # #> [1] 97.52501
- 
+
 # # convert cm -> mm?
 v <- values(awc) * 10
 r$awc <- v#rep(NA, ncell(r))
@@ -39,6 +39,7 @@ plot(r$awc)
 if(test) r2 <- crop(r, ext(r) / 40) else r2 <- r
 r2 <- crop(r, vect("D:/CA732/Geodata/CA732_Derived.sqlite", "ca732_wbdhu12"))
 plot(r2$awc)
+
 plot(vect("D:/CA732/Geodata/CA732_Derived.sqlite", "ca732_b"), add = T)
 plot(density(values(r2$awc), na.rm = TRUE))
 quantile(values(r2$awc), na.rm = TRUE)
@@ -47,7 +48,7 @@ r2$stationName <- NULL; r2$stationID <- NULL; r2$notes <- NULL; r2$stProvCode <-
 
 #system.time(resbig <- newhall_batch(r2))
 system.time(resbig <-  newhall_batch(r2,
-                                     cores = 6, 
+                                     cores = 6,
                                      nrows = ifelse(ncell(r2) > 100000, 16, 40)))
 terra::writeRaster(resbig, filename = "newhall_ca732_800m_200mm.tif", overwrite = TRUE)
 

@@ -6,6 +6,7 @@
 \alias{newhall_batch.character}
 \alias{newhall_batch.SpatRaster}
 \alias{newhall_batch.RasterBrick}
+\alias{newhall_batch.RasterStack}
 \title{Run Newhall Soil Climate Simulations}
 \usage{
 \method{newhall_batch}{default}(
@@ -31,7 +32,7 @@
   toString = TRUE,
   checkargs = TRUE,
   cores = 1,
-  file = paste0(tempfile(), ".grd"),
+  file = paste0(tempfile(), ".tif"),
   nrows = nrow(.data),
   overwrite = TRUE
 )
@@ -59,7 +60,21 @@
   toString = TRUE,
   checkargs = TRUE,
   cores = 1,
-  file = paste0(tempfile(), ".grd"),
+  file = paste0(tempfile(), ".tif"),
+  nrows = nrow(.data),
+  overwrite = TRUE
+)
+
+\method{newhall_batch}{RasterStack}(
+  .data,
+  unitSystem = "metric",
+  soilAirOffset = ifelse(unitSystem \%in\% c("in", "english"), 4.5, 2.5),
+  amplitude = 0.66,
+  verbose = TRUE,
+  toString = TRUE,
+  checkargs = TRUE,
+  cores = 1,
+  file = paste0(tempfile(), ".tif"),
   nrows = nrow(.data),
   overwrite = TRUE
 )

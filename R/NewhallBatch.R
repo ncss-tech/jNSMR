@@ -93,7 +93,7 @@ newhall_batch.default <- function(.data = NULL,
                                   overwrite = NULL) {
 
   # if newer JAR is available, use the fastest batch method
-  # if (newhall_version() >= "1.6.3") {
+  if (newhall_version() >= "1.6.3") {
     batch2(
       .data,
       unitSystem = unitSystem,
@@ -103,153 +103,153 @@ newhall_batch.default <- function(.data = NULL,
       toString = toString,
       checkargs = checkargs
     )
-  # } else {
-  #   # v1.6.1
-  #   batch1(
-  #     .data = .data,
-  #     unitSystem = unitSystem,
-  #     soilAirOffset = soilAirOffset,
-  #     amplitude = amplitude,
-  #     verbose = verbose,
-  #     toString = toString,
-  #     checkargs = checkargs
-  #   )
-  # }
+  } else {
+    # v1.6.1
+    batch1(
+      .data = .data,
+      unitSystem = unitSystem,
+      soilAirOffset = soilAirOffset,
+      amplitude = amplitude,
+      verbose = verbose,
+      toString = toString,
+      checkargs = checkargs
+    )
+  }
 }
-#
-# batch1 <- function(.data = NULL,
-#                    unitSystem = "metric",
-#                    soilAirOffset = ifelse(unitSystem %in% c("in","english"), 4.5, 2.5),
-#                    amplitude = 0.66,
-#                    verbose = TRUE,
-#                    toString = TRUE,
-#                    checkargs = TRUE) {
-#   t1 <- Sys.time()
-#    # for NSE in data.table / R CMD check
-#   .id <- NULL; allAirTempsDbl <- NULL; allPrecipsDbl <- NULL; awc <- NULL; cntryCode <- NULL; dataset <- NULL; elev <- NULL; latDD <- NULL; lonDD <- NULL; pApr <- NULL; pAug <- NULL; pDec <- NULL; pFeb <- NULL; pJan <- NULL; pJul <- NULL; pJun <- NULL; pMar <- NULL; pMay <- NULL; pNov <- NULL; pOct <- NULL; pSep <- NULL; pdEndYr <- NULL; pdStartYr <- NULL; results <- NULL; stationName <- NULL; tApr <- NULL; tAug <- NULL; tDec <- NULL; tFeb <- NULL; tJan <- NULL; tJul <- NULL; tJun <- NULL; tMar <- NULL; tMay <- NULL; tNov <- NULL; tOct <- NULL; tSep <- NULL
-#
-#   unitSystem <- match.arg(tolower(unitSystem), choices =  c("metric","mm","cm","in","english"))
-#   if (unitSystem %in% c("metric","mm")) {
-#     # "cm" is the internal convention in the NewhallDatasetMetadata for _millimeters_ of rainfall, degrees Celsius
-#     unitSystem <- "cm"
-#   } else if (unitSystem == "english") {
-#     # "in" is the internal convention in the NewhallDatasetMetadata for inches of rainfall, degrees Fahrenheit
-#     unitSystem <- "in"
-#   }
-#
-#   # minimum dataset includes all of the codes specified in colnames of batch file template
-#   mincols <- !(.colnamesNewhallBatch() %in% colnames(.data))
-#
-#   if (sum(mincols) > 0) {
-#     stop(sprintf(
-#       "columns %s are required in the Newhall batch CSV input format",
-#       paste0(.colnamesNewhallBatch()[mincols], collapse = ", ")
-#     ), call. = FALSE)
-#   }
-#
-#   # convert deg F to deg C
-#   .doUnitsTemp <- function(x) if (unitSystem == "in") return((x - 32) * 5 / 9) else x
-#
-#   # convert inches to _millimeters_
-#   .doUnitsLength <- function(x) if (unitSystem == "in") return(x * 25.4) else x
-#
-#   batchframe <- data.table::data.table(.data)
-#   batchframe$.id <- 1:nrow(batchframe)
-#
-#   batchframe <- batchframe[batchframe[, list(allPrecipsDbl = list(.doUnitsLength(c(pJan,pFeb,pMar,pApr,pMay,pJun,
-#                                                                                    pJul,pAug,pSep,pOct,pNov,pDec))),
-#                                              allAirTempsDbl = list(.doUnitsTemp(c(tJan,tFeb,tMar,tApr,tMay,tJun,
-#                                                                                   tJul,tAug,tSep,tOct,tNov,tDec)))),
-#                                        by = .id],
-#                            on = ".id"]
-#
-#   res <- batchframe[, list(awc = awc,
-#                            dataset = list(NewhallDataset(stationName = as.character(stationName), # String
-#                                                          country = as.character(cntryCode), # String
-#                                                          latDD = as.double(latDD), # double
-#                                                          lonDD = as.double(lonDD), # double
-#                                                          elev = as.double(elev), # double
-#                                                          allPrecipsDbl = as.double(allPrecipsDbl[[1]]), # List<Double>
-#                                                          allAirTempsDbl = as.double(allAirTempsDbl[[1]]), # List<Double>
-#                                                          pdbegin = as.integer(pdStartYr), # integer
-#                                                          pdend = as.integer(pdEndYr), # integer
-#                                                          smcsawc = as.double(awc),  # double
-#                                                          checkargs = checkargs
-#                                                         ))),
-#                                           by = .id][,
-#                                             list(dataset = dataset,
-#                                                  results = list(newhall_simulation(dataset = dataset[[1]],
-#                                                                                    smcsawc = as.double(awc),
-#                                                                                    soilAirOffset = as.double(soilAirOffset),
-#                                                                                    amplitude = as.double(amplitude)))),
-#
-#                                           by = .id][,
-#                                             list(dataset = dataset,
-#                                                  results = results,
-#                                                  output  = ifelse(toString,
-#                                                                   list(rJava::.jcall(results[[1]],
-#                                                                                      returnSig = "S",
-#                                                                                      method = "toString")),
-#                                                                   list())),
-#                                           by = .id]
-#
-#
-#   .format_results <- function(x) {
-#     data.frame(
-#       NumCumulativeDaysMoist = rJava::.jcall(x, 'I', "getNumCumulativeDaysMoist"),
-#       NumCumulativeDaysMoistDry =  rJava::.jcall(x, 'I', "getNumCumulativeDaysMoistDry"),
-#       NumCumulativeDaysMoistDryOver5C =  rJava::.jcall(x, 'I', "getNumCumulativeDaysMoistDryOver5C"),
-#       NumConsecutiveDaysMoistInSomePartsOver8C =  rJava::.jcall(x, 'I', "getNumConsecutiveDaysMoistInSomePartsOver8C"),
-#       NumCumulativeDaysDry = rJava::.jcall(x, 'I', "getNumCumulativeDaysDry"),
-#       NumCumulativeDaysDryOver5C = rJava::.jcall(x, 'I', "getNumCumulativeDaysDryOver5C"),
-#       NumCumulativeDaysMoistOver5C = rJava::.jcall(x, 'I', "getNumCumulativeDaysMoistOver5C"),
-#       # Ncpm = x$getNcpm(),
-#       # Nsd = x$getNsd(),
-#       NumConsecutiveDaysMoistInSomeParts = rJava::.jcall(x, 'I', "getNumConsecutiveDaysMoistInSomeParts"),
-#       TemperatureRegime = rJava::.jcall(x, 'S', "getTemperatureRegime"),
-#       MoistureRegime = rJava::.jcall(x, 'S', "getMoistureRegime"),
-#       RegimeSubdivision1 = rJava::.jcall(x, 'S', "getRegimeSubdivision1"),
-#       RegimeSubdivision2 = rJava::.jcall(x, 'S', "getRegimeSubdivision2"),
-#       # MeanPotentialEvapotranspiration = x$getMeanPotentialEvapotranspiration()
-#       MoistDaysAfterWinterSolstice = rJava::.jcall(x, 'I', "getMoistDaysAfterWinterSolstice"),
-#       DryDaysAfterSummerSolstice = rJava::.jcall(x, 'I', "getDryDaysAfterSummerSolstice")
-#     )
-#   }
-#
-#   fields <- c(
-#     "annualRainfall",
-#     "waterHoldingCapacity",
-#     "annualWaterBalance",
-#     "summerWaterBalance",
-#     "dryDaysAfterSummerSolstice",
-#     "moistDaysAfterWinterSolstice",
-#     "numCumulativeDaysDry",
-#     "numCumulativeDaysMoistDry",
-#     "numCumulativeDaysMoist",
-#     "numCumulativeDaysDryOver5C",
-#     "numCumulativeDaysMoistDryOver5C",
-#     "numCumulativeDaysMoistOver5C",
-#     "numConsecutiveDaysMoistInSomeParts",
-#     "numConsecutiveDaysMoistInSomePartsOver8C",
-#     "temperatureRegime",
-#     "moistureRegime",
-#     "regimeSubdivision1",
-#     "regimeSubdivision2"
-#   )
-#
-#   res <- cbind(res, res[, .format_results(results[[1]]), by = list(1:nrow(res))])
-#
-#   if (verbose) {
-#     deltat <- signif(difftime(Sys.time(), t1, units = "auto"), digits = 2)
-#     message(sprintf(
-#       "newhall_batch: ran n=%s simulations in %s %s",
-#       nrow(res), deltat, attr(deltat, 'units')
-#     ))
-#   }
-#
-#   res$.id <- NULL
-#   as.data.frame(res)
-# }
+
+batch1 <- function(.data = NULL,
+                   unitSystem = "metric",
+                   soilAirOffset = ifelse(unitSystem %in% c("in","english"), 4.5, 2.5),
+                   amplitude = 0.66,
+                   verbose = TRUE,
+                   toString = TRUE,
+                   checkargs = TRUE) {
+  t1 <- Sys.time()
+   # for NSE in data.table / R CMD check
+  .id <- NULL; allAirTempsDbl <- NULL; allPrecipsDbl <- NULL; awc <- NULL; cntryCode <- NULL; dataset <- NULL; elev <- NULL; latDD <- NULL; lonDD <- NULL; pApr <- NULL; pAug <- NULL; pDec <- NULL; pFeb <- NULL; pJan <- NULL; pJul <- NULL; pJun <- NULL; pMar <- NULL; pMay <- NULL; pNov <- NULL; pOct <- NULL; pSep <- NULL; pdEndYr <- NULL; pdStartYr <- NULL; results <- NULL; stationName <- NULL; tApr <- NULL; tAug <- NULL; tDec <- NULL; tFeb <- NULL; tJan <- NULL; tJul <- NULL; tJun <- NULL; tMar <- NULL; tMay <- NULL; tNov <- NULL; tOct <- NULL; tSep <- NULL
+
+  unitSystem <- match.arg(tolower(unitSystem), choices =  c("metric","mm","cm","in","english"))
+  if (unitSystem %in% c("metric","mm")) {
+    # "cm" is the internal convention in the NewhallDatasetMetadata for _millimeters_ of rainfall, degrees Celsius
+    unitSystem <- "cm"
+  } else if (unitSystem == "english") {
+    # "in" is the internal convention in the NewhallDatasetMetadata for inches of rainfall, degrees Fahrenheit
+    unitSystem <- "in"
+  }
+
+  # minimum dataset includes all of the codes specified in colnames of batch file template
+  mincols <- !(.colnamesNewhallBatch() %in% colnames(.data))
+
+  if (sum(mincols) > 0) {
+    stop(sprintf(
+      "columns %s are required in the Newhall batch CSV input format",
+      paste0(.colnamesNewhallBatch()[mincols], collapse = ", ")
+    ), call. = FALSE)
+  }
+
+  # convert deg F to deg C
+  .doUnitsTemp <- function(x) if (unitSystem == "in") return((x - 32) * 5 / 9) else x
+
+  # convert inches to _millimeters_
+  .doUnitsLength <- function(x) if (unitSystem == "in") return(x * 25.4) else x
+
+  batchframe <- data.table::data.table(.data)
+  batchframe$.id <- 1:nrow(batchframe)
+
+  batchframe <- batchframe[batchframe[, list(allPrecipsDbl = list(.doUnitsLength(c(pJan,pFeb,pMar,pApr,pMay,pJun,
+                                                                                   pJul,pAug,pSep,pOct,pNov,pDec))),
+                                             allAirTempsDbl = list(.doUnitsTemp(c(tJan,tFeb,tMar,tApr,tMay,tJun,
+                                                                                  tJul,tAug,tSep,tOct,tNov,tDec)))),
+                                       by = .id],
+                           on = ".id"]
+
+  res <- batchframe[, list(awc = awc,
+                           dataset = list(NewhallDataset(stationName = as.character(stationName), # String
+                                                         country = as.character(cntryCode), # String
+                                                         latDD = as.double(latDD), # double
+                                                         lonDD = as.double(lonDD), # double
+                                                         elev = as.double(elev), # double
+                                                         allPrecipsDbl = as.double(allPrecipsDbl[[1]]), # List<Double>
+                                                         allAirTempsDbl = as.double(allAirTempsDbl[[1]]), # List<Double>
+                                                         pdbegin = as.integer(pdStartYr), # integer
+                                                         pdend = as.integer(pdEndYr), # integer
+                                                         smcsawc = as.double(awc),  # double
+                                                         checkargs = checkargs
+                                                        ))),
+                                          by = .id][,
+                                            list(dataset = dataset,
+                                                 results = list(newhall_simulation(dataset = dataset[[1]],
+                                                                                   smcsawc = as.double(awc),
+                                                                                   soilAirOffset = as.double(soilAirOffset),
+                                                                                   amplitude = as.double(amplitude)))),
+
+                                          by = .id][,
+                                            list(dataset = dataset,
+                                                 results = results,
+                                                 output  = ifelse(toString,
+                                                                  list(rJava::.jcall(results[[1]],
+                                                                                     returnSig = "S",
+                                                                                     method = "toString")),
+                                                                  list())),
+                                          by = .id]
+
+
+  .format_results <- function(x) {
+    data.frame(
+      NumCumulativeDaysMoist = rJava::.jcall(x, 'I', "getNumCumulativeDaysMoist"),
+      NumCumulativeDaysMoistDry =  rJava::.jcall(x, 'I', "getNumCumulativeDaysMoistDry"),
+      NumCumulativeDaysMoistDryOver5C =  rJava::.jcall(x, 'I', "getNumCumulativeDaysMoistDryOver5C"),
+      NumConsecutiveDaysMoistInSomePartsOver8C =  rJava::.jcall(x, 'I', "getNumConsecutiveDaysMoistInSomePartsOver8C"),
+      NumCumulativeDaysDry = rJava::.jcall(x, 'I', "getNumCumulativeDaysDry"),
+      NumCumulativeDaysDryOver5C = rJava::.jcall(x, 'I', "getNumCumulativeDaysDryOver5C"),
+      NumCumulativeDaysMoistOver5C = rJava::.jcall(x, 'I', "getNumCumulativeDaysMoistOver5C"),
+      # Ncpm = x$getNcpm(),
+      # Nsd = x$getNsd(),
+      NumConsecutiveDaysMoistInSomeParts = rJava::.jcall(x, 'I', "getNumConsecutiveDaysMoistInSomeParts"),
+      TemperatureRegime = rJava::.jcall(x, 'S', "getTemperatureRegime"),
+      MoistureRegime = rJava::.jcall(x, 'S', "getMoistureRegime"),
+      RegimeSubdivision1 = rJava::.jcall(x, 'S', "getRegimeSubdivision1"),
+      RegimeSubdivision2 = rJava::.jcall(x, 'S', "getRegimeSubdivision2"),
+      # MeanPotentialEvapotranspiration = x$getMeanPotentialEvapotranspiration()
+      MoistDaysAfterWinterSolstice = rJava::.jcall(x, 'I', "getMoistDaysAfterWinterSolstice"),
+      DryDaysAfterSummerSolstice = rJava::.jcall(x, 'I', "getDryDaysAfterSummerSolstice")
+    )
+  }
+
+  fields <- c(
+    "annualRainfall",
+    "waterHoldingCapacity",
+    "annualWaterBalance",
+    "summerWaterBalance",
+    "dryDaysAfterSummerSolstice",
+    "moistDaysAfterWinterSolstice",
+    "numCumulativeDaysDry",
+    "numCumulativeDaysMoistDry",
+    "numCumulativeDaysMoist",
+    "numCumulativeDaysDryOver5C",
+    "numCumulativeDaysMoistDryOver5C",
+    "numCumulativeDaysMoistOver5C",
+    "numConsecutiveDaysMoistInSomeParts",
+    "numConsecutiveDaysMoistInSomePartsOver8C",
+    "temperatureRegime",
+    "moistureRegime",
+    "regimeSubdivision1",
+    "regimeSubdivision2"
+  )
+
+  res <- cbind(res, res[, .format_results(results[[1]]), by = list(1:nrow(res))])
+
+  if (verbose) {
+    deltat <- signif(difftime(Sys.time(), t1, units = "auto"), digits = 2)
+    message(sprintf(
+      "newhall_batch: ran n=%s simulations in %s %s",
+      nrow(res), deltat, attr(deltat, 'units')
+    ))
+  }
+
+  res$.id <- NULL
+  as.data.frame(res)
+}
 
 # data.frame -> data.frame
 #'
@@ -382,7 +382,7 @@ newhall_batch <- function(.data,
                           toString = TRUE,
                           checkargs = TRUE,
                           cores = 1,
-                          file = paste0(tempfile(), ".grd"),
+                          file = paste0(tempfile(), ".tif"),
                           nrows = nrow(.data),
                           overwrite = TRUE){
   UseMethod("newhall_batch", .data)
@@ -398,7 +398,7 @@ newhall_batch.character <- function(.data,
                                     toString = TRUE,
                                     checkargs = TRUE,
                                     cores = 1,
-                                    file = paste0(tempfile(), ".grd"),
+                                    file = paste0(tempfile(), ".tif"),
                                     nrows = nrow(.data),
                                     overwrite = TRUE) {
   # if .data is character, it could specify multiple CSVs
@@ -438,22 +438,24 @@ newhall_batch.character <- function(.data,
 
   # handle character results w/ standard factor levels
 
-  # explicitly set factors (so each chunk uses same lookup table)
+  # explicitly set factors  and convert to numeric (so each chunk uses same lookup table)
+  # subtract 1 because factor levels in terra are 0-indexed
+  # TODO: double check that this is encoding everything correctly
   x$temperatureRegime <- as.numeric(factor(x$temperatureRegime, levels = .str())) - 1
   x$moistureRegime <- as.numeric(factor(x$moistureRegime, levels = .smr())) - 1
   x$regimeSubdivision1 <- as.numeric(factor(x$regimeSubdivision1, levels = .smrsub1())) - 1
   x$regimeSubdivision2 <- as.numeric(factor(x$regimeSubdivision2, levels = .smrsub2())) - 1
-  # print(colnames(x)[sapply(x, is.character)])
-  # convert anything else character -> factor -> numeric
-  # x[sapply(x, is.character)] <- lapply(x[sapply(x, is.character)], function(y) as.numeric(factor(y)) - 1)
   x
 }
 
+# helpers for setting categories
+.fctDF <- function(levels, name = "category", offset = -1) {
+  `colnames<-`(data.frame(seq_along(levels) + offset, levels), c("value", name))
+}
 .str <- function() c("Pergelic", "Cryic", "Frigid", "Mesic", "Thermic", "Hyperthermic", "Isofrigid", "Isomesic", "Isothermic", "Isohyperthermic")
 .smr <- function()  c("Aridic", "Ustic", "Xeric", "Udic", "Perudic", "Undefined")
 .smrsub1 <- function() c("Typic", "Weak", "Wet", "Dry", "Extreme", "Xeric", "Udic", "Aridic", " ")
 .smrsub2 <- function() c("Aridic", "Tempustic", "Tropustic", "Tempudic", "Xeric", "Udic", "Tropudic", "Undefined", " ")
-
 
 #' @param cores number of cores; used only for processing _SpatRaster_ or _Raster*_ input
 #' @param file path to write incremental raster processing output for large inputs that do not fit in memory; passed to `terra::writeStart()` and used only for processing _SpatRaster_ or _Raster*_ input; defaults to a temporary file created by `tempfile()` if needed
@@ -462,7 +464,7 @@ newhall_batch.character <- function(.data,
 #' @export
 #' @rdname newhall_batch
 #' @return For `SpatRaster` input returns a `SpatRaster` containing numeric and categorical model outputs. `RasterBrick` inputs are first converted to `SpatRaster`, and a `SpatRaster` is returned
-#' @importFrom terra rast readStart writeStart readValues writeValues writeStop readStop `nlyr<-`
+#' @importFrom terra rast readStart writeStart readValues writeValues writeStop readStop `nlyr<-` set.cats
 #' @importFrom parallel makeCluster stopCluster clusterApply
 newhall_batch.SpatRaster <- function(.data,
                                      unitSystem = "metric",
@@ -639,20 +641,25 @@ newhall_batch.SpatRaster <- function(.data,
   terra::readStop(.data)
 
   # factors in output object
-  l <- levels(out)
 
-  l[[which(names(out) %in% "temperatureRegime")]] <- .str()
-  l[[which(names(out) %in% "moistureRegime")]] <- .smr()
-  l[[which(names(out) %in% "regimeSubdivision1")]] <- .smrsub1()
-  l[[which(names(out) %in% "regimeSubdivision2")]] <- .smrsub2()
+  ## deprecated way of setting levels in {terra}
+  # l <- levels(out)
+  # l[[which(names(out) %in% "temperatureRegime")]] <- .str()
+  # l[[which(names(out) %in% "moistureRegime")]] <- .smr()
+  # l[[which(names(out) %in% "regimeSubdivision1")]] <- .smrsub1()
+  # l[[which(names(out) %in% "regimeSubdivision2")]] <- .smrsub2()
+  # levels(out) <- l
 
-  levels(out) <- l
+  # use two-column data.frames
+  terra::set.cats(out, .fctDF(.str()), layer = which(names(out) == "temperatureRegime"))
+  terra::set.cats(out, .fctDF(.smr()), layer = which(names(out) == "moistureRegime"))
+  terra::set.cats(out, .fctDF(.smrsub1()), layer = which(names(out) == "regimeSubdivision1"))
+  terra::set.cats(out, .fctDF(.smrsub2()), layer = which(names(out) == "regimeSubdivision2"))
   out
 }
 
 #' @export
 #' @rdname newhall_batch
-#' @importFrom terra rast
 newhall_batch.RasterBrick <- function(.data,
                                       unitSystem = "metric",
                                       soilAirOffset = ifelse(unitSystem %in% c("in","english"), 4.5, 2.5),
@@ -661,7 +668,34 @@ newhall_batch.RasterBrick <- function(.data,
                                       toString = TRUE,
                                       checkargs = TRUE,
                                       cores = 1,
-                                      file = paste0(tempfile(),".grd"),
+                                      file = paste0(tempfile(), ".tif"),
+                                      nrows = nrow(.data),
+                                      overwrite = TRUE) {
+  newhall_batch.RasterStack(.data,
+                            unitSystem = unitSystem,
+                            soilAirOffset = soilAirOffset,
+                            amplitude = amplitude,
+                            verbose = verbose,
+                            toString = toString,
+                            checkargs = checkargs,
+                            cores = cores,
+                            file = file,
+                            nrows = nrows,
+                            overwrite = overwrite)
+}
+
+#' @export
+#' @rdname newhall_batch
+#' @importFrom terra rast
+newhall_batch.RasterStack <- function(.data,
+                                      unitSystem = "metric",
+                                      soilAirOffset = ifelse(unitSystem %in% c("in","english"), 4.5, 2.5),
+                                      amplitude = 0.66,
+                                      verbose = TRUE,
+                                      toString = TRUE,
+                                      checkargs = TRUE,
+                                      cores = 1,
+                                      file = paste0(tempfile(), ".tif"),
                                       nrows = nrow(.data),
                                       overwrite = TRUE) {
   stopifnot(requireNamespace("terra"))

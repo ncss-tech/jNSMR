@@ -1,0 +1,115 @@
+---
+title: "Using Legacy Newhall v1.6.1 Routines"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Using Legacy Newhall v1.6.1 Input/Output Routines}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+This vignette demonstrates setting a custom `jNSMR.JAR_SUFFIX` to force use of the legacy Java Newhall Model version 1.6.1 (released 2016/02/10). See official download here: https://www.nrcs.usda.gov/wps/portal/nrcs/detail/?cid=nrcs142p2_053559.
+
+## Copyright Information
+
+ > Newhall 1.6.1, Copyright (C) 2010-2011 United States Department of Agriculture - Natural Resources Conservation Service, Penn State University Center for Environmental Informatics All rights reserved.
+
+```{r setup}
+options(jNSMR.JAR_SUFFIX = "-1.6.1")
+library(jNSMR)
+```
+
+### Run the BASIC simulation model
+
+Create a _NewhallDataset_ with `xml_NewhallDataset()` or `NewhallDataset()` and associated _NewhallDatasetMetadata_ with `NewhallDatasetMetadata()`.
+
+```{r}
+library(jNSMR)
+
+# read single-station XML file (NewhallDataset + NewhallDatasetMetadata)
+input_xml_file <- system.file("extdata/WILLIAMSPORT_1930_1930_input.xml", package = "jNSMR")[1]
+input_xml <- xml_NewhallDataset(input_xml_file)
+
+# or specify inputs directly to the constructor
+input_direct <- NewhallDataset(stationName = "WILLIAMSPORT",
+                               country = "US",
+                               lat = 41.24,
+                               lon = -76.92,
+                               elev = 158.0,
+                               allPrecipsDbl = c(44.2,40.39,113.54,96.77,95.0,98.55,
+                                                 66.04,13.46,54.86,6.35,17.53,56.39),
+                               allAirTempsDbl = c(-2.17,0.89,3.72,9.11,16.28,21.11,
+                                                  22.83,21.94,19.78,10.5,5.33,-1.06),
+                               pdbegin = 1930,
+                               pdend = 1930,
+                               smcsawc = 200.0)
+
+# set minimal _NewhallDatasetMetadata_ for our constructed _NewhallDataset_
+input_direct$setMetadata(NewhallDatasetMetadata(stationName = "WILLIAMSPORT"))
+```
+
+### Run single model from file or R object
+
+```{r}
+# run single model (from XML file--only with v1.6.1 JAR)
+output_xml <- newhall_simulation(input_xml)
+
+# run single model (from direct input)
+output <- newhall_simulation(input_direct)
+```
+
+### Access references to Java objects containing results
+
+Here we demonstrate how to use the `NewhallResults` object from `newhall_simulation()` to get various formatted statistics, calendars and other output from a single run of the model.
+
+#### Moisture and temperature regime statistics
+
+```{r}
+cat(output$getFormattedStatistics())
+```
+
+#### Moisture calendar
+
+```{r}
+cat(output$getFormattedMoistureCalendar())
+```
+
+#### Temperature calendar
+
+```{r}
+cat(output$getFormattedTemperatureCalendar())
+```
+
+### Support for Newhall XML format for input and output
+
+`newhall_XMLStringResultsExporter()` returns a character vector with XML based on an input and an output object.
+
+```{r}
+# inspect XML result format
+cat(newhall_XMLStringResultsExporter(input_xml, output))
+```
+
+### XML File Output
+
+This writes the "direct" input _NewhallDataset_ (`input_direct`) and result _NewhallResult_ (`output`) to an XML file with format as above. 
+
+```{r}
+# write XML results to file
+newhall_XMLResultsExporter(dataset = input_direct,
+                           result = output,
+                           pathname = "misc/WILLIAMSPORT_1930_1930_export.xml")
+```
+
+### Graphical User Interface for individual runs via _newhall-1.6.1.jar_
+
+`newhall_GUI()` is convenience method to open the Newhall GUI (single runs in v1.6.1 only) with the R package.
+
+```{r, eval=FALSE}
+newhall_GUI()
+```
