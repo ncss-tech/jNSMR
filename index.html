@@ -12,7 +12,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
 <script src="pkgdown.js"></script><meta property="og:title" content="Wrapper for Java Newhall Simulation Model (jNSM) " a traditional soil climate simulation model>
-<meta property="og:description" content="Provides methods to create input, read output, and run the routines from the legacy Java Newhall Simulation Model (jNSM) for soil climate. Currently this package uses a modified version of the jNSM v1.6.1 which is available for download here: &lt;https://www.nrcs.usda.gov/wps/portal/nrcs/detail/?cid=nrcs142p2_053559&gt; and the source code found here &lt;https://github.com/drww/newhall/&gt;. The system requirements of the extraction and installation tools (Windows .EXE archive) at the above link may not be met on your system but the core Java class files are stored in a platform-independent format (in newhall-1.6.1.jar) which is a core dependency in this package. Several modifications to the newhall JAR file (v1.6.3) allow for more efficient batching of many simulations allowing for larger-than-memory raster-based inputs and outputs.">
+<meta property="og:description" content="Provides methods to create input, read output, and run the routines from the legacy Java Newhall Simulation Model (jNSM) for soil climate. Currently this package uses a modified version of the jNSM v1.6.1 which is available for download here: &lt;https://www.nrcs.usda.gov/wps/portal/nrcs/detail/?cid=nrcs142p2_053559&gt; and the source code found here &lt;https://github.com/drww/newhall/&gt;. The system requirements of the extraction and installation tools (Windows .EXE archive) at the official download link may not be met on your system but the core Java class files are stored in a platform-independent format (a Java JAR file; e.g. newhall-1.6.1.jar) which is a core dependency in this package. Several more recent modifications to the Newhall JAR file allow for higher throughput and more efficient batching of many simulations allowing for larger-than-memory raster-based inputs and outputs.">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">jNSMR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.9010</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.0</span>
       </span>
     </div>
 
@@ -50,6 +50,9 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
+      <a href="articles/legacy-newhall161.html">Using Legacy Newhall v1.6.1 Routines</a>
+    </li>
+    <li>
       <a href="articles/newhall-prism.html">Applying Newhall to PRISM (4km) 30-year Normals for Continental United States</a>
     </li>
   </ul>
@@ -73,7 +76,7 @@
 
 
 <div class="section level1">
-<div class="page-header"><h1 id="jnsmr">jNSMR<a class="anchor" aria-label="anchor" href="#jnsmr"></a>
+<div class="page-header"><h1 id="jnsmr">{jNSMR}<a class="anchor" aria-label="anchor" href="#jnsmr"></a>
 </h1></div>
 <p>R wrapper for Java Newhall Simulation Model (jNSM) – “A Traditional Soil Climate Simulation Model”</p>
 <p>Provides methods to create input, read output, and run the routines from the legacy Java Newhall Simulation Model (jNSM).</p>
@@ -85,18 +88,15 @@
 <span id="cb1-2"><a href="#cb1-2"></a>remotes<span class="op">::</span><span class="kw">install_github</span>(<span class="st">'ncss-tech/jNSMR'</span>)</span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="basic-functionality">Basic functionality<a class="anchor" aria-label="anchor" href="#basic-functionality"></a>
+<h2 id="run-batches-of-models">Run batches of models<a class="anchor" aria-label="anchor" href="#run-batches-of-models"></a>
 </h2>
-<!-- ### Run the BASIC simulation model --><!-- Create a _NewhallDataset_ with `xml_NewhallDataset()` or `NewhallDataset()` and associated _NewhallDatasetMetadata_ with `NewhallDatasetMetadata()`. --><!-- ```{r} --><!-- library(jNSMR) --><!-- # read single-station XML file (NewhallDataset + NewhallDatasetMetadata) --><!-- input_xml_file <- system.file("extdata/WILLIAMSPORT_1930_1930_input.xml", package = "jNSMR")[1] --><!-- input_xml <- xml_NewhallDataset(input_xml_file) --><!-- # or specify inputs directly to the constructor --><!-- input_direct <- NewhallDataset(stationName = "WILLIAMSPORT", --><!--                                country = "US", --><!--                                lat = 41.24, --><!--                                lon = -76.92, --><!--                                elev = 158.0, --><!--                                allPrecipsDbl = c(44.2,40.39,113.54,96.77,95.0,98.55, --><!--                                                  66.04,13.46,54.86,6.35,17.53,56.39), --><!--                                allAirTempsDbl = c(-2.17,0.89,3.72,9.11,16.28,21.11, --><!--                                                   22.83,21.94,19.78,10.5,5.33,-1.06), --><!--                                pdbegin = 1930, --><!--                                pdend = 1930, --><!--                                smcsawc = 200.0) --><!-- # set minimal _NewhallDatasetMetadata_ for our constructed _NewhallDataset_ --><!-- input_direct$setMetadata(NewhallDatasetMetadata(stationName = "WILLIAMSPORT")) --><!-- ``` --><!-- ### Run single model from file or R object --><!-- ```{r} --><!-- # run single model (from XML file--only with v1.6.1 JAR) --><!-- # output_xml <- newhall_simulation(input_xml) --><!-- # run single model (from direct input) --><!-- output <- newhall_simulation(input_direct) --><!-- ``` --><div class="section level3">
-<h3 id="run-batches-of-models">Run batches of models<a class="anchor" aria-label="anchor" href="#run-batches-of-models"></a>
-</h3>
 <p>The jNSM has a defined CSV (comma-separated value) batch file format. Examples of batch inputs are included in the official download. The batching in the {jNSMR} package is handled by R code, not Java. The main interface to batching is <code><a href="reference/newhall_batch.html">newhall_batch()</a></code>.</p>
-<p><code><a href="reference/newhall_batch.html">newhall_batch()</a></code> takes either a character vector of CSV batch file paths, a data.frame, a SpatRaster or RasterStack object as input.</p>
+<p><code><a href="reference/newhall_batch.html">newhall_batch()</a></code> takes either a character vector of CSV batch file paths, a data.frame, a SpatRaster or RasterStack/Brick object as input.</p>
 <p>Selected example input files have been included in <code>inst/extdata</code> directory of this package.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">library</span>(jNSMR)</span>
 <span id="cb2-2"><a href="#cb2-2"></a></span>
-<span id="cb2-3"><a href="#cb2-3"></a><span class="co">## jNSMR (0.0.0.9010) -- R interface to the classic Newhall Simulation Model</span></span>
-<span id="cb2-4"><a href="#cb2-4"></a><span class="co">## Added JAR file (newhall-1.6.3.jar) to Java class path.</span></span>
+<span id="cb2-3"><a href="#cb2-3"></a><span class="co">## jNSMR (0.1.0) -- R interface to the classic Newhall Simulation Model</span></span>
+<span id="cb2-4"><a href="#cb2-4"></a><span class="co">## Added JAR file (newhall-1.6.4.jar) to Java class path.</span></span>
 <span id="cb2-5"><a href="#cb2-5"></a></span>
 <span id="cb2-6"><a href="#cb2-6"></a>pathname &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">"extdata/All_PA_jNSM_Example_Batch_Metric.csv"</span>, <span class="dt">package =</span> <span class="st">"jNSMR"</span>)[<span class="dv">1</span>]</span>
 <span id="cb2-7"><a href="#cb2-7"></a></span>
@@ -104,50 +104,55 @@
 <span id="cb2-9"><a href="#cb2-9"></a></span>
 <span id="cb2-10"><a href="#cb2-10"></a><span class="kw">head</span>(res)</span>
 <span id="cb2-11"><a href="#cb2-11"></a></span>
-<span id="cb2-12"><a href="#cb2-12"></a><span class="co">##    annualRainfall waterHoldingCapacity annualWaterBalance summerWaterBalance</span></span>
-<span id="cb2-13"><a href="#cb2-13"></a><span class="co">## 1:        1147.33                  200           474.2701          -69.77925</span></span>
-<span id="cb2-14"><a href="#cb2-14"></a><span class="co">## 2:         932.69                  200           270.1988         -112.88055</span></span>
-<span id="cb2-15"><a href="#cb2-15"></a><span class="co">## 3:        1084.32                  200           427.3922          -79.13638</span></span>
-<span id="cb2-16"><a href="#cb2-16"></a><span class="co">## 4:         992.64                  200           332.5753          -88.15085</span></span>
-<span id="cb2-17"><a href="#cb2-17"></a><span class="co">## 5:        1262.39                  200           629.7745          -15.91051</span></span>
-<span id="cb2-18"><a href="#cb2-18"></a><span class="co">## 6:        1118.09                  200           452.0308         -107.59863</span></span>
-<span id="cb2-19"><a href="#cb2-19"></a><span class="co">##    dryDaysAfterSummerSolstice moistDaysAfterWinterSolstice numCumulativeDaysDry</span></span>
-<span id="cb2-20"><a href="#cb2-20"></a><span class="co">## 1:                          0                          120                    0</span></span>
-<span id="cb2-21"><a href="#cb2-21"></a><span class="co">## 2:                          0                          120                    0</span></span>
-<span id="cb2-22"><a href="#cb2-22"></a><span class="co">## 3:                          0                          120                    0</span></span>
-<span id="cb2-23"><a href="#cb2-23"></a><span class="co">## 4:                          0                          120                    0</span></span>
-<span id="cb2-24"><a href="#cb2-24"></a><span class="co">## 5:                          0                          120                    0</span></span>
-<span id="cb2-25"><a href="#cb2-25"></a><span class="co">## 6:                          0                          120                    0</span></span>
-<span id="cb2-26"><a href="#cb2-26"></a><span class="co">##    numCumulativeDaysMoistDry numCumulativeDaysMoist numCumulativeDaysDryOver5C</span></span>
-<span id="cb2-27"><a href="#cb2-27"></a><span class="co">## 1:                         0                    360                          0</span></span>
-<span id="cb2-28"><a href="#cb2-28"></a><span class="co">## 2:                         0                    360                          0</span></span>
-<span id="cb2-29"><a href="#cb2-29"></a><span class="co">## 3:                         0                    360                          0</span></span>
-<span id="cb2-30"><a href="#cb2-30"></a><span class="co">## 4:                         0                    360                          0</span></span>
-<span id="cb2-31"><a href="#cb2-31"></a><span class="co">## 5:                         0                    360                          0</span></span>
-<span id="cb2-32"><a href="#cb2-32"></a><span class="co">## 6:                         0                    360                          0</span></span>
-<span id="cb2-33"><a href="#cb2-33"></a><span class="co">##    numCumulativeDaysMoistDryOver5C numCumulativeDaysMoistOver5C</span></span>
-<span id="cb2-34"><a href="#cb2-34"></a><span class="co">## 1:                               0                          227</span></span>
-<span id="cb2-35"><a href="#cb2-35"></a><span class="co">## 2:                               0                          226</span></span>
-<span id="cb2-36"><a href="#cb2-36"></a><span class="co">## 3:                               0                          224</span></span>
-<span id="cb2-37"><a href="#cb2-37"></a><span class="co">## 4:                               0                          226</span></span>
-<span id="cb2-38"><a href="#cb2-38"></a><span class="co">## 5:                               0                          212</span></span>
-<span id="cb2-39"><a href="#cb2-39"></a><span class="co">## 6:                               0                          223</span></span>
-<span id="cb2-40"><a href="#cb2-40"></a><span class="co">##    numConsecutiveDaysMoistInSomeParts numConsecutiveDaysMoistInSomePartsOver8C</span></span>
-<span id="cb2-41"><a href="#cb2-41"></a><span class="co">## 1:                                360                                      205</span></span>
-<span id="cb2-42"><a href="#cb2-42"></a><span class="co">## 2:                                360                                      206</span></span>
-<span id="cb2-43"><a href="#cb2-43"></a><span class="co">## 3:                                360                                      204</span></span>
-<span id="cb2-44"><a href="#cb2-44"></a><span class="co">## 4:                                360                                      205</span></span>
-<span id="cb2-45"><a href="#cb2-45"></a><span class="co">## 5:                                360                                      193</span></span>
-<span id="cb2-46"><a href="#cb2-46"></a><span class="co">## 6:                                360                                      203</span></span>
-<span id="cb2-47"><a href="#cb2-47"></a><span class="co">##    temperatureRegime moistureRegime regimeSubdivision1 regimeSubdivision2</span></span>
-<span id="cb2-48"><a href="#cb2-48"></a><span class="co">## 1:             Mesic           Udic              Typic               Udic</span></span>
-<span id="cb2-49"><a href="#cb2-49"></a><span class="co">## 2:             Mesic           Udic              Typic               Udic</span></span>
-<span id="cb2-50"><a href="#cb2-50"></a><span class="co">## 3:             Mesic           Udic              Typic               Udic</span></span>
-<span id="cb2-51"><a href="#cb2-51"></a><span class="co">## 4:             Mesic           Udic              Typic               Udic</span></span>
-<span id="cb2-52"><a href="#cb2-52"></a><span class="co">## 5:             Mesic           Udic              Typic               Udic</span></span>
-<span id="cb2-53"><a href="#cb2-53"></a><span class="co">## 6:             Mesic           Udic              Typic               Udic</span></span></code></pre></div>
-<!-- ### Graphical User Interface for individual runs of _newhall-1.6.1.jar_ --><!-- ```{r, eval=FALSE} --><!-- # convenience method to open GUI with the R package --><!-- newhall_GUI() --><!-- ``` --><!-- ### Access references to Java objects containing results --><!-- #### Moisture and temperature regime statistics --><!-- ```{r} --><!-- cat(output$getFormattedStatistics()) --><!-- ``` --><!-- #### Moisture calendar --><!-- ```{r} --><!-- cat(output$getFormattedMoistureCalendar()) --><!-- ``` --><!-- #### Temperature calendar --><!-- ```{r} --><!-- cat(output$getFormattedTemperatureCalendar()) --><!-- ``` --><!-- ### Support for Newhall XML format for input and output --><!-- ```{r} --><!-- # inspect XML result format --><!-- cat(newhall_XMLStringResultsExporter(input_xml, output)) --><!-- ``` --><!-- ### XML File Output --><!-- ```{r} --><!-- # write XML results to file --><!-- newhall_XMLResultsExporter(dataset = input_direct,  --><!--                            result = output,  --><!--                            pathname = "misc/WILLIAMSPORT_1930_1930_export.xml") --><!-- ``` -->
-</div>
+<span id="cb2-12"><a href="#cb2-12"></a><span class="co">##    annualRainfall waterHoldingCapacity annualWaterBalance</span></span>
+<span id="cb2-13"><a href="#cb2-13"></a><span class="co">## 1:        1147.33                  200           474.2701</span></span>
+<span id="cb2-14"><a href="#cb2-14"></a><span class="co">## 2:         932.69                  200           270.1988</span></span>
+<span id="cb2-15"><a href="#cb2-15"></a><span class="co">## 3:        1084.32                  200           427.3922</span></span>
+<span id="cb2-16"><a href="#cb2-16"></a><span class="co">## 4:         992.64                  200           332.5753</span></span>
+<span id="cb2-17"><a href="#cb2-17"></a><span class="co">## 5:        1262.39                  200           629.7745</span></span>
+<span id="cb2-18"><a href="#cb2-18"></a><span class="co">## 6:        1118.09                  200           452.0308</span></span>
+<span id="cb2-19"><a href="#cb2-19"></a><span class="co">##    annualPotentialEvapotranspiration summerWaterBalance</span></span>
+<span id="cb2-20"><a href="#cb2-20"></a><span class="co">## 1:                          673.0599          -69.77925</span></span>
+<span id="cb2-21"><a href="#cb2-21"></a><span class="co">## 2:                          662.4912         -112.88055</span></span>
+<span id="cb2-22"><a href="#cb2-22"></a><span class="co">## 3:                          656.9278          -79.13638</span></span>
+<span id="cb2-23"><a href="#cb2-23"></a><span class="co">## 4:                          660.0647          -88.15085</span></span>
+<span id="cb2-24"><a href="#cb2-24"></a><span class="co">## 5:                          632.6155          -15.91051</span></span>
+<span id="cb2-25"><a href="#cb2-25"></a><span class="co">## 6:                          666.0592         -107.59863</span></span>
+<span id="cb2-26"><a href="#cb2-26"></a><span class="co">##    dryDaysAfterSummerSolstice moistDaysAfterWinterSolstice numCumulativeDaysDry</span></span>
+<span id="cb2-27"><a href="#cb2-27"></a><span class="co">## 1:                          0                          120                    0</span></span>
+<span id="cb2-28"><a href="#cb2-28"></a><span class="co">## 2:                          0                          120                    0</span></span>
+<span id="cb2-29"><a href="#cb2-29"></a><span class="co">## 3:                          0                          120                    0</span></span>
+<span id="cb2-30"><a href="#cb2-30"></a><span class="co">## 4:                          0                          120                    0</span></span>
+<span id="cb2-31"><a href="#cb2-31"></a><span class="co">## 5:                          0                          120                    0</span></span>
+<span id="cb2-32"><a href="#cb2-32"></a><span class="co">## 6:                          0                          120                    0</span></span>
+<span id="cb2-33"><a href="#cb2-33"></a><span class="co">##    numCumulativeDaysMoistDry numCumulativeDaysMoist numCumulativeDaysDryOver5C</span></span>
+<span id="cb2-34"><a href="#cb2-34"></a><span class="co">## 1:                         0                    360                          0</span></span>
+<span id="cb2-35"><a href="#cb2-35"></a><span class="co">## 2:                         0                    360                          0</span></span>
+<span id="cb2-36"><a href="#cb2-36"></a><span class="co">## 3:                         0                    360                          0</span></span>
+<span id="cb2-37"><a href="#cb2-37"></a><span class="co">## 4:                         0                    360                          0</span></span>
+<span id="cb2-38"><a href="#cb2-38"></a><span class="co">## 5:                         0                    360                          0</span></span>
+<span id="cb2-39"><a href="#cb2-39"></a><span class="co">## 6:                         0                    360                          0</span></span>
+<span id="cb2-40"><a href="#cb2-40"></a><span class="co">##    numCumulativeDaysMoistDryOver5C numCumulativeDaysMoistOver5C</span></span>
+<span id="cb2-41"><a href="#cb2-41"></a><span class="co">## 1:                               0                          227</span></span>
+<span id="cb2-42"><a href="#cb2-42"></a><span class="co">## 2:                               0                          226</span></span>
+<span id="cb2-43"><a href="#cb2-43"></a><span class="co">## 3:                               0                          224</span></span>
+<span id="cb2-44"><a href="#cb2-44"></a><span class="co">## 4:                               0                          226</span></span>
+<span id="cb2-45"><a href="#cb2-45"></a><span class="co">## 5:                               0                          212</span></span>
+<span id="cb2-46"><a href="#cb2-46"></a><span class="co">## 6:                               0                          223</span></span>
+<span id="cb2-47"><a href="#cb2-47"></a><span class="co">##    numConsecutiveDaysMoistInSomeParts numConsecutiveDaysMoistInSomePartsOver8C</span></span>
+<span id="cb2-48"><a href="#cb2-48"></a><span class="co">## 1:                                360                                      205</span></span>
+<span id="cb2-49"><a href="#cb2-49"></a><span class="co">## 2:                                360                                      206</span></span>
+<span id="cb2-50"><a href="#cb2-50"></a><span class="co">## 3:                                360                                      204</span></span>
+<span id="cb2-51"><a href="#cb2-51"></a><span class="co">## 4:                                360                                      205</span></span>
+<span id="cb2-52"><a href="#cb2-52"></a><span class="co">## 5:                                360                                      193</span></span>
+<span id="cb2-53"><a href="#cb2-53"></a><span class="co">## 6:                                360                                      203</span></span>
+<span id="cb2-54"><a href="#cb2-54"></a><span class="co">##    temperatureRegime moistureRegime regimeSubdivision1 regimeSubdivision2</span></span>
+<span id="cb2-55"><a href="#cb2-55"></a><span class="co">## 1:             Mesic           Udic              Typic               Udic</span></span>
+<span id="cb2-56"><a href="#cb2-56"></a><span class="co">## 2:             Mesic           Udic              Typic               Udic</span></span>
+<span id="cb2-57"><a href="#cb2-57"></a><span class="co">## 3:             Mesic           Udic              Typic               Udic</span></span>
+<span id="cb2-58"><a href="#cb2-58"></a><span class="co">## 4:             Mesic           Udic              Typic               Udic</span></span>
+<span id="cb2-59"><a href="#cb2-59"></a><span class="co">## 5:             Mesic           Udic              Typic               Udic</span></span>
+<span id="cb2-60"><a href="#cb2-60"></a><span class="co">## 6:             Mesic           Udic              Typic               Udic</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="license-information">License information<a class="anchor" aria-label="anchor" href="#license-information"></a>
@@ -158,7 +163,7 @@
 <div class="section level2">
 <h2 id="system-requirements">System requirements<a class="anchor" aria-label="anchor" href="#system-requirements"></a>
 </h2>
-<p>The system requirements of the extraction and installation tools (Windows .EXE archive) at the above link may not be met on your system but the core Java class files are stored in a platform-independent format (e.g <em>newhall-1.6.1.jar</em>)–a core dependency in this package.</p>
+<p>The system requirements of the extraction and installation tools (Windows .EXE archive) at the official download link may not be met on your system, but the core Java class files are stored in a platform-independent format (a Java JAR file e.g <em>newhall-1.6.1.jar</em>)–a core dependency in this package.</p>
 <p>As long as you have a modern Java Runtime Environment (you probably do), you will be able to run jNSM with only minimal setup.</p>
 </div>
 </div>
