@@ -116,8 +116,9 @@ newhall_GUI()
 
 ## Detaching the Package
 
-If you need to switch back and forth between different versions of the model JAR file within a single R session, you will need to `detach()` the package before reloading with a new JAR. 
+If you need to switch back and forth between different versions of the model JAR file within a single R session, you will need to `detach()` the package and unset any options such as `jNSMR.JAR_SUFFIX` before reloading with a new JAR. 
 
 ```{r}
-detach("package:soilDB")
+detach("package:jNSMR")
+options(jNSMR.JAR_SUFFIX = NULL)
 ```
