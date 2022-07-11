@@ -238,7 +238,7 @@
 <span><span class="co">#&gt;     &lt;notes&gt;</span></span>
 <span><span class="co">#&gt;       &lt;note&gt;gaps filled by interpolation of neighboring stations&lt;/note&gt;</span></span>
 <span><span class="co">#&gt;     &lt;/notes&gt;</span></span>
-<span><span class="co">#&gt;     &lt;rundate&gt;20220706&lt;/rundate&gt;</span></span>
+<span><span class="co">#&gt;     &lt;rundate&gt;20220711&lt;/rundate&gt;</span></span>
 <span><span class="co">#&gt;     &lt;nsmver&gt;1.6.1&lt;/nsmver&gt;</span></span>
 <span><span class="co">#&gt;     &lt;srcunitsys&gt;english&lt;/srcunitsys&gt;</span></span>
 <span><span class="co">#&gt;   &lt;/metadata&gt;</span></span>
@@ -390,6 +390,14 @@
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/newhall_GUI.html">newhall_GUI</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
+</div>
+<div class="section level2">
+<h2 id="detaching-the-package">Detaching the Package<a class="anchor" aria-label="anchor" href="#detaching-the-package"></a>
+</h2>
+<p>If you need to switch back and forth between different versions of the model JAR file within a single R session, you will need to <code><a href="https://rdrr.io/r/base/detach.html" class="external-link">detach()</a></code> the package and unset any options such as <code>jNSMR.JAR_SUFFIX</code> before reloading with a new JAR.</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/detach.html" class="external-link">detach</a></span><span class="op">(</span><span class="st">"package:jNSMR"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>jNSMR.JAR_SUFFIX <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
 </div>
   </div>
 
