@@ -6,6 +6,7 @@ on:
     paths:
       - '**.Rd'
     tags: ['*']
+  workflow_dispatch:
 
 name: pkgdown
 
