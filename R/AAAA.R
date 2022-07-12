@@ -28,7 +28,7 @@ newhall_version <- function() {
   # rJava::.jpackage(pkgname, lib.loc = libname)
 
   # allow an option to add additional characters to jar file name (custom jar file)
-  jas <- getOption("jNSMR.JAR_SUFFIX", default = "-1.6.4")
+  jas <- getOption("jNSMR.JAR_SUFFIX", default = .get_default_suffix())
   
   # jnf0 <- .jnsm_jar_file()
   jnf <- .jnsm_jar_file(suffix = jas)
@@ -42,7 +42,7 @@ newhall_version <- function() {
 #' @importFrom rJava .jfield .jnew
 #' @importFrom utils packageVersion
 .onAttach <- function(libname, pkgname) {
-  jas <- getOption("jNSMR.JAR_SUFFIX", default = "-1.6.4")
+  jas <- getOption("jNSMR.JAR_SUFFIX", default = .get_default_suffix())
   jnf <- .jnsm_jar_file(suffix = jas)
   packageStartupMessage(paste0("jNSMR (", packageVersion("jNSMR"), ") -- R interface to the classic Newhall Simulation Model\nAdded JAR file (", basename(jnf), ") to Java class path."))
   
@@ -52,3 +52,5 @@ newhall_version <- function() {
     name = "NSM_VERSION"
   ))
 }
+
+.get_default_suffix <- function() "-1.6.4-3"
