@@ -221,9 +221,11 @@
      }
 
      double dif = Math.abs(at1 - at2);
-     double cs = dif * (1.0D - fcd) / 2.0D;
-/**
-     * The cr[] arrays hold critera to determine temperature regime.  Then
+     double cs = dif * (1.0D - fcd) / 2.0D; 
+     // TODO: check (1.0D - fcd) v.s. fcd v.s. cr[7] expression
+     
+    /**
+     * The cr[] arrays hold criteria to determine temperature regime.  Then
      * the reg[] array holds the flags for each regime.  The last-most flag
      * that is true indicates the temp regime.
      */
@@ -234,7 +236,7 @@
     cr[2] = 0 <= tma && tma < 8;          // 0C <= MAAT <= 8C.
     // cr[3] = (st - cs) < 15;            // Summer temp ave minus (summer/winter difference * (1 - SOIL_AIR_REL) * 0.5) < 15C.
                                           // TODO: where did latter part ^^ (... - SWD...) of this come from? Misread cryic crit 1?
-    cr[3] = (st * (1.0D - fcd)) < 15;     // assume cryic crit 1a: "non-saturated, mineral soil, mean _summer_ soil temperature between 0 and 15C
+    cr[3] = (st * fcd) < 15;              // assume cryic crit 1a: "non-saturated, mineral soil, mean _summer_ soil temperature between 0 and 15C
     cr[7] = (dif * fcd) >= 6;             // Summer/winter difference * SOIL_AIR_REL >= 6 
                                           // NOTE: Taxonomy clearly states difference greater/equal than 6, not 5
     cr[8] = (tma >= 8) && (tma < 15);     // 8C <= MAAT < 15C.
