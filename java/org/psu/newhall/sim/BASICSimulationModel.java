@@ -232,8 +232,11 @@
     boolean[] reg = new boolean[13];
     cr[1] = tma < 0;                      // Mean annual air temp (MAAT) < 0C.
     cr[2] = 0 <= tma && tma < 8;          // 0C <= MAAT <= 8C.
-    cr[3] = (st - cs) < 15;               // Summer temp ave minus (summer/winter difference * (1 - SOIL_AIR_REL) * 0.5) < 15C.
-    cr[7] = (dif * fcd) > 5;              // Summer/winter difference * SOIL_AIR_REL > 5.  Change to 6?
+    // cr[3] = (st - cs) < 15;            // Summer temp ave minus (summer/winter difference * (1 - SOIL_AIR_REL) * 0.5) < 15C.
+                                          // TODO: where did latter part ^^ (... - SWD...) of this come from? Misread cryic crit 1?
+    cr[3] = (st * (1.0D - fcd)) < 15;     // assume cryic crit 1a: "non-saturated, mineral soil, mean _summer_ soil temperature between 0 and 15C
+    cr[7] = (dif * fcd) >= 6;             // Summer/winter difference * SOIL_AIR_REL >= 6 
+                                          // NOTE: Taxonomy clearly states difference greater/equal than 6, not 5
     cr[8] = (tma >= 8) && (tma < 15);     // 8C <= MAAT < 15C.
     cr[9] = (tma >= 15) && (tma < 22);    // 15C <= MAAT < 22C.
     cr[10] = tma >= 22;                   // 22C <= MAAT.
