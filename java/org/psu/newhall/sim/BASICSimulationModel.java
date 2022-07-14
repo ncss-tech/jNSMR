@@ -236,7 +236,7 @@
     cr[2] = 0 <= tma && tma < 8;         // 0C <= MAAT <= 8C.
     // cr[3] = (st - cs) < 15;            // Summer temp ave minus (summer/winter difference * (1 - SOIL_AIR_REL) * 0.5) < 15C.
                                           // TODO: where did latter part ^^ (... - SWD...) of this come from? Misread cryic crit 1?
-    cr[3] = st < 12;                      // assume cryic crit between 1a/1b: "non-saturated, mineral soil, mean _summer_ soil temperature between 0 and 8C/15C
+    cr[3] = st < 15;                      // assume cryic crit between 1a/1b: "non-saturated, mineral soil, mean _summer_ soil temperature between 0 and 8C/15C
     cr[7] = (dif * fcd) >= 6;             // Summer/winter difference * SOIL_AIR_REL >= 6 
                                           // NOTE: Taxonomy clearly states difference greater/equal than 6, not 5
     cr[8] = (tma >= 8) && (tma < 15);     // 8C <= MAAT < 15C.
