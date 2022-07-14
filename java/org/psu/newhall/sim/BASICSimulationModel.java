@@ -232,8 +232,8 @@
 
     boolean[] cr = new boolean[13];
     boolean[] reg = new boolean[13];
-    cr[1] = tma < -2;                     // Mean annual air temp (MAAT) < 0C.
-    cr[2] = -2 <= tma && tma < 8;         // 0C <= MAAT <= 8C.
+    cr[1] = tma < 0;                     // Mean annual air temp (MAAT) < 0C.
+    cr[2] = 0 <= tma && tma < 8;         // 0C <= MAAT <= 8C.
     // cr[3] = (st - cs) < 15;            // Summer temp ave minus (summer/winter difference * (1 - SOIL_AIR_REL) * 0.5) < 15C.
                                           // TODO: where did latter part ^^ (... - SWD...) of this come from? Misread cryic crit 1?
     cr[3] = st < 12;                      // assume cryic crit between 1a/1b: "non-saturated, mineral soil, mean _summer_ soil temperature between 0 and 8C/15C
