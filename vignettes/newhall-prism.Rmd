@@ -9,7 +9,7 @@ vignette: >
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
-  eval = FALSE,
+  eval = TRUE,
   collapse = TRUE,
   comment = "#>"
 )
@@ -25,7 +25,7 @@ library(terra)
 # run jNSMR on prism monthly 30yr normals
 
 # path to PRISM data
-PRISM_PATH <- tempdir() #"~/Geodata/PRISM"
+PRISM_PATH <- tempdir() # "~/Geodata/PRISM"
 prism::prism_set_dl_dir(PRISM_PATH)
 
 # PRISM resolution; either 4km or 800m
@@ -48,21 +48,26 @@ Download PRISM data (if needed)
                     annual = annual, keepZip = keepZip)
   TRUE
 }
+```
 
+```{r, echo=FALSE}
 bilfile <- list.files(PRISM_PATH, "\\.bil$", recursive = TRUE)
 
 # only download the PRISM data if it can't be found in PRISM_PATH
 if (length(bilfile) == 0) {
   
-  # download by month
-  res <- lapply(1:12, .download_month, resolution=RESOLUTION)
-  
+  # download by month (suppress txtProgressBar by capturing output)
+  capture.output({
+    res <- lapply(1:12, .download_month, resolution = RESOLUTION)
+  })
   # get the monthly files only (hardcoded for 30yr normals for now)
-  bilfile <- list.files(PRISM_PATH, "\\.bil$", recursive = TRUE)
+  bilfile <- list.files(PRISM_PATH, "\\.txt$|\\.bil$", recursive = TRUE)
 }
+```
 
+```{r}
 # capture file name components
-monthly.pattern <- ".*PRISM_([a-z]+)_(30yr_normal)_(\\d+[a-z]+)M[23]_(\\d{2})_bil\\.bil"
+monthly.pattern <- ".*PRISM_([a-z]+)_(30yr_normal)_(\\d+[a-z]+)M[23]_(\\d{2})_bil\\.txt"
 bilfile_sub <- bilfile[grep(monthly.pattern, bilfile)]
 bilmonth <- strsplit(gsub(monthly.pattern,  "\\1;\\2;\\3;\\4", bilfile_sub), ";")
 bil <- data.frame(bilfile_sub, do.call('rbind', bilmonth))
@@ -122,37 +127,37 @@ res <- jNSMR::newhall_batch(test_set)
 
 ## Results
 
-Create terra SpatVector containing points and results
+Create {terra} `SpatVector` containing points and results
 
 ```{r}
 newsp <- terra::vect(cbind(test_set[,c('lonDD','latDD')], res), geom = c("lonDD","latDD"), crs="EPSG:4326")
 ```
 
-Temperature Regimes
+### Temperature Regimes
 
 ```{r}
 plot(newsp, col=factor(newsp$temperatureRegime))
 ```
 
-Moisture Regimes
+### Moisture Regimes
 
 ```{r}
 plot(newsp, col=factor(newsp$moistureRegime))
 ```
 
-Moisture Regime Subdivision 1
+#### Moisture Regime Subdivision 1
 
 ```{r}
 plot(newsp, col=factor(newsp$regimeSubdivision1))
 ```
 
-Moisture Regime Subdivision 2
+#### Moisture Regime Subdivision 2
 
 ```{r}
 plot(newsp, col=factor(newsp$regimeSubdivision2))
 ```
 
-Moisture regimes (Xeric, Aridic, Ustic, Udic)
+#### Moisture regimes (focus on Xeric, Aridic, Ustic, Udic)
 
 ```{r}
 newspsub <- subset(newsp, newsp$moistureRegime %in% c("Aridic","Udic","Ustic","Xeric"))
@@ -163,7 +168,7 @@ plot(newspsub, col = nlegcolors[match(legnames, nlegnames)], pch=".", cex=5)
 legend("topright", legend = nlegnames, pch=".", fill = nlegcolors)
 ```
 
-Moisture regime subdivisions within Aridic and Xeric
+#### Moisture regime subdivisions (within Aridic and Xeric)
 
 ```{r}
 table(newspsub$regimeSubdivision1)

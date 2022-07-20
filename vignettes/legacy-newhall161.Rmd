@@ -10,7 +10,7 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   # skip 1.6.1 vignette in R CMD check on GHA
-  eval = FALSE,
+  eval = TRUE,
   collapse = TRUE,
   comment = "#>"
 )
@@ -23,7 +23,10 @@ This vignette demonstrates setting a custom `jNSMR.JAR_SUFFIX` to force use of t
  > Newhall 1.6.1, Copyright (C) 2010-2011 United States Department of Agriculture - Natural Resources Conservation Service, Penn State University Center for Environmental Informatics All rights reserved.
 
 ```{r setup}
+# before we load the library, set the JAR_SUFFIX option to indicate which JAR to load
 options(jNSMR.JAR_SUFFIX = "-1.6.1")
+
+# onAttach message indicates JAR version loaded
 library(jNSMR)
 ```
 
