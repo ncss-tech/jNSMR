@@ -67,7 +67,7 @@ if (length(bilfile) == 0) {
 
 ```{r}
 # capture file name components
-monthly.pattern <- ".*PRISM_([a-z]+)_(30yr_normal)_(\\d+[a-z]+)M[23]_(\\d{2})_bil\\.txt"
+monthly.pattern <- ".*PRISM_([a-z]+)_(30yr_normal)_(\\d+[a-z]+)M[23]_(\\d{2})_bil\\.(bil|txt)"
 bilfile_sub <- bilfile[grep(monthly.pattern, bilfile)]
 bilmonth <- strsplit(gsub(monthly.pattern,  "\\1;\\2;\\3;\\4", bilfile_sub), ";")
 bil <- data.frame(bilfile_sub, do.call('rbind', bilmonth))
