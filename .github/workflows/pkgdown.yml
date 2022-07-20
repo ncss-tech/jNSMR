@@ -5,6 +5,8 @@ on:
     branches: [main, master]
     paths:
       - '**.Rd'
+      - '**.Rmd'
+      - '**.md'
     tags: ['*']
   workflow_dispatch:
 
