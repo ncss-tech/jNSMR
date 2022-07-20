@@ -10,7 +10,7 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   # skip 1.6.1 vignette in R CMD check on GHA
-  eval = TRUE,
+  eval = FALSE,
   collapse = TRUE,
   comment = "#>"
 )
