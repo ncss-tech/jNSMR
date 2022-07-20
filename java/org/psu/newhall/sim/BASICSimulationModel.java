@@ -191,7 +191,7 @@
 
 
      double arf = 0.0D;
-     double aev = 0.0D;
+     double aev = 0.0D; // TODO: value not used?
      for (int i2 = 1; i2 <= 12; i2++) {
        arf += precip[i2];
        aev += mpe[i2];
@@ -268,8 +268,8 @@
      }
 
      int k = 1;
-     int swst = 0;
-     int swfi = 0;
+     int swst = 0; // TODO: not used?
+     int swfi = 0; // TODO: not used?
 
      double[] ntwi = new double[4];
      double[] ntsu = new double[4];
@@ -3070,7 +3070,7 @@
 
 
      byte[] cc2Bytes = { 7, 0, 7, 0, 7 };
-     String cc2 = new String(cc2Bytes);
+     String cc2 = new String(cc2Bytes); // TODO: value not used?
      int c2 = 0;
 
 
@@ -3147,7 +3147,7 @@
      boolean hasRunAlready = false;
 
 
-     double elevation = dataset.getElevation();
+     double elevation = dataset.getElevation(); // TODO: not used?
      if (!dataset.isMetric())
      {
 /*   30 */       elevation *= 0.305D;
@@ -3406,8 +3406,8 @@
      }
 
      int k = 1;
-     int swst = 0;
-     int swfi = 0;
+     int swst = 0; // TODO: not used?
+     int swfi = 0; // TODO: not used?
 
      double[] ntwi = new double[4];
 /*  290 */     double[] ntsu = new double[4];
@@ -6216,7 +6216,7 @@
 
 
     byte[] cc2Bytes = { 7, 0, 7, 0, 7 };
-    String cc2 = new String(cc2Bytes);
+    String cc2 = new String(cc2Bytes); // TODO: not used?
     int c2 = 0;
 
     String flxFile = "\"" + dataset.getName() + "\",\"" + dataset.getCountry() + "\"," + dataset.getLatitudeDegrees() + ",";

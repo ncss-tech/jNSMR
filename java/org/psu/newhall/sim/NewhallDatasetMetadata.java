@@ -1,6 +1,5 @@
 package org.psu.newhall.sim;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.ArrayList;
 

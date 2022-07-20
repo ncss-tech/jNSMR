@@ -1,8 +1,5 @@
 package org.psu.newhall;
 import java.io.File;
-import java.util.Arrays;
-import java.util.stream.Stream;
-import java.util.stream.Collectors;
 import org.psu.newhall.sim.*;
 import org.psu.newhall.util.*;
 
