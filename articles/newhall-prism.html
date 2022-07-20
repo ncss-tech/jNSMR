@@ -89,183 +89,42 @@
 </h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ncss-tech.github.io/jNSMR">jNSMR</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; jNSMR (0.1.0) -- R interface to the classic Newhall Simulation Model</span></span>
-<span><span class="co">#&gt; Added JAR file (newhall-1.6.4.jar) to Java class path.</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://docs.ropensci.org/prism/" class="external-link">prism</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: no function found corresponding to methods exports from 'raster' for:</span></span>
-<span><span class="co">#&gt; 'area'</span></span>
-<span><span class="co">#&gt; Be sure to set the download folder using `prism_set_dl_dir()`.</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/terra/" class="external-link">terra</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; terra 1.5.49</span></span>
 <span></span>
 <span><span class="co"># run jNSMR on prism monthly 30yr normals</span></span>
 <span></span>
 <span><span class="co"># path to PRISM data</span></span>
-<span><span class="va">PRISM_PATH</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span> <span class="co">#"~/Geodata/PRISM"</span></span>
+<span><span class="va">PRISM_PATH</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span> <span class="co"># "~/Geodata/PRISM"</span></span>
 <span><span class="fu">prism</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/prism/reference/prism_set_dl_dir.html" class="external-link">prism_set_dl_dir</a></span><span class="op">(</span><span class="va">PRISM_PATH</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># PRISM resolution; either 4km or 800m</span></span>
 <span><span class="va">RESOLUTION</span> <span class="op">&lt;-</span> <span class="st">"4km"</span></span></code></pre></div>
 <p>Download PRISM data (if needed)</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="co"># download 4km or 800m data</span></span>
-<span id="cb2-2"><a href="#cb2-2"></a>.download_month &lt;-<span class="st"> </span><span class="cf">function</span>(i, <span class="dt">resolution =</span> <span class="kw">c</span>(<span class="st">"4km"</span>,<span class="st">"800m"</span>), <span class="dt">annual =</span> <span class="ot">FALSE</span>, <span class="dt">keepZip =</span> <span class="ot">TRUE</span>) {</span>
-<span id="cb2-3"><a href="#cb2-3"></a>  resolution &lt;-<span class="st"> </span><span class="kw">match.arg</span>(resolution, <span class="kw">c</span>(<span class="st">"4km"</span>,<span class="st">"800m"</span>))</span>
-<span id="cb2-4"><a href="#cb2-4"></a>  <span class="cf">if</span>(i <span class="op">==</span><span class="st"> </span><span class="dv">1</span>)</span>
-<span id="cb2-5"><a href="#cb2-5"></a>    annual =<span class="st"> </span><span class="ot">TRUE</span></span>
-<span id="cb2-6"><a href="#cb2-6"></a>  prism<span class="op">::</span><span class="kw">get_prism_normals</span>(<span class="dt">mon =</span> i, <span class="dt">type =</span> <span class="st">"ppt"</span>,</span>
-<span id="cb2-7"><a href="#cb2-7"></a>                    <span class="dt">resolution =</span> resolution,</span>
-<span id="cb2-8"><a href="#cb2-8"></a>                    <span class="dt">annual =</span> annual, <span class="dt">keepZip =</span> keepZip)</span>
-<span id="cb2-9"><a href="#cb2-9"></a>  prism<span class="op">::</span><span class="kw">get_prism_normals</span>(<span class="dt">mon =</span> i, <span class="dt">type =</span> <span class="st">"tmean"</span>,</span>
-<span id="cb2-10"><a href="#cb2-10"></a>                    <span class="dt">resolution =</span> resolution,</span>
-<span id="cb2-11"><a href="#cb2-11"></a>                    <span class="dt">annual =</span> annual, <span class="dt">keepZip =</span> keepZip)</span>
-<span id="cb2-12"><a href="#cb2-12"></a>  <span class="ot">TRUE</span></span>
-<span id="cb2-13"><a href="#cb2-13"></a>}</span>
-<span id="cb2-14"><a href="#cb2-14"></a></span>
-<span id="cb2-15"><a href="#cb2-15"></a>bilfile &lt;-<span class="st"> </span><span class="kw">list.files</span>(PRISM_PATH, <span class="st">"</span><span class="ch">\\</span><span class="st">.bil$"</span>, <span class="dt">recursive =</span> <span class="ot">TRUE</span>)</span>
-<span id="cb2-16"><a href="#cb2-16"></a></span>
-<span id="cb2-17"><a href="#cb2-17"></a><span class="co"># only download the PRISM data if it can't be found in PRISM_PATH</span></span>
-<span id="cb2-18"><a href="#cb2-18"></a><span class="cf">if</span> (<span class="kw">length</span>(bilfile) <span class="op">==</span><span class="st"> </span><span class="dv">0</span>) {</span>
-<span id="cb2-19"><a href="#cb2-19"></a>  </span>
-<span id="cb2-20"><a href="#cb2-20"></a>  <span class="co"># download by month</span></span>
-<span id="cb2-21"><a href="#cb2-21"></a>  res &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">12</span>, .download_month, <span class="dt">resolution=</span>RESOLUTION)</span>
-<span id="cb2-22"><a href="#cb2-22"></a>  </span>
-<span id="cb2-23"><a href="#cb2-23"></a>  <span class="co"># get the monthly files only (hardcoded for 30yr normals for now)</span></span>
-<span id="cb2-24"><a href="#cb2-24"></a>  bilfile &lt;-<span class="st"> </span><span class="kw">list.files</span>(PRISM_PATH, <span class="st">"</span><span class="ch">\\</span><span class="st">.bil$"</span>, <span class="dt">recursive =</span> <span class="ot">TRUE</span>)</span>
-<span id="cb2-25"><a href="#cb2-25"></a>}</span>
-<span id="cb2-26"><a href="#cb2-26"></a><span class="co">#&gt; </span></span>
-<span id="cb2-27"><a href="#cb2-27"></a>  <span class="op">|</span><span class="st">                                                                            </span></span>
-<span id="cb2-28"><a href="#cb2-28"></a><span class="st">  </span><span class="er">|</span><span class="st">                                                                      </span><span class="er">|</span><span class="st">   </span><span class="dv">0</span>%</span>
-<span id="cb2-29"><a href="#cb2-29"></a>  <span class="op">|</span><span class="st">                                                                            </span></span>
-<span id="cb2-30"><a href="#cb2-30"></a><span class="st">  </span><span class="er">|===================================</span><span class="st">                                   </span><span class="er">|</span><span class="st">  </span><span class="dv">50</span>%</span>
-<span id="cb2-31"><a href="#cb2-31"></a>  <span class="op">|</span><span class="st">                                                                            </span></span>
-<span id="cb2-32"><a href="#cb2-32"></a><span class="st">  </span><span class="er">|======================================================================|</span><span class="st"> </span><span class="dv">100</span>%</span>
-<span id="cb2-33"><a href="#cb2-33"></a><span class="co">#&gt; </span></span>
-<span id="cb2-34"><a href="#cb2-34"></a>  <span class="op">|</span><span class="st">                                                                            </span></span>
-<span id="cb2-35"><a href="#cb2-35"></a><span class="st">  </span><span class="er">|</span><span class="st">                                                                      </span><span class="er">|</span><span class="st">   </span><span class="dv">0</span>%</span>
-<span id="cb2-36"><a href="#cb2-36"></a>  <span class="op">|</span><span class="st">                                                                            </span></span>
-<span id="cb2-37"><a href="#cb2-37"></a><span class="st">  </span><span class="er">|===================================</span><span class="st">                                   </span><span class="er">|</span><span class="st">  </span><span class="dv">50</span>%</span>
-<span id="cb2-38"><a href="#cb2-38"></a>  <span class="op">|</span><span class="st">                                                                            </span></span>
-<span id="cb2-39"><a href="#cb2-39"></a><span class="st">  </span><span class="er">|======================================================================|</span><span class="st"> </span><span class="dv">100</span>%</span>
-<span id="cb2-40"><a href="#cb2-40"></a><span class="co">#&gt; </span></span>
-<span id="cb2-41"><a href="#cb2-41"></a>  <span class="op">|</span><span class="st">                                                                            </span></span>
-<span id="cb2-42"><a href="#cb2-42"></a><span class="st">  </span><span class="er">|</span><span class="st">                                                                      </span><span class="er">|</span><span class="st">   </span><span class="dv">0</span>%</span>
-<span id="cb2-43"><a href="#cb2-43"></a>  <span class="op">|</span><span class="st">                                                                            </span></span>
-<span id="cb2-44"><a href="#cb2-44"></a><span class="st">  </span><span class="er">|======================================================================|</span><span class="st"> </span><span class="dv">100</span>%</span>
-<span id="cb2-45"><a href="#cb2-45"></a><span class="co">#&gt; </span></span>
-<span id="cb2-46"><a href="#cb2-46"></a>  <span class="op">|</span><span class="st">                                                                            </span></span>
-<span id="cb2-47"><a href="#cb2-47"></a><span class="st">  </span><span class="er">|</span><span class="st">                                                                      </span><span class="er">|</span><span class="st">   </span><span class="dv">0</span>%</span>
-<span id="cb2-48"><a href="#cb2-48"></a>  <span class="op">|</span><span class="st">                                                                            </span></span>
-<span id="cb2-49"><a href="#cb2-49"></a><span class="st">  </span><span class="er">|======================================================================|</span><span class="st"> </span><span class="dv">100</span>%</span>
-<span id="cb2-50"><a href="#cb2-50"></a><span class="co">#&gt; </span></span>
-<span id="cb2-51"><a href="#cb2-51"></a>  <span class="op">|</span><span class="st">                                                                            </span></span>
-<span id="cb2-52"><a href="#cb2-52"></a><span class="st">  </span><span class="er">|</span><span class="st">                                                                      </span><span class="er">|</span><span class="st">   </span><span class="dv">0</span>%</span>
-<span id="cb2-53"><a href="#cb2-53"></a>  <span class="op">|</span><span class="st">                                                                            </span></span>
-<span id="cb2-54"><a href="#cb2-54"></a><span class="st">  </span><span class="er">|======================================================================|</span><span class="st"> </span><span class="dv">100</span>%</span>
-<span id="cb2-55"><a href="#cb2-55"></a><span class="co">#&gt; </span></span>
-<span id="cb2-56"><a href="#cb2-56"></a>  <span class="op">|</span><span class="st">                                                                            </span></span>
-<span id="cb2-57"><a href="#cb2-57"></a><span class="st">  </span><span class="er">|</span><span class="st">                                                                      </span><span class="er">|</span><span class="st">   </span><span class="dv">0</span>%</span>
-<span id="cb2-58"><a href="#cb2-58"></a>  <span class="op">|</span><span class="st">                                                                            </span></span>
-<span id="cb2-59"><a href="#cb2-59"></a><span class="st">  </span><span class="er">|======================================================================|</span><span class="st"> </span><span class="dv">100</span>%</span>
-<span id="cb2-60"><a href="#cb2-60"></a><span class="co">#&gt; </span></span>
-<span id="cb2-61"><a href="#cb2-61"></a>  <span class="op">|</span><span class="st">                                                                            </span></span>
-<span id="cb2-62"><a href="#cb2-62"></a><span class="st">  </span><span class="er">|</span><span class="st">                                                                      </span><span class="er">|</span><span class="st">   </span><span class="dv">0</span>%</span>
-<span id="cb2-63"><a href="#cb2-63"></a>  <span class="op">|</span><span class="st">                                                                            </span></span>
-<span id="cb2-64"><a href="#cb2-64"></a><span class="st">  </span><span class="er">|======================================================================|</span><span class="st"> </span><span class="dv">100</span>%</span>
-<span id="cb2-65"><a href="#cb2-65"></a><span class="co">#&gt; </span></span>
-<span id="cb2-66"><a href="#cb2-66"></a>  <span class="op">|</span><span class="st">                                                                            </span></span>
-<span id="cb2-67"><a href="#cb2-67"></a><span class="st">  </span><span class="er">|</span><span class="st">                                                                      </span><span class="er">|</span><span class="st">   </span><span class="dv">0</span>%</span>
-<span id="cb2-68"><a href="#cb2-68"></a>  <span class="op">|</span><span class="st">                                                                            </span></span>
-<span id="cb2-69"><a href="#cb2-69"></a><span class="st">  </span><span class="er">|======================================================================|</span><span class="st"> </span><span class="dv">100</span>%</span>
-<span id="cb2-70"><a href="#cb2-70"></a><span class="co">#&gt; </span></span>
-<span id="cb2-71"><a href="#cb2-71"></a>  <span class="op">|</span><span class="st">                                                                            </span></span>
-<span id="cb2-72"><a href="#cb2-72"></a><span class="st">  </span><span class="er">|</span><span class="st">                                                                      </span><span class="er">|</span><span class="st">   </span><span class="dv">0</span>%</span>
-<span id="cb2-73"><a href="#cb2-73"></a>  <span class="op">|</span><span class="st">                                                                            </span></span>
-<span id="cb2-74"><a href="#cb2-74"></a><span class="st">  </span><span class="er">|======================================================================|</span><span class="st"> </span><span class="dv">100</span>%</span>
-<span id="cb2-75"><a href="#cb2-75"></a><span class="co">#&gt; </span></span>
-<span id="cb2-76"><a href="#cb2-76"></a>  <span class="op">|</span><span class="st">                                                                            </span></span>
-<span id="cb2-77"><a href="#cb2-77"></a><span class="st">  </span><span class="er">|</span><span class="st">                                                                      </span><span class="er">|</span><span class="st">   </span><span class="dv">0</span>%</span>
-<span id="cb2-78"><a href="#cb2-78"></a>  <span class="op">|</span><span class="st">                                                                            </span></span>
-<span id="cb2-79"><a href="#cb2-79"></a><span class="st">  </span><span class="er">|======================================================================|</span><span class="st"> </span><span class="dv">100</span>%</span>
-<span id="cb2-80"><a href="#cb2-80"></a><span class="co">#&gt; </span></span>
-<span id="cb2-81"><a href="#cb2-81"></a>  <span class="op">|</span><span class="st">                                                                            </span></span>
-<span id="cb2-82"><a href="#cb2-82"></a><span class="st">  </span><span class="er">|</span><span class="st">                                                                      </span><span class="er">|</span><span class="st">   </span><span class="dv">0</span>%</span>
-<span id="cb2-83"><a href="#cb2-83"></a>  <span class="op">|</span><span class="st">                                                                            </span></span>
-<span id="cb2-84"><a href="#cb2-84"></a><span class="st">  </span><span class="er">|======================================================================|</span><span class="st"> </span><span class="dv">100</span>%</span>
-<span id="cb2-85"><a href="#cb2-85"></a><span class="co">#&gt; </span></span>
-<span id="cb2-86"><a href="#cb2-86"></a>  <span class="op">|</span><span class="st">                                                                            </span></span>
-<span id="cb2-87"><a href="#cb2-87"></a><span class="st">  </span><span class="er">|</span><span class="st">                                                                      </span><span class="er">|</span><span class="st">   </span><span class="dv">0</span>%</span>
-<span id="cb2-88"><a href="#cb2-88"></a>  <span class="op">|</span><span class="st">                                                                            </span></span>
-<span id="cb2-89"><a href="#cb2-89"></a><span class="st">  </span><span class="er">|======================================================================|</span><span class="st"> </span><span class="dv">100</span>%</span>
-<span id="cb2-90"><a href="#cb2-90"></a><span class="co">#&gt; </span></span>
-<span id="cb2-91"><a href="#cb2-91"></a>  <span class="op">|</span><span class="st">                                                                            </span></span>
-<span id="cb2-92"><a href="#cb2-92"></a><span class="st">  </span><span class="er">|</span><span class="st">                                                                      </span><span class="er">|</span><span class="st">   </span><span class="dv">0</span>%</span>
-<span id="cb2-93"><a href="#cb2-93"></a>  <span class="op">|</span><span class="st">                                                                            </span></span>
-<span id="cb2-94"><a href="#cb2-94"></a><span class="st">  </span><span class="er">|======================================================================|</span><span class="st"> </span><span class="dv">100</span>%</span>
-<span id="cb2-95"><a href="#cb2-95"></a><span class="co">#&gt; </span></span>
-<span id="cb2-96"><a href="#cb2-96"></a>  <span class="op">|</span><span class="st">                                                                            </span></span>
-<span id="cb2-97"><a href="#cb2-97"></a><span class="st">  </span><span class="er">|</span><span class="st">                                                                      </span><span class="er">|</span><span class="st">   </span><span class="dv">0</span>%</span>
-<span id="cb2-98"><a href="#cb2-98"></a>  <span class="op">|</span><span class="st">                                                                            </span></span>
-<span id="cb2-99"><a href="#cb2-99"></a><span class="st">  </span><span class="er">|======================================================================|</span><span class="st"> </span><span class="dv">100</span>%</span>
-<span id="cb2-100"><a href="#cb2-100"></a><span class="co">#&gt; </span></span>
-<span id="cb2-101"><a href="#cb2-101"></a>  <span class="op">|</span><span class="st">                                                                            </span></span>
-<span id="cb2-102"><a href="#cb2-102"></a><span class="st">  </span><span class="er">|</span><span class="st">                                                                      </span><span class="er">|</span><span class="st">   </span><span class="dv">0</span>%</span>
-<span id="cb2-103"><a href="#cb2-103"></a>  <span class="op">|</span><span class="st">                                                                            </span></span>
-<span id="cb2-104"><a href="#cb2-104"></a><span class="st">  </span><span class="er">|======================================================================|</span><span class="st"> </span><span class="dv">100</span>%</span>
-<span id="cb2-105"><a href="#cb2-105"></a><span class="co">#&gt; </span></span>
-<span id="cb2-106"><a href="#cb2-106"></a>  <span class="op">|</span><span class="st">                                                                            </span></span>
-<span id="cb2-107"><a href="#cb2-107"></a><span class="st">  </span><span class="er">|</span><span class="st">                                                                      </span><span class="er">|</span><span class="st">   </span><span class="dv">0</span>%</span>
-<span id="cb2-108"><a href="#cb2-108"></a>  <span class="op">|</span><span class="st">                                                                            </span></span>
-<span id="cb2-109"><a href="#cb2-109"></a><span class="st">  </span><span class="er">|======================================================================|</span><span class="st"> </span><span class="dv">100</span>%</span>
-<span id="cb2-110"><a href="#cb2-110"></a><span class="co">#&gt; </span></span>
-<span id="cb2-111"><a href="#cb2-111"></a>  <span class="op">|</span><span class="st">                                                                            </span></span>
-<span id="cb2-112"><a href="#cb2-112"></a><span class="st">  </span><span class="er">|</span><span class="st">                                                                      </span><span class="er">|</span><span class="st">   </span><span class="dv">0</span>%</span>
-<span id="cb2-113"><a href="#cb2-113"></a>  <span class="op">|</span><span class="st">                                                                            </span></span>
-<span id="cb2-114"><a href="#cb2-114"></a><span class="st">  </span><span class="er">|======================================================================|</span><span class="st"> </span><span class="dv">100</span>%</span>
-<span id="cb2-115"><a href="#cb2-115"></a><span class="co">#&gt; </span></span>
-<span id="cb2-116"><a href="#cb2-116"></a>  <span class="op">|</span><span class="st">                                                                            </span></span>
-<span id="cb2-117"><a href="#cb2-117"></a><span class="st">  </span><span class="er">|</span><span class="st">                                                                      </span><span class="er">|</span><span class="st">   </span><span class="dv">0</span>%</span>
-<span id="cb2-118"><a href="#cb2-118"></a>  <span class="op">|</span><span class="st">                                                                            </span></span>
-<span id="cb2-119"><a href="#cb2-119"></a><span class="st">  </span><span class="er">|======================================================================|</span><span class="st"> </span><span class="dv">100</span>%</span>
-<span id="cb2-120"><a href="#cb2-120"></a><span class="co">#&gt; </span></span>
-<span id="cb2-121"><a href="#cb2-121"></a>  <span class="op">|</span><span class="st">                                                                            </span></span>
-<span id="cb2-122"><a href="#cb2-122"></a><span class="st">  </span><span class="er">|</span><span class="st">                                                                      </span><span class="er">|</span><span class="st">   </span><span class="dv">0</span>%</span>
-<span id="cb2-123"><a href="#cb2-123"></a>  <span class="op">|</span><span class="st">                                                                            </span></span>
-<span id="cb2-124"><a href="#cb2-124"></a><span class="st">  </span><span class="er">|======================================================================|</span><span class="st"> </span><span class="dv">100</span>%</span>
-<span id="cb2-125"><a href="#cb2-125"></a><span class="co">#&gt; </span></span>
-<span id="cb2-126"><a href="#cb2-126"></a>  <span class="op">|</span><span class="st">                                                                            </span></span>
-<span id="cb2-127"><a href="#cb2-127"></a><span class="st">  </span><span class="er">|</span><span class="st">                                                                      </span><span class="er">|</span><span class="st">   </span><span class="dv">0</span>%</span>
-<span id="cb2-128"><a href="#cb2-128"></a>  <span class="op">|</span><span class="st">                                                                            </span></span>
-<span id="cb2-129"><a href="#cb2-129"></a><span class="st">  </span><span class="er">|======================================================================|</span><span class="st"> </span><span class="dv">100</span>%</span>
-<span id="cb2-130"><a href="#cb2-130"></a><span class="co">#&gt; </span></span>
-<span id="cb2-131"><a href="#cb2-131"></a>  <span class="op">|</span><span class="st">                                                                            </span></span>
-<span id="cb2-132"><a href="#cb2-132"></a><span class="st">  </span><span class="er">|</span><span class="st">                                                                      </span><span class="er">|</span><span class="st">   </span><span class="dv">0</span>%</span>
-<span id="cb2-133"><a href="#cb2-133"></a>  <span class="op">|</span><span class="st">                                                                            </span></span>
-<span id="cb2-134"><a href="#cb2-134"></a><span class="st">  </span><span class="er">|======================================================================|</span><span class="st"> </span><span class="dv">100</span>%</span>
-<span id="cb2-135"><a href="#cb2-135"></a><span class="co">#&gt; </span></span>
-<span id="cb2-136"><a href="#cb2-136"></a>  <span class="op">|</span><span class="st">                                                                            </span></span>
-<span id="cb2-137"><a href="#cb2-137"></a><span class="st">  </span><span class="er">|</span><span class="st">                                                                      </span><span class="er">|</span><span class="st">   </span><span class="dv">0</span>%</span>
-<span id="cb2-138"><a href="#cb2-138"></a>  <span class="op">|</span><span class="st">                                                                            </span></span>
-<span id="cb2-139"><a href="#cb2-139"></a><span class="st">  </span><span class="er">|======================================================================|</span><span class="st"> </span><span class="dv">100</span>%</span>
-<span id="cb2-140"><a href="#cb2-140"></a><span class="co">#&gt; </span></span>
-<span id="cb2-141"><a href="#cb2-141"></a>  <span class="op">|</span><span class="st">                                                                            </span></span>
-<span id="cb2-142"><a href="#cb2-142"></a><span class="st">  </span><span class="er">|</span><span class="st">                                                                      </span><span class="er">|</span><span class="st">   </span><span class="dv">0</span>%</span>
-<span id="cb2-143"><a href="#cb2-143"></a>  <span class="op">|</span><span class="st">                                                                            </span></span>
-<span id="cb2-144"><a href="#cb2-144"></a><span class="st">  </span><span class="er">|======================================================================|</span><span class="st"> </span><span class="dv">100</span>%</span>
-<span id="cb2-145"><a href="#cb2-145"></a><span class="co">#&gt; </span></span>
-<span id="cb2-146"><a href="#cb2-146"></a>  <span class="op">|</span><span class="st">                                                                            </span></span>
-<span id="cb2-147"><a href="#cb2-147"></a><span class="st">  </span><span class="er">|</span><span class="st">                                                                      </span><span class="er">|</span><span class="st">   </span><span class="dv">0</span>%</span>
-<span id="cb2-148"><a href="#cb2-148"></a>  <span class="op">|</span><span class="st">                                                                            </span></span>
-<span id="cb2-149"><a href="#cb2-149"></a><span class="st">  </span><span class="er">|======================================================================|</span><span class="st"> </span><span class="dv">100</span>%</span>
-<span id="cb2-150"><a href="#cb2-150"></a></span>
-<span id="cb2-151"><a href="#cb2-151"></a><span class="co"># capture file name components</span></span>
-<span id="cb2-152"><a href="#cb2-152"></a>monthly.pattern &lt;-<span class="st"> ".*PRISM_([a-z]+)_(30yr_normal)_(</span><span class="ch">\\</span><span class="st">d+[a-z]+)M[23]_(</span><span class="ch">\\</span><span class="st">d{2})_bil</span><span class="ch">\\</span><span class="st">.bil"</span></span>
-<span id="cb2-153"><a href="#cb2-153"></a>bilfile_sub &lt;-<span class="st"> </span>bilfile[<span class="kw">grep</span>(monthly.pattern, bilfile)]</span>
-<span id="cb2-154"><a href="#cb2-154"></a>bilmonth &lt;-<span class="st"> </span><span class="kw">strsplit</span>(<span class="kw">gsub</span>(monthly.pattern,  <span class="st">"</span><span class="ch">\\</span><span class="st">1;</span><span class="ch">\\</span><span class="st">2;</span><span class="ch">\\</span><span class="st">3;</span><span class="ch">\\</span><span class="st">4"</span>, bilfile_sub), <span class="st">";"</span>)</span>
-<span id="cb2-155"><a href="#cb2-155"></a>bil &lt;-<span class="st"> </span><span class="kw">data.frame</span>(bilfile_sub, <span class="kw">do.call</span>(<span class="st">'rbind'</span>, bilmonth))</span>
-<span id="cb2-156"><a href="#cb2-156"></a><span class="kw">colnames</span>(bil) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">"bilfile"</span>,<span class="st">"variable"</span>,<span class="st">"product"</span>,<span class="st">"resolution"</span>,<span class="st">"month"</span>)</span>
-<span id="cb2-157"><a href="#cb2-157"></a>bilsub &lt;-<span class="st"> </span><span class="kw">subset</span>(bil, resolution <span class="op">==</span><span class="st"> </span>RESOLUTION)</span></code></pre></div>
-<p>Create PRISM raster stack and extract POINT (longlat) locations of cells</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># download 4km or 800m data</span></span>
+<span><span class="va">.download_month</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">i</span>, <span class="va">resolution</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"4km"</span>,<span class="st">"800m"</span><span class="op">)</span>, <span class="va">annual</span> <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">keepZip</span> <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">resolution</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/match.arg.html" class="external-link">match.arg</a></span><span class="op">(</span><span class="va">resolution</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"4km"</span>,<span class="st">"800m"</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="kw">if</span><span class="op">(</span><span class="va">i</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span></span>
+<span>    <span class="va">annual</span> <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  <span class="fu">prism</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/prism/reference/get_prism_data.html" class="external-link">get_prism_normals</a></span><span class="op">(</span>mon <span class="op">=</span> <span class="va">i</span>, type <span class="op">=</span> <span class="st">"ppt"</span>,</span>
+<span>                    resolution <span class="op">=</span> <span class="va">resolution</span>,</span>
+<span>                    annual <span class="op">=</span> <span class="va">annual</span>, keepZip <span class="op">=</span> <span class="va">keepZip</span><span class="op">)</span></span>
+<span>  <span class="fu">prism</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/prism/reference/get_prism_data.html" class="external-link">get_prism_normals</a></span><span class="op">(</span>mon <span class="op">=</span> <span class="va">i</span>, type <span class="op">=</span> <span class="st">"tmean"</span>,</span>
+<span>                    resolution <span class="op">=</span> <span class="va">resolution</span>,</span>
+<span>                    annual <span class="op">=</span> <span class="va">annual</span>, keepZip <span class="op">=</span> <span class="va">keepZip</span><span class="op">)</span></span>
+<span>  <span class="cn">TRUE</span></span>
+<span><span class="op">}</span></span></code></pre></div>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># capture file name components</span></span>
+<span><span class="va">monthly.pattern</span> <span class="op">&lt;-</span> <span class="st">".*PRISM_([a-z]+)_(30yr_normal)_(\\d+[a-z]+)M[23]_(\\d{2})_bil\\.(bil|txt)"</span></span>
+<span><span class="va">bilfile_sub</span> <span class="op">&lt;-</span> <span class="va">bilfile</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grep</a></span><span class="op">(</span><span class="va">monthly.pattern</span>, <span class="va">bilfile</span><span class="op">)</span><span class="op">]</span></span>
+<span><span class="va">bilmonth</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/strsplit.html" class="external-link">strsplit</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">gsub</a></span><span class="op">(</span><span class="va">monthly.pattern</span>,  <span class="st">"\\1;\\2;\\3;\\4"</span>, <span class="va">bilfile_sub</span><span class="op">)</span>, <span class="st">";"</span><span class="op">)</span></span>
+<span><span class="va">bil</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="va">bilfile_sub</span>, <span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="st">'rbind'</span>, <span class="va">bilmonth</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">bil</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"bilfile"</span>,<span class="st">"variable"</span>,<span class="st">"product"</span>,<span class="st">"resolution"</span>,<span class="st">"month"</span><span class="op">)</span></span>
+<span><span class="va">bilsub</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">bil</span>, <span class="va">resolution</span> <span class="op">==</span> <span class="va">RESOLUTION</span><span class="op">)</span></span></code></pre></div>
+<p>Create PRISM raster stack and extract POINT (longlat) locations of cells</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># stack rasters, create matrix of values and XY (longlat) locations as data.frame</span></span>
 <span><span class="va">prism_stack</span> <span class="op">&lt;-</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">PRISM_PATH</span>, <span class="va">bilsub</span><span class="op">$</span><span class="va">bilfile</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">prism_stack</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">bilsub</span><span class="op">$</span><span class="va">variable</span>, <span class="va">bilsub</span><span class="op">$</span><span class="va">month</span><span class="op">)</span></span>
@@ -274,12 +133,9 @@
 <span><span class="va">prism_stack</span><span class="op">$</span><span class="va">latDD</span> <span class="op">&lt;-</span> <span class="va">cx</span><span class="op">[</span>,<span class="fl">2</span><span class="op">]</span></span>
 <span><span class="va">prism_frame</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/as.spatvector.html" class="external-link">as.points</a></span><span class="op">(</span><span class="va">prism_stack</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>Prepare jNSM batch input (CSV) file</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># fix column names for jNSM style batch input format</span></span>
 <span><span class="va">monthnames</span> <span class="op">&lt;-</span> <span class="va">month.abb</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">prism_frame</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">as.integer</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">gsub</a></span><span class="op">(</span><span class="st">"([a-z])"</span>, <span class="st">""</span>, <span class="va">x</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">]</span></span>
-<span><span class="co">#&gt; Warning in FUN(X[[i]], ...): NAs introduced by coercion</span></span>
-<span></span>
-<span><span class="co">#&gt; Warning in FUN(X[[i]], ...): NAs introduced by coercion</span></span>
 <span><span class="va">newnames</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">gsub</a></span><span class="op">(</span><span class="st">"tmean"</span>, <span class="st">"t"</span>, <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">prism_frame</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">newnames</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">gsub</a></span><span class="op">(</span><span class="st">"ppt"</span>, <span class="st">"p"</span>, <span class="va">newnames</span><span class="op">)</span></span>
 <span><span class="va">newnames</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">gsub</a></span><span class="op">(</span><span class="st">"\\d"</span>, <span class="st">""</span>, <span class="va">newnames</span><span class="op">)</span></span>
@@ -308,55 +164,63 @@
 <div class="section level2">
 <h2 id="run-simulations">Run simulations<a class="anchor" aria-label="anchor" href="#run-simulations"></a>
 </h2>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># run simulations</span></span>
-<span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">jNSMR</span><span class="fu">::</span><span class="fu"><a href="../reference/newhall_batch.html">newhall_batch</a></span><span class="op">(</span><span class="va">test_set</span><span class="op">)</span> </span>
-<span><span class="co">#&gt; newhall_batch: ran n=20000 simulations in 36 secs</span></span></code></pre></div>
+<span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">jNSMR</span><span class="fu">::</span><span class="fu"><a href="../reference/newhall_batch.html">newhall_batch</a></span><span class="op">(</span><span class="va">test_set</span><span class="op">)</span> </span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="results">Results<a class="anchor" aria-label="anchor" href="#results"></a>
 </h2>
-<p>Create terra SpatVector containing points and results</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">newsp</span> <span class="op">&lt;-</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/vect.html" class="external-link">vect</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">test_set</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'lonDD'</span>,<span class="st">'latDD'</span><span class="op">)</span><span class="op">]</span>, <span class="va">res</span><span class="op">)</span>, geom <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"lonDD"</span>,<span class="st">"latDD"</span><span class="op">)</span>, crs<span class="op">=</span><span class="st">"EPSG:4326"</span><span class="op">)</span></span></code></pre></div>
-<p>Temperature Regimes</p>
+<p>Create {terra} <code>SpatVector</code> containing points and results</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">newsp</span>, col<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">newsp</span><span class="op">$</span><span class="va">temperatureRegime</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="newhall-prism_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
-<p>Moisture Regimes</p>
+<code class="sourceCode R"><span><span class="va">newsp</span> <span class="op">&lt;-</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/vect.html" class="external-link">vect</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">test_set</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'lonDD'</span>,<span class="st">'latDD'</span><span class="op">)</span><span class="op">]</span>, <span class="va">res</span><span class="op">)</span>, geom <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"lonDD"</span>,<span class="st">"latDD"</span><span class="op">)</span>, crs<span class="op">=</span><span class="st">"EPSG:4326"</span><span class="op">)</span></span></code></pre></div>
+<div class="section level3">
+<h3 id="temperature-regimes">Temperature Regimes<a class="anchor" aria-label="anchor" href="#temperature-regimes"></a>
+</h3>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">newsp</span>, col<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">newsp</span><span class="op">$</span><span class="va">moistureRegime</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="newhall-prism_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
-<p>Moisture Regime Subdivision 1</p>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">newsp</span>, col<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">newsp</span><span class="op">$</span><span class="va">temperatureRegime</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="moisture-regimes">Moisture Regimes<a class="anchor" aria-label="anchor" href="#moisture-regimes"></a>
+</h3>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">newsp</span>, col<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">newsp</span><span class="op">$</span><span class="va">regimeSubdivision1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="newhall-prism_files/figure-html/unnamed-chunk-9-1.png" width="700"></p>
-<p>Moisture Regime Subdivision 2</p>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">newsp</span>, col<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">newsp</span><span class="op">$</span><span class="va">moistureRegime</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="section level4">
+<h4 id="moisture-regime-subdivision-1">Moisture Regime Subdivision 1<a class="anchor" aria-label="anchor" href="#moisture-regime-subdivision-1"></a>
+</h4>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">newsp</span>, col<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">newsp</span><span class="op">$</span><span class="va">regimeSubdivision2</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="newhall-prism_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
-<p>Moisture regimes (Xeric, Aridic, Ustic, Udic)</p>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">newsp</span>, col<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">newsp</span><span class="op">$</span><span class="va">regimeSubdivision1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level4">
+<h4 id="moisture-regime-subdivision-2">Moisture Regime Subdivision 2<a class="anchor" aria-label="anchor" href="#moisture-regime-subdivision-2"></a>
+</h4>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">newsp</span>, col<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">newsp</span><span class="op">$</span><span class="va">regimeSubdivision2</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level4">
+<h4 id="moisture-regimes-focus-on-xeric-aridic-ustic-udic">Moisture regimes (focus on Xeric, Aridic, Ustic, Udic)<a class="anchor" aria-label="anchor" href="#moisture-regimes-focus-on-xeric-aridic-ustic-udic"></a>
+</h4>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">newspsub</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">newsp</span>, <span class="va">newsp</span><span class="op">$</span><span class="va">moistureRegime</span> <span class="op"><a href="https://rdrr.io/pkg/terra/man/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Aridic"</span>,<span class="st">"Udic"</span>,<span class="st">"Ustic"</span>,<span class="st">"Xeric"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">legnames</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">newspsub</span><span class="op">$</span><span class="va">moistureRegime</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">nlegnames</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/factors.html" class="external-link">levels</a></span><span class="op">(</span><span class="va">legnames</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">nlegcolors</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"RED"</span>,<span class="st">"BLUE"</span>,<span class="st">"ORANGE"</span>,<span class="st">"YELLOW"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">newspsub</span>, col <span class="op">=</span> <span class="va">nlegcolors</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/match.html" class="external-link">match</a></span><span class="op">(</span><span class="va">legnames</span>, <span class="va">nlegnames</span><span class="op">)</span><span class="op">]</span>, pch<span class="op">=</span><span class="st">"."</span>, cex<span class="op">=</span><span class="fl">5</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/legend.html" class="external-link">legend</a></span><span class="op">(</span><span class="st">"topright"</span>, legend <span class="op">=</span> <span class="va">nlegnames</span>, pch<span class="op">=</span><span class="st">"."</span>, fill <span class="op">=</span> <span class="va">nlegcolors</span><span class="op">)</span></span></code></pre></div>
-<p><img src="newhall-prism_files/figure-html/unnamed-chunk-11-1.png" width="700"></p>
-<p>Moisture regime subdivisions within Aridic and Xeric</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+</div>
+<div class="section level4">
+<h4 id="moisture-regime-subdivisions-within-aridic-and-xeric">Moisture regime subdivisions (within Aridic and Xeric)<a class="anchor" aria-label="anchor" href="#moisture-regime-subdivisions-within-aridic-and-xeric"></a>
+</h4>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">newspsub</span><span class="op">$</span><span class="va">regimeSubdivision1</span><span class="op">)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Aridic     Dry Extreme   Typic    Udic    Weak     Wet   Xeric </span></span>
-<span><span class="co">#&gt;       6    1603     307   13371      17    2841    1366      17</span></span>
 <span><span class="va">newspsub2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">newsp</span>, <span class="va">newsp</span><span class="op">$</span><span class="va">moistureRegime</span> <span class="op"><a href="https://rdrr.io/pkg/terra/man/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Aridic"</span>,<span class="st">"Xeric"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">legnames</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">newspsub2</span><span class="op">$</span><span class="va">regimeSubdivision1</span>, <span class="va">newspsub2</span><span class="op">$</span><span class="va">moistureRegime</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">nlegnames</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/factors.html" class="external-link">levels</a></span><span class="op">(</span><span class="va">legnames</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">nlegcolors</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ORANGE"</span>,<span class="st">"RED"</span>,<span class="st">"TAN"</span>,<span class="st">"YELLOW"</span>,<span class="st">"SALMON"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">newspsub2</span>, col <span class="op">=</span> <span class="va">nlegcolors</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/match.html" class="external-link">match</a></span><span class="op">(</span><span class="va">legnames</span>, <span class="va">nlegnames</span><span class="op">)</span><span class="op">]</span>, pch<span class="op">=</span><span class="st">"."</span>, cex<span class="op">=</span><span class="fl">5</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/legend.html" class="external-link">legend</a></span><span class="op">(</span><span class="st">"bottomleft"</span>, legend <span class="op">=</span> <span class="va">nlegnames</span>, pch<span class="op">=</span><span class="st">"."</span>, fill <span class="op">=</span> <span class="va">nlegcolors</span><span class="op">)</span></span></code></pre></div>
-<p><img src="newhall-prism_files/figure-html/unnamed-chunk-12-1.png" width="700"></p>
+</div>
+</div>
 </div>
   </div>
 
@@ -377,7 +241,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer>
