@@ -651,10 +651,14 @@ newhall_batch.SpatRaster <- function(.data,
   # levels(out) <- l
 
   # use two-column data.frames
-  terra::set.cats(out, .fctDF(.str()), layer = which(names(out) == "temperatureRegime"))
-  terra::set.cats(out, .fctDF(.smr()), layer = which(names(out) == "moistureRegime"))
-  terra::set.cats(out, .fctDF(.smrsub1()), layer = which(names(out) == "regimeSubdivision1"))
-  terra::set.cats(out, .fctDF(.smrsub2()), layer = which(names(out) == "regimeSubdivision2"))
+  terra::set.cats(out, .fctDF(.str(), name = "temperatureRegime"), 
+                  layer = which(names(out) == "temperatureRegime"))
+  terra::set.cats(out, .fctDF(.smr(), name = "moistureRegime"), 
+                  layer = which(names(out) == "moistureRegime"))
+  terra::set.cats(out, .fctDF(.smrsub1(), name = "regimeSubdivision1"),
+                  layer = which(names(out) == "regimeSubdivision1"))
+  terra::set.cats(out, .fctDF(.smrsub2(), name = "regimeSubdivision2"), 
+                  layer = which(names(out) == "regimeSubdivision2"))
   out
 }
 
