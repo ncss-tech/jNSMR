@@ -425,27 +425,27 @@ newhall_batch.character <- function(.data,
 }
 
 .setCats <- function(x) {
-  x <- as.data.frame(x)
+    x <- as.data.frame(x)
 
-  if (length(x$temperatureRegime) == 0)
-    x$temperatureRegime <- rep(NA, nrow(x))
-  if (length(x$moistureRegime) == 0)
-    x$moistureRegime <- rep(NA, nrow(x))
-  if (length(x$regimeSubdivision1) == 0)
-    x$regimeSubdivision1 <- rep(NA, nrow(x))
-  if (length(x$regimeSubdivision2) == 0)
-    x$regimeSubdivision2 <- rep(NA, nrow(x))
+    if (length(x$temperatureRegime) == 0)
+      x$temperatureRegime <- rep(NA, nrow(x))
+    if (length(x$moistureRegime) == 0)
+      x$moistureRegime <- rep("Undefined", nrow(x))
+    if (length(x$regimeSubdivision1) == 0 || (any(!is.na(x$moistureRegime)) && all(is.na(x$regimeSubdivision1))))
+      x$regimeSubdivision1 <- rep("Undefined", nrow(x))
+    if (length(x$regimeSubdivision2) == 0 || (any(!is.na(x$moistureRegime)) && all(is.na(x$regimeSubdivision2))))
+      x$regimeSubdivision2 <- rep("Undefined", nrow(x))
 
-  # handle character results w/ standard factor levels
+    # handle character results w/ standard factor levels
 
-  # explicitly set factors  and convert to numeric (so each chunk uses same lookup table)
-  # subtract 1 because factor levels in terra are 0-indexed
-  # TODO: double check that this is encoding everything correctly
-  x$temperatureRegime <- as.numeric(factor(x$temperatureRegime, levels = .str())) - 1
-  x$moistureRegime <- as.numeric(factor(x$moistureRegime, levels = .smr())) - 1
-  x$regimeSubdivision1 <- as.numeric(factor(x$regimeSubdivision1, levels = .smrsub1())) - 1
-  x$regimeSubdivision2 <- as.numeric(factor(x$regimeSubdivision2, levels = .smrsub2())) - 1
-  x
+    # explicitly set factors  and convert to numeric (so each chunk uses same lookup table)
+    # subtract 1 because factor levels in terra are 0-indexed
+    # TODO: double check that this is encoding everything correctly
+    x$temperatureRegime <- as.numeric(factor(x$temperatureRegime, levels = .str())) - 1
+    x$moistureRegime <- as.numeric(factor(x$moistureRegime, levels = .smr())) - 1
+    x$regimeSubdivision1 <- as.numeric(factor(gsub(" ", "Undefined", x$regimeSubdivision1), levels = .smrsub1())) - 1
+    x$regimeSubdivision2 <- as.numeric(factor(gsub(" ", "Undefined", x$regimeSubdivision2), levels = .smrsub2())) - 1
+    x
 }
 
 # helpers for setting categories
@@ -454,8 +454,8 @@ newhall_batch.character <- function(.data,
 }
 .str <- function() c("Pergelic", "Cryic", "Frigid", "Mesic", "Thermic", "Hyperthermic", "Isofrigid", "Isomesic", "Isothermic", "Isohyperthermic")
 .smr <- function()  c("Aridic", "Ustic", "Xeric", "Udic", "Perudic", "Undefined")
-.smrsub1 <- function() c("Typic", "Weak", "Wet", "Dry", "Extreme", "Xeric", "Udic", "Aridic", " ")
-.smrsub2 <- function() c("Aridic", "Tempustic", "Tropustic", "Tempudic", "Xeric", "Udic", "Tropudic", "Undefined", " ")
+.smrsub1 <- function() c("Typic", "Weak", "Wet", "Dry", "Extreme", "Xeric", "Udic", "Aridic", "Undefined")
+.smrsub2 <- function() c("Aridic", "Tempustic", "Tropustic", "Tempudic", "Xeric", "Udic", "Tropudic", "Undefined")
 
 #' @param cores number of cores; used only for processing _SpatRaster_ or _Raster*_ input
 #' @param file path to write incremental raster processing output for large inputs that do not fit in memory; passed to `terra::writeStart()` and used only for processing _SpatRaster_ or _Raster*_ input; defaults to a temporary file created by `tempfile()` if needed
@@ -651,13 +651,13 @@ newhall_batch.SpatRaster <- function(.data,
   # levels(out) <- l
 
   # use two-column data.frames
-  terra::set.cats(out, .fctDF(.str(), name = "temperatureRegime"), 
+  terra::set.cats(out, .fctDF(.str(), name = "temperatureRegime"),
                   layer = which(names(out) == "temperatureRegime"))
-  terra::set.cats(out, .fctDF(.smr(), name = "moistureRegime"), 
+  terra::set.cats(out, .fctDF(.smr(), name = "moistureRegime"),
                   layer = which(names(out) == "moistureRegime"))
   terra::set.cats(out, .fctDF(.smrsub1(), name = "regimeSubdivision1"),
                   layer = which(names(out) == "regimeSubdivision1"))
-  terra::set.cats(out, .fctDF(.smrsub2(), name = "regimeSubdivision2"), 
+  terra::set.cats(out, .fctDF(.smrsub2(), name = "regimeSubdivision2"),
                   layer = which(names(out) == "regimeSubdivision2"))
   out
 }
