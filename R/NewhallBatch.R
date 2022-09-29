@@ -431,10 +431,13 @@ newhall_batch.character <- function(.data,
       x$temperatureRegime <- rep(NA, nrow(x))
     if (length(x$moistureRegime) == 0)
       x$moistureRegime <- rep("Undefined", nrow(x))
-    if (length(x$regimeSubdivision1) == 0 || (any(!is.na(x$moistureRegime)) && all(is.na(x$regimeSubdivision1))))
-      x$regimeSubdivision1 <- rep("Undefined", nrow(x))
-    if (length(x$regimeSubdivision2) == 0 || (any(!is.na(x$moistureRegime)) && all(is.na(x$regimeSubdivision2))))
-      x$regimeSubdivision2 <- rep("Undefined", nrow(x))
+
+    # ensure subdivisions are "undefined" if missing and moistureRegime is not NA
+    nonamoist <- !is.na(x$moistureRegime)
+    if (length(x$regimeSubdivision1) == 0 || (any(nonamoist) && all(is.na(x$regimeSubdivision1))))
+      x$regimeSubdivision1[nonamoist] <- rep("Undefined", sum(nonamoist))
+    if (length(x$regimeSubdivision2) == 0 || (any(nonamoist) && all(is.na(x$regimeSubdivision2))))
+      x$regimeSubdivision2[nonamoist] <- rep("Undefined", sum(nonamoist))
 
     # handle character results w/ standard factor levels
 
@@ -556,6 +559,9 @@ newhall_batch.SpatRaster <- function(.data,
                  verbose = verbose,
                  toString = toString,
                  checkargs = checkargs), use.names = TRUE, fill = TRUE)
+            # TODO: why does fill=TRUE need to be used here? it introduces NAs; can it be fixed on Java side?
+            r$regimeSubdivision1[is.na(r$regimeSubdivision1)] <- "Undefined"
+            r$regimeSubdivision2[is.na(r$regimeSubdivision2)] <- "Undefined"
           } else {
             r <- data.frame(annualRainfall = logical(0), waterHoldingCapacity = logical(0),
                             annualWaterBalance = logical(0), summerWaterBalance = logical(0),
