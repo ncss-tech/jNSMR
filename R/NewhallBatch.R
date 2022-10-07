@@ -427,18 +427,6 @@ newhall_batch.character <- function(.data,
 .setCats <- function(x) {
     x <- as.data.frame(x)
 
-    if (length(x$temperatureRegime) == 0)
-      x$temperatureRegime <- rep(NA, nrow(x))
-    if (length(x$moistureRegime) == 0)
-      x$moistureRegime <- rep("Undefined", nrow(x))
-
-    # ensure subdivisions are "undefined" if missing and moistureRegime is not NA
-    nonamoist <- !is.na(x$moistureRegime)
-    if (length(x$regimeSubdivision1) == 0 || (any(nonamoist) && all(is.na(x$regimeSubdivision1))))
-      x$regimeSubdivision1[nonamoist] <- rep("Undefined", sum(nonamoist))
-    if (length(x$regimeSubdivision2) == 0 || (any(nonamoist) && all(is.na(x$regimeSubdivision2))))
-      x$regimeSubdivision2[nonamoist] <- rep("Undefined", sum(nonamoist))
-
     # handle character results w/ standard factor levels
 
     # explicitly set factors  and convert to numeric (so each chunk uses same lookup table)
