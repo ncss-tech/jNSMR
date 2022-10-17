@@ -1,9 +1,13 @@
 # jNSMR 0.1.1
- - Several fixes related to "Undefined" factor levels for moisture regime and moisture regime subdivisions in the `newhall_batch(<SpatRaster>)` method
+
+ - Several fixes related to "Undefined" factor levels for moisture regime and moisture regime subdivisions in the `newhall_batch(<SpatRaster>)` method (#8)
+ 
  - Fixed layer names for the categorical results in the `newhall_batch(<SpatRaster>)` method
  
 # jNSMR 0.1.0
+
  - Added vignettes for using "legacy" model v1.6.1 JAR and for PRISM data; general improvements to documentation
+ 
  - Use `terra::set.cats()` for setting factor levels (prior approach using vector input and `levels<-` was deprecated) 
 
 # jNSMR 0.0.0.9010
