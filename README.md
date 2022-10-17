@@ -38,7 +38,7 @@ directory of this package.
 
     library(jNSMR)
 
-    ## jNSMR (0.1.0) -- R interface to the classic Newhall Simulation Model
+    ## jNSMR (0.1.1) -- R interface to the classic Newhall Simulation Model
     ## Added JAR file (newhall-1.6.4.jar) to Java class path.
 
     pathname <- system.file("extdata/All_PA_jNSM_Example_Batch_Metric.csv", package = "jNSMR")[1]
