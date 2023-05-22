@@ -21,13 +21,47 @@ plot(x$numConsecutiveDaysMoistInSomePartsOver8C < 90,
      col = rev(hcl.colors(2)),
      main = "<90 Cumulative Days Moist (in some parts) Over 8 degrees C")
 
-m <-  x$numCumulativeDaysMoistOver5C > 90 & x$numConsecutiveDaysMoistInSomePartsOver8C < 90
+m0 <- x$numCumulativeDaysDryOver5C / (x$numCumulativeDaysDryOver5C + x$numCumulativeDaysMoistDryOver5C + x$numCumulativeDaysMoistOver5C)
+m <-  m0 > 0.5 & x$numCumulativeDaysMoistOver5C > 90 & x$numConsecutiveDaysMoistInSomePartsOver8C < 90
 
 plot(m,  col = hcl.colors(2, palette = "cividis"),
-     main = ">90 Cumulative Days Moist Over 5 degrees C and\n
-             <90 Cumulative Days Moist (in some parts) Over 8 degrees C")
+     main = ">90 Cumulative Days Moist Over 5 degrees C\nwith Aridic SMR criteria")
 plot(as.lines(v), col = "brown", add = TRUE)
 
 if (!file.exists("mollic_crit.tif")) {
   writeRaster(m, "mollic_crit.tif")
 }
+
+# convert the areas the model predicts could make aridic SMR
+# and also make mollic criterion 8
+
+x <- as.polygons(m)
+v <- subset(x, x[[1]] == 1)
+y <- spatSample(v, 1000)
+z <- soilDB::SDA_spatialQuery(y)
+p <- soilDB::get_SDA_property(method = "dominant condition",
+                              mukeys = z$mukey,
+                              property = "taxsubgrp")
+o <- soilDB::get_SDA_property(method = "dominant condition",
+                              mukeys = z$mukey,
+                              property = "compname")
+a <- soilDB::SDA_query(
+      paste0("SELECT mukey, muacres FROM mapunit WHERE mukey IN ",
+        soilDB::format_SQL_in_statement(z$mukey)))
+
+library(dplyr)
+
+b <- left_join(p, o) |>
+  left_join(a)
+
+b |>
+  group_by(taxsubgrp) |>
+  summarize(sumacres = sum(muacres)) |>
+  arrange(desc(sumacres)) |>
+  write.csv("aridic-mollic_taxsubgrp.csv", row.names=FALSE)
+
+b |>
+  group_by(compname) |>
+  summarize(sumacres = sum(muacres)) |>
+  arrange(desc(sumacres)) |>
+write.csv("aridic-mollic_components.csv", row.names=FALSE)

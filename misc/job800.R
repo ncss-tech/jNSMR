@@ -11,28 +11,28 @@ v <- rep(NA, ncell(r))
 v[!is.na(values(r$pJan))] <- 200
 values(r$awc) <- v
 
-# # ISSR-800 AWC
-# # download.file(
-# #   "https://soilmap2-1.lawr.ucdavis.edu/800m_grids/rasters/water_storage.tif",
-# #   destfile = "water_storage.tif",
-# #   mode = "wb"
-# # )
-# awc <- rast("water_storage.tif")
-# terra::crs(awc) <- "EPSG:5070"
-# awc <- project(awc, r)
-#
-# # global mean for all of conus is near the default newhall value of 200mm
-# mean(values(awc) * 10, na.rm = TRUE)
-# #> [1] 197.82760 # 200 (mm water) is default
-#
-# # # +/- 1 standard deviation ~[100,300]mm
-# sd(values(awc)*10, na.rm=T)
-# # #> [1] 97.52501
-#
-# # # convert cm -> mm?
-# v <- values(awc) * 10
-# r$awc <- v#rep(NA, ncell(r))
-#
+# ISSR-800 AWC
+# download.file(
+#   "https://soilmap2-1.lawr.ucdavis.edu/800m_grids/rasters/water_storage.tif",
+#   destfile = "water_storage.tif",
+#   mode = "wb"
+# )
+awc <- rast("water_storage.tif")
+terra::crs(awc) <- "EPSG:5070"
+awc <- project(awc, r)
+
+# global mean for all of conus is near the default newhall value of 200mm
+mean(values(awc) * 10, na.rm = TRUE)
+#> [1] 197.82760 # 200 (mm water) is default
+
+# # +/- 1 standard deviation ~[100,300]mm
+sd(values(awc)*10, na.rm=T)
+# #> [1] 97.52501
+
+# # convert cm -> mm?
+v <- values(awc) * 10
+r$awc <- v#rep(NA, ncell(r))
+
 plot(r$awc)
 
 # test extent
@@ -57,8 +57,8 @@ r2$stationName <- NULL; r2$stationID <- NULL; r2$notes <- NULL; r2$stProvCode <-
 # r2 <- resample(r2, r2tmp, filename="coweetagrid.tif", overwrite=TRUE)
 
 #system.time(resbig <- newhall_batch(r2))
-system.time({resbig <- newhall_batch(r2, cores = 8, nrows = 2)})
-terra::writeRaster(resbig, filename = "newhall_conus_800m_200mm.tif", overwrite = TRUE)
+system.time({resbig <- newhall_batch(r2, cores = 8, nrows = 6)})
+terra::writeRaster(resbig, filename = "newhall_conus_800m_AWS.tif")
 #
 # x <- rast("newhall_conus_800m_200mm.tif")
 # x <- project(x, "EPSG:5070", filename = "newhall_conus_800m_200mm_epsg5070.tif")
