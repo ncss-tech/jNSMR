@@ -412,7 +412,7 @@ batch2 <- function(.data,
 #' terra::plot(y$waterHoldingCapacity, main = "Water Holding Capacity")
 #' 
 #' terra::plot(y$temperatureRegime, main = "Temperature Regime")
-
+#' 
 #' terra::plot(y$moistureRegime, main = "Moisture Regime")
 #' 
 #' terra::plot(y$numCumulativeDaysDryOver5C, cex.main=0.75,
