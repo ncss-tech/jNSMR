@@ -23,6 +23,20 @@
   overwrite = NULL
 )
 
+newhall_batch(
+  .data,
+  unitSystem = "metric",
+  soilAirOffset = ifelse(unitSystem \%in\% c("in", "english"), 4.5, 2.5),
+  amplitude = 0.66,
+  verbose = TRUE,
+  toString = TRUE,
+  checkargs = TRUE,
+  cores = 1,
+  file = paste0(tempfile(), ".tif"),
+  nrows = nrow(.data),
+  overwrite = TRUE
+)
+
 \method{newhall_batch}{character}(
   .data,
   unitSystem = "metric",
@@ -169,6 +183,29 @@ The following elements have a many:1 relationship with model runs and are not (y
 \item \code{"moistureCalendar"} - compressed (360 day) grid "calendar" showing "moist", "moist/dry" and "dry" days.
 }
 }
+}
+\examples{
+
+library(terra)
+
+x <- terra::rast(system.file("extdata", "prism_issr800_sample.tif", package="jNSMR"))
+x$elev <- 0 # elevation is not currently used by the model directly
+
+y <- newhall_batch(x)
+
+par(mfrow=c(2,1))
+terra::plot(y$annualWaterBalance, main = "Annual Water Balance (P-PET)")
+terra::plot(y$waterHoldingCapacity, main = "Water Holding Capacity")
+
+terra::plot(y$temperatureRegime, main = "Temperature Regime")
+terra::plot(y$moistureRegime, main = "Moisture Regime")
+
+terra::plot(y$numCumulativeDaysDryOver5C, cex.main=0.75,
+            main = "# Cumulative Days Dry over 5 degrees C")
+terra::plot(y$numConsecutiveDaysMoistInSomePartsOver8C, cex.main=0.75,
+            main = "# Consecutive Days Moist\nin some parts over 8 degrees C")
+par(mfrow=c(1,1))
+
 }
 \references{
 van Wambeke, A. and Newhall, F. and United States Soil Management Support Services (1981) Calculated Soil Moisture and Temperature Regimes of South America: A Compilation of Soil Climatic Regimes calculated by using a mathematical model developed by F. Newhall (Soil Conservation Service, USDA, 1972). SMSS : Technical Monograph : Soil management support services. New York State College of Agriculture and Life Sciences, Cornell University, Department of Agronomy. Available online: \url{https://books.google.com/books?id=jwtIAAAAYAAJ}

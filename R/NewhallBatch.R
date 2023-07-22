@@ -374,6 +374,42 @@ batch2 <- function(.data,
 }
 
 #' @export
+#' @examples
+#' 
+#' library(terra)
+#' 
+#' x <- terra::rast(system.file("extdata", "prism_issr800_sample.tif", package="jNSMR"))
+#' x <- c(newhall_prism_extent(ext(x) * 4), newhall_issr800_extent(ext(x) * 4))
+#' x$elev <- 0 # elevation is not currently used by the model directly
+#' 
+#' # reduce resolution (for fast example)
+#' x2 <- aggregate(x, 10, na.rm = TRUE)
+#' 
+#' # calculate winter, summer and annual average temperatures
+#' d <- as.data.frame(x2)
+#' x2$mwst <- rowMeans(d[, c("tDec","tJan","tFeb")])
+#' x2$msst <- rowMeans(d[, c("tJun","tJul","tAug")]) 
+#' x2$mast <- rowMeans(d[, paste0("t", month.abb)])
+#' x2$dif <- x2$msst - x2$mwst
+#' plot(x2$dif)
+#'
+#' y <- newhall_batch(x2) ## 1/10th resolution
+#' 
+#' # y <- newhall_batch(x) ## full resolution
+#' 
+#' par(mfrow=c(2, 1))
+#' terra::plot(y$annualWaterBalance, main = "Annual Water Balance (P-PET)")
+#' terra::plot(y$waterHoldingCapacity, main = "Water Holding Capacity")
+#' 
+#' terra::plot(y$temperatureRegime, main = "Temperature Regime")
+#' terra::plot(y$moistureRegime, main = "Moisture Regime")
+#' 
+#' terra::plot(y$numCumulativeDaysDryOver5C, cex.main=0.75,
+#'             main = "# Cumulative Days Dry over 5 degrees C")
+#' terra::plot(y$numConsecutiveDaysMoistInSomePartsOver8C, cex.main=0.75,
+#'             main = "# Consecutive Days Moist\nin some parts over 8 degrees C")
+#' par(mfrow=c(1,1))
+#' 
 newhall_batch <- function(.data,
                           unitSystem = "metric",
                           soilAirOffset = ifelse(unitSystem %in% c("in", "english"), 4.5, 2.5),

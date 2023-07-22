@@ -33,69 +33,104 @@ interface to batching is `newhall_batch()`.
 `newhall_batch()` takes either a character vector of CSV batch file
 paths, a data.frame, a SpatRaster or RasterStack/Brick object as input.
 
-Selected example input files have been included in `inst/extdata`
-directory of this package.
+### GeoTIFF/SpatRaster Input
 
     library(jNSMR)
+    #> jNSMR (0.1.2.9000) -- R interface to the classic Newhall Simulation Model
+    #> Added JAR file (newhall-1.6.4.jar) to Java class path.
+    library(terra)
+    #> terra 1.7.39
 
-    ## jNSMR (0.1.1) -- R interface to the classic Newhall Simulation Model
-    ## Added JAR file (newhall-1.6.4.jar) to Java class path.
+    x <- terra::rast(system.file("extdata", "prism_issr800_sample.tif",
+                                 package = "jNSMR"))
+    x$elev <- 0 # elevation is not currently used by the model directly
+
+    y <- newhall_batch(x) ## full resolution
+    #> newhall_batch: ran n=18790 simulations in 24 secs
+
+    par(mfrow = c(2, 1))
+    terra::plot(y$annualWaterBalance, main = "Annual Water Balance (P-PET)")
+    terra::plot(y$waterHoldingCapacity, main = "Water Holding Capacity")
+
+<img src="man/figures/README-spatraster-ex-1.png" width="100%" />
+
+
+    terra::plot(y$temperatureRegime, main = "Temperature Regime")
+    terra::plot(y$moistureRegime, main = "Moisture Regime")
+
+<img src="man/figures/README-spatraster-ex-2.png" width="100%" />
+
+
+    terra::plot(y$numCumulativeDaysDryOver5C,
+                cex.main = 0.75,
+                main = "# Cumulative Days Dry over 5 degrees C")
+    terra::plot(y$numConsecutiveDaysMoistInSomePartsOver8C,
+                cex.main = 0.75,
+                main = "# Consecutive Days Moist\nin some parts over 8 degrees C")
+
+<img src="man/figures/README-spatraster-ex-3.png" width="100%" />
+
+    par(mfrow = c(1, 1))
+
+### CSV File Input
+
+Selected example input files have been included in `inst/extdata`
+directory of this package.
 
     pathname <- system.file("extdata/All_PA_jNSM_Example_Batch_Metric.csv", package = "jNSMR")[1]
 
     res <- data.table::data.table(newhall_batch(pathname, toString = FALSE, verbose = FALSE))
 
     head(res)
-
-    ##    annualRainfall waterHoldingCapacity annualWaterBalance
-    ## 1:        1147.33                  200           474.2701
-    ## 2:         932.69                  200           270.1988
-    ## 3:        1084.32                  200           427.3922
-    ## 4:         992.64                  200           332.5753
-    ## 5:        1262.39                  200           629.7745
-    ## 6:        1118.09                  200           452.0308
-    ##    annualPotentialEvapotranspiration summerWaterBalance
-    ## 1:                          673.0599          -69.77925
-    ## 2:                          662.4912         -112.88055
-    ## 3:                          656.9278          -79.13638
-    ## 4:                          660.0647          -88.15085
-    ## 5:                          632.6155          -15.91051
-    ## 6:                          666.0592         -107.59863
-    ##    dryDaysAfterSummerSolstice moistDaysAfterWinterSolstice numCumulativeDaysDry
-    ## 1:                          0                          120                    0
-    ## 2:                          0                          120                    0
-    ## 3:                          0                          120                    0
-    ## 4:                          0                          120                    0
-    ## 5:                          0                          120                    0
-    ## 6:                          0                          120                    0
-    ##    numCumulativeDaysMoistDry numCumulativeDaysMoist numCumulativeDaysDryOver5C
-    ## 1:                         0                    360                          0
-    ## 2:                         0                    360                          0
-    ## 3:                         0                    360                          0
-    ## 4:                         0                    360                          0
-    ## 5:                         0                    360                          0
-    ## 6:                         0                    360                          0
-    ##    numCumulativeDaysMoistDryOver5C numCumulativeDaysMoistOver5C
-    ## 1:                               0                          227
-    ## 2:                               0                          226
-    ## 3:                               0                          224
-    ## 4:                               0                          226
-    ## 5:                               0                          212
-    ## 6:                               0                          223
-    ##    numConsecutiveDaysMoistInSomeParts numConsecutiveDaysMoistInSomePartsOver8C
-    ## 1:                                360                                      205
-    ## 2:                                360                                      206
-    ## 3:                                360                                      204
-    ## 4:                                360                                      205
-    ## 5:                                360                                      193
-    ## 6:                                360                                      203
-    ##    temperatureRegime moistureRegime regimeSubdivision1 regimeSubdivision2
-    ## 1:             Mesic           Udic              Typic               Udic
-    ## 2:             Mesic           Udic              Typic               Udic
-    ## 3:             Mesic           Udic              Typic               Udic
-    ## 4:             Mesic           Udic              Typic               Udic
-    ## 5:             Mesic           Udic              Typic               Udic
-    ## 6:             Mesic           Udic              Typic               Udic
+    #>    annualRainfall waterHoldingCapacity annualWaterBalance
+    #> 1:        1147.33                  200           474.2701
+    #> 2:         932.69                  200           270.1988
+    #> 3:        1084.32                  200           427.3922
+    #> 4:         992.64                  200           332.5753
+    #> 5:        1262.39                  200           629.7745
+    #> 6:        1118.09                  200           452.0308
+    #>    annualPotentialEvapotranspiration summerWaterBalance
+    #> 1:                          673.0599          -69.77925
+    #> 2:                          662.4912         -112.88055
+    #> 3:                          656.9278          -79.13638
+    #> 4:                          660.0647          -88.15085
+    #> 5:                          632.6155          -15.91051
+    #> 6:                          666.0592         -107.59863
+    #>    dryDaysAfterSummerSolstice moistDaysAfterWinterSolstice numCumulativeDaysDry
+    #> 1:                          0                          120                    0
+    #> 2:                          0                          120                    0
+    #> 3:                          0                          120                    0
+    #> 4:                          0                          120                    0
+    #> 5:                          0                          120                    0
+    #> 6:                          0                          120                    0
+    #>    numCumulativeDaysMoistDry numCumulativeDaysMoist numCumulativeDaysDryOver5C
+    #> 1:                         0                    360                          0
+    #> 2:                         0                    360                          0
+    #> 3:                         0                    360                          0
+    #> 4:                         0                    360                          0
+    #> 5:                         0                    360                          0
+    #> 6:                         0                    360                          0
+    #>    numCumulativeDaysMoistDryOver5C numCumulativeDaysMoistOver5C
+    #> 1:                               0                          227
+    #> 2:                               0                          226
+    #> 3:                               0                          224
+    #> 4:                               0                          226
+    #> 5:                               0                          212
+    #> 6:                               0                          223
+    #>    numConsecutiveDaysMoistInSomeParts numConsecutiveDaysMoistInSomePartsOver8C
+    #> 1:                                360                                      205
+    #> 2:                                360                                      206
+    #> 3:                                360                                      204
+    #> 4:                                360                                      205
+    #> 5:                                360                                      193
+    #> 6:                                360                                      203
+    #>    temperatureRegime moistureRegime regimeSubdivision1 regimeSubdivision2
+    #> 1:             Mesic           Udic              Typic               Udic
+    #> 2:             Mesic           Udic              Typic               Udic
+    #> 3:             Mesic           Udic              Typic               Udic
+    #> 4:             Mesic           Udic              Typic               Udic
+    #> 5:             Mesic           Udic              Typic               Udic
+    #> 6:             Mesic           Udic              Typic               Udic
 
 ## License information
 

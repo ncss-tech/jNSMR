@@ -10,3 +10,4 @@ README.Rmd
 ^pkgdown$
 \.xml$
 \.zip$
+^data-raw$
