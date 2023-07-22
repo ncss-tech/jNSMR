@@ -7,21 +7,24 @@ x2 <- subset(x, select = c("latDD", "lonDD", "tJan",
   "tOct", "tNov", "tDec", "pJan", "pFeb", "pMar", "pApr", "pMay", 
   "pJun", "pJul", "pAug", "pSep", "pOct", "pNov", "pDec"))
 
-r <- terra::rast(lapply(x2, function(a) terra::rast(as.data.frame(a))))
+r <- terra::rast(lapply(x2, function(a) terra::rast(as.matrix(a))))
 # PRISM info
-r$stationName <- 1:ncell(r)
+# r$stationName <- 1:ncell(r)
 r$awc <- 200
-r$maatmast <- 1.2
-r$pdType <- "Normal"
-r$pdStartYr <- 1981
-r$pdEndYr <- 2010
-r$cntryCode <- "US"
+# r$maatmast <- 1.2
+# r$pdType <- "Normal"
+# r$pdStartYr <- 1981
+# r$pdEndYr <- 2010
+# r$cntryCode <- "US"
 
 # boilerplate minimum metadata -- these are not used by the algorithm
-r$netType <- ""
+# r$netType <- ""
 r$elev <- -9999
-r$stProvCode <- ""
-r$notes <- ""
-r$stationID <- 1:ncell(r)
-res <- newhall_batch.SpatRaster(r)
-# res$NumCumulativeDaysMoist |> values() |> density(from = 0) |>  plot()
+# r$stProvCode <- ""
+# r$notes <- ""
+# r$stationID <- 1:ncell(r)
+res <- newhall_batch(r)
+res$numCumulativeDaysMoist |> 
+  terra::values() |> 
+  density(from = 0) |> 
+  plot()
