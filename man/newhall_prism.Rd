@@ -3,7 +3,7 @@
 \name{newhall_prism_cache}
 \alias{newhall_prism_cache}
 \alias{newhall_prism_rast}
-\alias{newhall_prism_extent}
+\alias{newhall_prism_subset}
 \title{Load PRISM Monthly "Normals" at 800 meter or 4 kilometer Resolution}
 \usage{
 newhall_prism_cache(
@@ -18,7 +18,7 @@ newhall_prism_rast(
   bilfile = list.files(file.path(PRISM_PATH, resolution), "\\\\.bil$", recursive = TRUE)
 )
 
-newhall_prism_extent(x, resolution = "800m")
+newhall_prism_subset(x, resolution = "800m")
 }
 \arguments{
 \item{resolution}{character. Either \code{"800m"} or \code{"4km"}}
@@ -39,7 +39,7 @@ character. Vector of file paths (to PRISM .BIL files).
 
 \code{newhall_prism_rast()}: Create a \emph{SpatRaster} object. This object contains temperature and precipitation data for the specified data set, at the specified resolution, using the standard jNSM column naming scheme.
 
-\verb{newhall_prism_extent():} Used to create a subset of the PRISM data corresponding to the extent of an input spatial object \code{x}.
+\verb{newhall_prism_subset():} Used to create a subset of the PRISM data corresponding to the extent of an input spatial object \code{x}.
 }
 \references{
 PRISM Climate Group, Oregon State University, \url{https://prism.oregonstate.edu}, data created 4 Feb 2014, accessed 22 Jul 2023.

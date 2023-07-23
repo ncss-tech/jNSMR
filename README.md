@@ -46,11 +46,14 @@ paths, a data.frame, a SpatRaster or RasterStack/Brick object as input.
     x$elev <- 0 # elevation is not currently used by the model directly
 
     y <- newhall_batch(x) ## full resolution
-    #> newhall_batch: ran n=18790 simulations in 26 secs
+    #> newhall_batch: ran n=18790 simulations in 20 secs
 
-    par(mfrow = c(2, 1))
-    terra::plot(y$annualWaterBalance, main = "Annual Water Balance (P-PET)")
-    terra::plot(y$waterHoldingCapacity, main = "Water Holding Capacity")
+    par(mfrow = c(1, 2))
+
+    terra::plot(y$annualWaterBalance, 
+                cex.main = 0.9, main = "Annual Water Balance (P-PET)")
+    terra::plot(y$waterHoldingCapacity, 
+                cex.main = 0.9, main = "Water Holding Capacity")
 
 <img src="man/figures/README-spatraster-ex-1.png" width="100%" />
 
@@ -62,13 +65,54 @@ paths, a data.frame, a SpatRaster or RasterStack/Brick object as input.
 
 
     terra::plot(y$numCumulativeDaysDryOver5C,
-                cex.main = 0.75,
-                main = "# Cumulative Days Dry over 5 degrees C")
+                cex.main = 0.75, main = "# Cumulative Days Dry over 5 degrees C")
     terra::plot(y$numConsecutiveDaysMoistInSomePartsOver8C,
-                cex.main = 0.75,
-                main = "# Consecutive Days Moist\nin some parts over 8 degrees C")
+                cex.main = 0.75, main = "# Consecutive Days Moist\nin some parts over 8 degrees C")
 
 <img src="man/figures/README-spatraster-ex-3.png" width="100%" />
+
+
+    par(mfrow = c(1, 1))
+
+Now let’s try again with ‘Daymet’ monthly climate data at 1 km
+resolution. ‘Daymet’ takes a different approach to prediction of
+temperature and precipitation so we may expect to see some
+differences–but ideally we have good general agreement between the two
+models.
+
+    library(jNSMR)
+    library(terra)
+
+    x2 <- terra::rast(system.file("extdata", "daymet_issr800_sample.tif",
+                                 package = "jNSMR"))
+    x2$elev <- 0 # elevation is not currently used by the model directly
+
+    y2 <- newhall_batch(x2) ## full resolution
+    #> newhall_batch: ran n=18790 simulations in 21 secs
+
+    par(mfrow = c(1, 2))
+
+    terra::plot(y2$annualWaterBalance, range = c(-750, 1500),
+                cex.main = 0.9, main = "Annual Water Balance (P-PET)")
+    terra::plot(y2$waterHoldingCapacity, 
+                cex.main = 0.9, main = "Water Holding Capacity")
+
+<img src="man/figures/README-spatraster-ex-daymet-1.png" width="100%" />
+
+
+    terra::plot(y2$temperatureRegime, main = "Temperature Regime")
+    terra::plot(y2$moistureRegime, main = "Moisture Regime")
+
+<img src="man/figures/README-spatraster-ex-daymet-2.png" width="100%" />
+
+
+    terra::plot(y2$numCumulativeDaysDryOver5C,
+                cex.main = 0.75, main = "# Cumulative Days Dry over 5 degrees C")
+    terra::plot(y2$numConsecutiveDaysMoistInSomePartsOver8C,
+                cex.main = 0.75, main = "# Consecutive Days Moist\nin some parts over 8 degrees C")
+
+<img src="man/figures/README-spatraster-ex-daymet-3.png" width="100%" />
+
 
     par(mfrow = c(1, 1))
 

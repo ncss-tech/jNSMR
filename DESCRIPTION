@@ -24,7 +24,8 @@ Suggests:
     knitr,
     testthat (>= 3.0.0),
     rmarkdown,
-    prism
+    prism, 
+    daymetr
 Language: en-US
 URL: https://ncss-tech.github.io/jNSMR, https://github.com/ncss-tech/jNSMR
 VignetteBuilder: knitr

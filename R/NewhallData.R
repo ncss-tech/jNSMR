@@ -1,3 +1,5 @@
+#### Public general utilities ----
+
 #' Newhall Data Directory
 #'
 #' Returns a platform-specific user-level directory where data, configuration and cache files may be stored.
@@ -8,6 +10,24 @@
 #' @export
 newhall_data_dir <- function(which = c("data", "config", "cache")) {
   tools::R_user_dir("jNSMR", which = which)
+}
+
+#### Private general utilities ----
+
+.add_LL <- function(x) {
+  # add longitude and latitude layers
+  
+  if (!terra::is.lonlat(x)) {
+    x1 <- terra::project(x[[1]], "OGC:CRS84")
+  } else {
+    x1 <-  x[[1]]
+  }
+  
+  cx <- terra::rast(list(x = terra::init(x1, "x"), 
+                         y = terra::init(x1, "y")))
+  x$lonDD <- cx$x
+  x$latDD <- cx$y
+  x
 }
 
 #### PRISM Monthly Normals----
@@ -87,22 +107,15 @@ newhall_prism_rast <- function(resolution = "800m",
                                                     gsub("PRISM_(ppt|tmean)_.*[0-9]{2}_bil$", "\\1",
                                                          names(prism_rast)))),  
                               ifelse(is.na(monthnames), "", monthnames))
-  
-  # add longitude and latitude layers
-  cx <- rast(list(x = terra::init(prism_rast, "x"), 
-                  y = terra::init(prism_rast, "y")))
-  prism_rast$lonDD <- cx$x
-  prism_rast$latDD <- cx$y
-  
-  prism_rast
+  .add_LL(prism_rast)
 }
 
-#' @description `newhall_prism_extent():` Used to create a subset of the PRISM data corresponding to the extent of an input spatial object `x`.
+#' @description `newhall_prism_subset():` Used to create a subset of the PRISM data corresponding to the extent of an input spatial object `x`.
 #' 
 #' @param x A _SpatVector_, _SpatRaster_, _SpatExtent_, or any other object type suitable to use with `terra::crop()`; 
 #' @export
 #' @rdname newhall_prism
-newhall_prism_extent <- function(x, resolution = "800m") {
+newhall_prism_subset <- function(x, resolution = "800m") {
   terra::crop(newhall_prism_rast(resolution = resolution), x)
 }
 
@@ -137,6 +150,93 @@ newhall_prism_extent <- function(x, resolution = "800m") {
     )
   })
   return(!inherits(res, 'try-error'))
+}
+
+#### Daymet Monthly Average ----
+# calculated by default for same PRISM "normal" period 1991-2020
+# newhall_daymet_cache <- function(start_year = 1991,
+#                                  end_year = 2020,
+#                                  DAYMET_PATH = file.path(newhall_data_dir("cache"), "DAYMET")) {
+#   # slow/inconvenient to download whole dataset, even at monthly granularity
+# }
+
+#' Load DAYMET Monthly Data at 1 kilometer Resolution
+#' 
+#' @description `newhall_daymet_subset():` Used to create a subset of the DAYMET data corresponding to the extent of an input spatial object `x`.
+#' 
+#' @param x A _SpatVector_, _SpatRaster_, _SpatExtent_, or any other object type suitable to use with `terra::ext()`
+#' 
+#' @param start_year integer. First year in range to download
+#' @param end_year integer. Last year in range to download.
+#' @param force logical. Force download when files exist in `DAYMET_PATH`? Default: `FALSE`
+#' @param DAYMET_PATH Default: `file.path(newhall_data_dir("cache"), "DAYMET")`
+#' @references Thornton, M.M., R. Shrestha, Y. Wei, P.E. Thornton, S-C. Kao, and B.E. Wilson. 2022. Daymet: Monthly Climate Summaries on a 1-km Grid for North America, Version 4 R1. ORNL DAAC, Oak Ridge, Tennessee, USA. \doi{https://doi.org/10.3334/ORNLDAAC/2131}
+#' @seealso [newhall_data_dir()]
+#'
+#' @return A _SpatRaster_ object
+#' @export
+#' @rdname newhall_daymet
+newhall_daymet_subset <- function(x,
+                                  start_year = 1991,
+                                  end_year = 2020,
+                                  force = FALSE,
+                                  DAYMET_PATH = tempdir()) {
+  
+  .daymet_download_monthly(x,
+                           start_year = start_year,
+                           end_year = end_year,
+                           DAYMET_PATH = DAYMET_PATH)
+  
+  prf <- list.files(DAYMET_PATH, "prcp_.*\\.nc$", full.names = TRUE)
+  trf <- list.files(DAYMET_PATH, "t(min|max)_.*\\.nc$", full.names = TRUE)
+  
+  npr <- terra::rast(prf)
+  ntr <- terra::rast(trf)
+  
+  # TODO: may contain extra years; filter to times within [start,end]
+  
+  prc <- terra::rast(lapply(terra::split(npr, names(npr)), terra::mean))
+  tmp <- terra::rast(lapply(terra::split(ntr, gsub("min|max", "emp", names(ntr))), terra::mean))
+  
+  names(prc) <- paste0("p", month.abb)
+  names(tmp) <- paste0("t", month.abb)
+  
+  .add_LL(c(prc, tmp))
+}
+
+.daymet_download_monthly <- function(x, 
+                                     start_year = 1991,
+                                     end_year = 2020,
+                                     force = FALSE,
+                                     DAYMET_PATH = tempdir()) {
+                # file.path(newhall_data_dir("cache"), "DAYMET")) {
+  
+  if (!dir.exists(DAYMET_PATH)) {
+    dir.create(DAYMET_PATH, recursive = TRUE, showWarnings = FALSE)
+  }
+  
+  ## TODO: cache whole prism extent?
+  # c(ymax = 49.937500332221, 
+  #   xmin = -125.020833333331, 
+  #   ymin = 24.062500342571, 
+  #   xmax = -66.479166690081)
+  
+  loc <- sapply(terra::ext(x), as.numeric)[c(4,1,3,2)]
+  
+  if (length(list.files(DAYMET_PATH, "\\.nc$"))
+      < (3 * (end_year - start_year)) || force) {
+    # TODO: need to check all years start:end are present
+    # download if missing
+    daymetr::download_daymet_ncss(
+      location = loc,
+      start = start_year,
+      end = end_year,
+      path = DAYMET_PATH,
+      param = c("tmax", "tmin", "prcp"), #,
+                # "vp", "srad", "dayl", "swe"),
+      frequency = "monthly" 
+    )
+  }
 }
 
 #### ISSR-800/SoilWeb Soil Properties ----
