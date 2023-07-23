@@ -18,6 +18,7 @@ Provides methods to create input, read output, and run the routines from the leg
 Useful links:
 \itemize{
   \item \url{https://ncss-tech.github.io/jNSMR}
+  \item \url{https://github.com/ncss-tech/jNSMR}
 }
 
 }

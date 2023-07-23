@@ -88,6 +88,7 @@ newhall_batch.default <- function(.data = NULL,
                                   toString = TRUE,
                                   checkargs = TRUE,
                                   cores = NULL,
+                                  core_thresh = NULL,
                                   file = NULL,
                                   nrows = NULL,
                                   overwrite = NULL) {
@@ -392,16 +393,22 @@ batch2 <- function(.data,
 #' x2$mast <- rowMeans(d[, paste0("t", month.abb)])
 #' x2$dif <- x2$msst - x2$mwst
 #' plot(x2$dif)
-#'
-#' y <- newhall_batch(x2) ## 1/10th resolution
 #' 
-#' # y <- newhall_batch(x) ## full resolution
+#' ## 1/10th resolution: ~3000 simulations in ~4 seconds
+#' y <- newhall_batch(x2) 
+#' 
+#' ## ~1/3 resolution: ~30k simulations in ~40 seconds
+#' # y <- newhall_batch(aggregate(x, 3)) 
+#' 
+#' ## full resolution: ~300k simulations in ~6 minutes
+#' # y <- newhall_batch(x)
 #' 
 #' par(mfrow=c(2, 1))
 #' terra::plot(y$annualWaterBalance, main = "Annual Water Balance (P-PET)")
 #' terra::plot(y$waterHoldingCapacity, main = "Water Holding Capacity")
 #' 
 #' terra::plot(y$temperatureRegime, main = "Temperature Regime")
+
 #' terra::plot(y$moistureRegime, main = "Moisture Regime")
 #' 
 #' terra::plot(y$numCumulativeDaysDryOver5C, cex.main=0.75,
@@ -418,6 +425,7 @@ newhall_batch <- function(.data,
                           toString = TRUE,
                           checkargs = TRUE,
                           cores = 1,
+                          core_thresh = 25000L,
                           file = paste0(tempfile(), ".tif"),
                           nrows = nrow(.data),
                           overwrite = TRUE){
@@ -434,6 +442,7 @@ newhall_batch.character <- function(.data,
                                     toString = TRUE,
                                     checkargs = TRUE,
                                     cores = 1,
+                                    core_thresh = 25000L,
                                     file = paste0(tempfile(), ".tif"),
                                     nrows = nrow(.data),
                                     overwrite = TRUE) {
@@ -484,10 +493,11 @@ newhall_batch.character <- function(.data,
 .smrsub1 <- function() c("Typic", "Weak", "Wet", "Dry", "Extreme", "Xeric", "Udic", "Aridic", "Undefined")
 .smrsub2 <- function() c("Aridic", "Tempustic", "Tropustic", "Tempudic", "Xeric", "Udic", "Tropudic", "Undefined")
 
-#' @param cores number of cores; used only for processing _SpatRaster_ or _Raster*_ input
-#' @param file path to write incremental raster processing output for large inputs that do not fit in memory; passed to `terra::writeStart()` and used only for processing _SpatRaster_ or _Raster*_ input; defaults to a temporary file created by `tempfile()` if needed
-#' @param nrows number of rows to use per block; passed to `terra::readValues()` `terra::writeValues()`; used only for processing _SpatRaster_ or _Raster*_ input; defaults to number of rows in dataset if needed
-#' @param overwrite logical; overwrite `file`? passed to `terra::writeStart()`; defaults to `TRUE` if needed
+#' @param cores integer. Number of cores; used only for processing _SpatRaster_ or _Raster*_ input. Default: `1` processes batches sequentially.
+#' @param core_thresh integer. Approximate number of cells to target per core and batch; used to calculate default value for `nrows`. Default `25000` cells.
+#' @param file character. Path to write incremental raster processing output for large inputs that do not fit in memory; passed to `terra::writeStart()` and used only for processing _SpatRaster_ or _Raster*_ input; defaults to a temporary file created by `tempfile()` if needed
+#' @param nrows integer. Number of rows to use per block; passed to `terra::readValues()` `terra::writeValues()`; used only for processing _SpatRaster_ or _Raster*_ input; defaults to number of rows in `.data` if it is small. If the number of cells in `.data` exceeds `core_thresh`, then the number of rows is calculated based on the number of cells in `.data`, `core_thresh` and `cores`.
+#' @param overwrite logical. Overwrite `file`? passed to `terra::writeStart()`; defaults to `TRUE` if needed
 #' @export
 #' @rdname newhall_batch
 #' @return For `SpatRaster` input returns a `SpatRaster` containing numeric and categorical model outputs. `RasterBrick` inputs are first converted to `SpatRaster`, and a `SpatRaster` is returned
@@ -501,12 +511,26 @@ newhall_batch.SpatRaster <- function(.data,
                                      toString = FALSE,
                                      checkargs = TRUE,
                                      cores = 1,
+                                     core_thresh = 25000L,
                                      file = paste0(tempfile(), ".tif"),
-                                     nrows = nrow(.data),
+                                     nrows = ifelse(ncol(.data) * nrow(.data) < core_thresh, 
+                                                    nrow(.data), 
+                                                    floor(ncol(.data) * nrow(.data) / (core_thresh * cores))),
                                      overwrite = TRUE) {
   stopifnot(requireNamespace("terra"))
   suppressWarnings(terra::readStart(.data))
 
+  # nrows mut be an integer
+  nrows <- floor(nrows)
+  if (getOption("jNSMR.DEBUG", default = FALSE))
+    message("using nrows=", nrows)
+  
+  if (cores > 1 && terra::ncell(.data) < core_thresh) {
+    if (getOption("jNSMR.DEBUG", default = FALSE))
+      message("forced cores=1 due to small number of cells (<", core_thresh, ")")
+    cores <- 1
+  }
+  
   # create template brick
   out <- terra::rast(.data)
   if (newhall_version() >= "1.6.4") {
@@ -702,8 +726,11 @@ newhall_batch.RasterBrick <- function(.data,
                                       toString = TRUE,
                                       checkargs = TRUE,
                                       cores = 1,
+                                      core_thresh = 25000L,
                                       file = paste0(tempfile(), ".tif"),
-                                      nrows = nrow(.data),
+                                      nrows = ifelse(ncol(.data) * nrow(.data) < core_thresh, 
+                                                     nrow(.data), 
+                                                     floor(ncol(.data) * nrow(.data) / (core_thresh * cores))),
                                       overwrite = TRUE) {
   newhall_batch.RasterStack(.data,
                             unitSystem = unitSystem,
@@ -713,6 +740,7 @@ newhall_batch.RasterBrick <- function(.data,
                             toString = toString,
                             checkargs = checkargs,
                             cores = cores,
+                            core_thresh = core_thresh,
                             file = file,
                             nrows = nrows,
                             overwrite = overwrite)
@@ -729,8 +757,11 @@ newhall_batch.RasterStack <- function(.data,
                                       toString = TRUE,
                                       checkargs = TRUE,
                                       cores = 1,
+                                      core_thresh = 25000L,
                                       file = paste0(tempfile(), ".tif"),
-                                      nrows = nrow(.data),
+                                      nrows = ifelse(ncol(.data) * nrow(.data) < core_thresh, 
+                                                     nrow(.data), 
+                                                     floor(ncol(.data) * nrow(.data) / (core_thresh * cores))),
                                       overwrite = TRUE) {
   stopifnot(requireNamespace("terra"))
   newhall_batch.SpatRaster(terra::rast(.data),
@@ -741,6 +772,7 @@ newhall_batch.RasterStack <- function(.data,
                            toString = toString,
                            checkargs = checkargs,
                            cores = cores,
+                           core_thresh = core_thresh,
                            file = file,
                            nrows = nrows,
                            overwrite = overwrite)

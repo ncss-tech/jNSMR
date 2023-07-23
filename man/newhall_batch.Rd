@@ -18,6 +18,7 @@
   toString = TRUE,
   checkargs = TRUE,
   cores = NULL,
+  core_thresh = NULL,
   file = NULL,
   nrows = NULL,
   overwrite = NULL
@@ -32,6 +33,7 @@ newhall_batch(
   toString = TRUE,
   checkargs = TRUE,
   cores = 1,
+  core_thresh = 25000L,
   file = paste0(tempfile(), ".tif"),
   nrows = nrow(.data),
   overwrite = TRUE
@@ -46,6 +48,7 @@ newhall_batch(
   toString = TRUE,
   checkargs = TRUE,
   cores = 1,
+  core_thresh = 25000L,
   file = paste0(tempfile(), ".tif"),
   nrows = nrow(.data),
   overwrite = TRUE
@@ -60,8 +63,10 @@ newhall_batch(
   toString = FALSE,
   checkargs = TRUE,
   cores = 1,
+  core_thresh = 25000L,
   file = paste0(tempfile(), ".tif"),
-  nrows = nrow(.data),
+  nrows = ifelse(ncol(.data) * nrow(.data) < core_thresh, nrow(.data), floor(ncol(.data)
+    * nrow(.data)/(core_thresh * cores))),
   overwrite = TRUE
 )
 
@@ -74,8 +79,10 @@ newhall_batch(
   toString = TRUE,
   checkargs = TRUE,
   cores = 1,
+  core_thresh = 25000L,
   file = paste0(tempfile(), ".tif"),
-  nrows = nrow(.data),
+  nrows = ifelse(ncol(.data) * nrow(.data) < core_thresh, nrow(.data), floor(ncol(.data)
+    * nrow(.data)/(core_thresh * cores))),
   overwrite = TRUE
 )
 
@@ -88,8 +95,10 @@ newhall_batch(
   toString = TRUE,
   checkargs = TRUE,
   cores = 1,
+  core_thresh = 25000L,
   file = paste0(tempfile(), ".tif"),
-  nrows = nrow(.data),
+  nrows = ifelse(ncol(.data) * nrow(.data) < core_thresh, nrow(.data), floor(ncol(.data)
+    * nrow(.data)/(core_thresh * cores))),
   overwrite = TRUE
 )
 }
@@ -108,13 +117,15 @@ newhall_batch(
 
 \item{checkargs}{\emph{logical}; check argument length and data types for each run? Default: \code{TRUE}}
 
-\item{cores}{number of cores; used only for processing \emph{SpatRaster} or \emph{Raster*} input}
+\item{cores}{integer. Number of cores; used only for processing \emph{SpatRaster} or \emph{Raster*} input. Default: \code{1} processes batches sequentially.}
 
-\item{file}{path to write incremental raster processing output for large inputs that do not fit in memory; passed to \code{terra::writeStart()} and used only for processing \emph{SpatRaster} or \emph{Raster*} input; defaults to a temporary file created by \code{tempfile()} if needed}
+\item{core_thresh}{integer. Approximate number of cells to target per core and batch; used to calculate default value for \code{nrows}. Default \code{25000} cells.}
 
-\item{nrows}{number of rows to use per block; passed to \code{terra::readValues()} \code{terra::writeValues()}; used only for processing \emph{SpatRaster} or \emph{Raster*} input; defaults to number of rows in dataset if needed}
+\item{file}{character. Path to write incremental raster processing output for large inputs that do not fit in memory; passed to \code{terra::writeStart()} and used only for processing \emph{SpatRaster} or \emph{Raster*} input; defaults to a temporary file created by \code{tempfile()} if needed}
 
-\item{overwrite}{logical; overwrite \code{file}? passed to \code{terra::writeStart()}; defaults to \code{TRUE} if needed}
+\item{nrows}{integer. Number of rows to use per block; passed to \code{terra::readValues()} \code{terra::writeValues()}; used only for processing \emph{SpatRaster} or \emph{Raster*} input; defaults to number of rows in \code{.data} if it is small. If the number of cells in \code{.data} exceeds \code{core_thresh}, then the number of rows is calculated based on the number of cells in \code{.data}, \code{core_thresh} and \code{cores}.}
+
+\item{overwrite}{logical. Overwrite \code{file}? passed to \code{terra::writeStart()}; defaults to \code{TRUE} if needed}
 }
 \value{
 When input is a \emph{data.frame} or \emph{character} vector of paths to CSV files, result is a a \emph{data.frame} with key model outputs (see details) containing list columns with Java Objects for \emph{NewhallDataset}, \emph{NewhallResults}.  If \code{toString=TRUE} the column \code{output} is a \emph{character} containing the \code{toString()} output from \emph{NewhallResults}
@@ -189,11 +200,30 @@ The following elements have a many:1 relationship with model runs and are not (y
 library(terra)
 
 x <- terra::rast(system.file("extdata", "prism_issr800_sample.tif", package="jNSMR"))
+x <- c(newhall_prism_extent(ext(x) * 4), newhall_issr800_extent(ext(x) * 4))
 x$elev <- 0 # elevation is not currently used by the model directly
 
-y <- newhall_batch(x)
+# reduce resolution (for fast example)
+x2 <- aggregate(x, 10, na.rm = TRUE)
 
-par(mfrow=c(2,1))
+# calculate winter, summer and annual average temperatures
+d <- as.data.frame(x2)
+x2$mwst <- rowMeans(d[, c("tDec","tJan","tFeb")])
+x2$msst <- rowMeans(d[, c("tJun","tJul","tAug")]) 
+x2$mast <- rowMeans(d[, paste0("t", month.abb)])
+x2$dif <- x2$msst - x2$mwst
+plot(x2$dif)
+
+## 1/10th resolution: ~3000 simulations in ~4 seconds
+y <- newhall_batch(x2) 
+
+## ~1/3 resolution: ~30k simulations in ~40 seconds
+# y <- newhall_batch(aggregate(x, 3)) 
+
+## full resolution: ~300k simulations in ~6 minutes
+# y <- newhall_batch(x)
+
+par(mfrow=c(2, 1))
 terra::plot(y$annualWaterBalance, main = "Annual Water Balance (P-PET)")
 terra::plot(y$waterHoldingCapacity, main = "Water Holding Capacity")
 
