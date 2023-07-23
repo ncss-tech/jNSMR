@@ -20,7 +20,7 @@ This vignette demonstrates setting a custom `jNSMR.JAR_SUFFIX` to force use of t
 
 Before we load the library, set the `jNSMR.JAR_SUFFIX` option to indicate which JAR to load. The attach message indicates the JAR version loaded.
 
-```{r setup, eval=TRUE}
+```{r setup, eval=FALSE}
 options(jNSMR.JAR_SUFFIX = "-1.6.1")
 library(jNSMR)
 ```
@@ -29,7 +29,7 @@ library(jNSMR)
 
 Create a _NewhallDataset_ with `xml_NewhallDataset()` or `NewhallDataset()` and associated _NewhallDatasetMetadata_ with `NewhallDatasetMetadata()`.
 
-```{r}
+```{r, eval=FALSE}
 library(jNSMR)
 
 # read single-station XML file (NewhallDataset + NewhallDatasetMetadata)
@@ -136,7 +136,7 @@ cat(output$getFormattedTemperatureCalendar())
 
 `newhall_XMLStringResultsExporter()` returns a character vector with XML based on an input and an output object.
 
-```{r}
+```{r, eval=FALSE}
 # inspect XML result format
 cat(newhall_XMLStringResultsExporter(input_xml, output))
 ```
@@ -315,7 +315,7 @@ cat(newhall_XMLStringResultsExporter(input_xml, output))
 
 This writes the "direct" input _NewhallDataset_ (`input_direct`) and result _NewhallResult_ (`output`) to an XML file with format as above. 
 
-```{r}
+```{r, eval=FALSE}
 # write XML results to file
 newhall_XMLResultsExporter(dataset = input_direct,
                            result = output,
@@ -334,7 +334,7 @@ newhall_GUI()
 
 If you need to switch back and forth between different versions of the model JAR file within a single R session, you will need to `detach()` the package and unset any options such as `jNSMR.JAR_SUFFIX` before reloading with a new JAR. 
 
-```{r}
+```{r, eval=FALSE}
 detach("package:jNSMR")
 options(jNSMR.JAR_SUFFIX = NULL)
 ```
