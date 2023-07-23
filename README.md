@@ -36,7 +36,7 @@ paths, a data.frame, a SpatRaster or RasterStack/Brick object as input.
 ### GeoTIFF/SpatRaster Input
 
     library(jNSMR)
-    #> jNSMR (0.1.2.9000) -- R interface to the classic Newhall Simulation Model
+    #> jNSMR (0.2.0) -- R interface to the classic Newhall Simulation Model
     #> Added JAR file (newhall-1.6.4.jar) to Java class path.
     library(terra)
     #> terra 1.7.39
@@ -46,7 +46,7 @@ paths, a data.frame, a SpatRaster or RasterStack/Brick object as input.
     x$elev <- 0 # elevation is not currently used by the model directly
 
     y <- newhall_batch(x) ## full resolution
-    #> newhall_batch: ran n=18790 simulations in 24 secs
+    #> newhall_batch: ran n=18790 simulations in 26 secs
 
     par(mfrow = c(2, 1))
     terra::plot(y$annualWaterBalance, main = "Annual Water Balance (P-PET)")

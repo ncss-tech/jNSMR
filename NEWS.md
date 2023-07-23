@@ -1,8 +1,24 @@
+# jNSMR 0.2.0
+
+ - Added helper functions for raster input data prep
+ 
+   - PRISM
+ 
+   - SoilWeb ISSR800 (Available Water Storage Capacity)
+ 
+ - Adeed sample data (PRISM+ISSR800 in GeoTIFF format) to inst/extdata
+ 
+ - Added `core_thresh` argument to `newhall_batch()` and better heuristics for `nrows` with and without multiple `cores`
+ 
+ - Set minimum R version to 4.0.0 (for `tools::R_user_dir()`)
+
 # jNSMR 0.1.1
 
  - Several fixes related to "Undefined" factor levels for moisture regime and moisture regime subdivisions in the `newhall_batch(<SpatRaster>)` method (#8)
  
  - Fixed layer names for the categorical results in the `newhall_batch(<SpatRaster>)` method
+ 
+ - Set minimum R version to 3.6.0 (based on {rJava})
  
 # jNSMR 0.1.0
 
