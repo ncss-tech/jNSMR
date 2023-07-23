@@ -276,12 +276,12 @@ newhall_issr800_cache <-
 }
 
 
-#' @description `newhall_issr800_extent():` Used to create a subset of the ISSR-800 soil available water storage data corresponding to the extent of an input spatial object `x`.
+#' @description `newhall_issr800_subset():` Used to create a subset of the ISSR-800 soil available water storage data corresponding to the extent of an input spatial object `x`.
 #' 
 #' @param x A _SpatVector_, _SpatRaster_, _SpatExtent_, or any other object type suitable to use with `terra::crop()`; 
 #' @export
 #' @rdname newhall_issr800
-newhall_issr800_extent <- function(x) {
+newhall_issr800_subset <- function(x) {
   terra::crop(newhall_issr800_rast(), x)
 }
 

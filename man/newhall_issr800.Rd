@@ -2,7 +2,7 @@
 % Please edit documentation in R/NewhallData.R
 \name{newhall_issr800_cache}
 \alias{newhall_issr800_cache}
-\alias{newhall_issr800_extent}
+\alias{newhall_issr800_subset}
 \alias{newhall_issr800_rast}
 \title{Load SoilWeb "ISSR-800" at 800 meter Resolution}
 \usage{
@@ -12,7 +12,7 @@ newhall_issr800_cache(
   overwrite = FALSE
 )
 
-newhall_issr800_extent(x)
+newhall_issr800_subset(x)
 
 newhall_issr800_rast(
   ISSR800_PATH = file.path(newhall_data_dir("cache"), "SoilWeb", "800m"),
@@ -36,7 +36,7 @@ character. Path to cached water storage GeoTIFF.
 \description{
 Currently the only ISSR-800 data are only available for the contiguous (lower 48) United States. The only property cached for use in the Newhall model is the "available water holding capacity" (sum of storage for the whole profile). For consistency with PRISM grid the values are reprojected from \code{"EPSG:5070"} to \code{"EPSG:4269"}.
 
-\verb{newhall_issr800_extent():} Used to create a subset of the ISSR-800 soil available water storage data corresponding to the extent of an input spatial object \code{x}.
+\verb{newhall_issr800_subset():} Used to create a subset of the ISSR-800 soil available water storage data corresponding to the extent of an input spatial object \code{x}.
 
 \code{newhall_issr800_rast()}: Create a \emph{SpatRaster} object. This object contains Available Water Capacity (Storage) for at 800 meter resolution using the standard jNSM column naming scheme.
 }

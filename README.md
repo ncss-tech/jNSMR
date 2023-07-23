@@ -46,7 +46,7 @@ paths, a data.frame, a SpatRaster or RasterStack/Brick object as input.
     x$elev <- 0 # elevation is not currently used by the model directly
 
     y <- newhall_batch(x) ## full resolution
-    #> newhall_batch: ran n=18790 simulations in 20 secs
+    #> newhall_batch: ran n=18790 simulations in 21 secs
 
     par(mfrow = c(1, 2))
 
@@ -88,7 +88,7 @@ models.
     x2$elev <- 0 # elevation is not currently used by the model directly
 
     y2 <- newhall_batch(x2) ## full resolution
-    #> newhall_batch: ran n=18790 simulations in 21 secs
+    #> newhall_batch: ran n=18790 simulations in 22 secs
 
     par(mfrow = c(1, 2))
 
