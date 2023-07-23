@@ -1,16 +1,18 @@
 # jNSMR 0.2.0
 
- - Added helper functions for raster input data prep
- 
-   - PRISM
- 
-   - SoilWeb ISSR800 (Available Water Storage Capacity)
- 
- - Adeed sample data (PRISM+ISSR800 in GeoTIFF format) to inst/extdata
- 
- - Added `core_thresh` argument to `newhall_batch()` and better heuristics for `nrows` with and without multiple `cores`
- 
- - Set minimum R version to 4.0.0 (for `tools::R_user_dir()`)
+- Added helper functions for raster input data preparation. Initial sources include:
+  - PRISM monthly climate "normals," DAYMET monthly aggregated climate, SoilWeb ISSR800 (Available Water Storage Capacity)
+    
+- Added sample data (PRISM+ISSR800, DAYMET+ISSR800 in GeoTIFF format) to inst/extdata
+  
+- Added `core_thresh` argument to `newhall_batch()`  and better heuristics for `nrows` with and without multiple `cores`
+ - Recompiled JAR v1.6.4
+ - Abstracted out longitude/latitude grid calculation, use `"OGC:CRS84"` for consistent determinations globally
+   
+- Add `newhall_prism_subset()` and `"extdata/prism_issr800_sample.tif"` `newhall_daymet_subset()` and `"extdata/daymet_issr800_sample.tif"`
+   - GeoTIFF files use `"INT2S"` (signed, two byte integer) datatype with `"LZW"` compression and `"PREDICTOR=2"` for small file size
+     
+- Set minimum R version to 4.0.0 (for `tools::R_user_dir()`)
 
 # jNSMR 0.1.1
 
