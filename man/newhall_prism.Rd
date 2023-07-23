@@ -4,6 +4,7 @@
 \alias{newhall_prism_cache}
 \alias{newhall_prism_rast}
 \alias{newhall_prism_subset}
+\alias{newhall_nad83_template}
 \title{Load PRISM Monthly "Normals" at 800 meter or 4 kilometer Resolution}
 \usage{
 newhall_prism_cache(
@@ -14,14 +15,21 @@ newhall_prism_cache(
 
 newhall_prism_rast(
   resolution = "800m",
-  PRISM_PATH = newhall_data_dir("cache"),
+  PRISM_PATH = file.path(newhall_data_dir("cache"), "PRISM"),
   bilfile = list.files(file.path(PRISM_PATH, resolution), "\\\\.bil$", recursive = TRUE)
 )
 
-newhall_prism_subset(x, resolution = "800m")
+newhall_prism_subset(
+  x,
+  resolution = "800m",
+  template = newhall_nad83_template(resolution = resolution),
+  PRISM_PATH = file.path(newhall_data_dir("cache"), "PRISM")
+)
+
+newhall_nad83_template(resolution = "800m")
 }
 \arguments{
-\item{resolution}{character. Either \code{"800m"} or \code{"4km"}}
+\item{resolution}{character. Either \code{"800m"} (default) or \code{"4km"}}
 
 \item{overwrite}{Force download of new cache files? Default: \code{FALSE}.}
 
@@ -29,7 +37,9 @@ newhall_prism_subset(x, resolution = "800m")
 
 \item{bilfile}{Optional: custom vector of paths to files to use to build raster. Defaults to all .BIL files in the specified cache directory and resolution.}
 
-\item{x}{A \emph{SpatVector}, \emph{SpatRaster}, \emph{SpatExtent}, or any other object type suitable to use with \code{terra::crop()};}
+\item{x}{A \emph{SpatVector}, \emph{SpatRaster}, \emph{SpatExtent}, or any other object type suitable to use with \code{terra::crop()}.}
+
+\item{template}{Template \emph{SpatRaster} or target CRS specification for re-projection. Default: \code{newhall_nad83_template()}}
 }
 \value{
 character. Vector of file paths (to PRISM .BIL files).
@@ -40,6 +50,14 @@ character. Vector of file paths (to PRISM .BIL files).
 \code{newhall_prism_rast()}: Create a \emph{SpatRaster} object. This object contains temperature and precipitation data for the specified data set, at the specified resolution, using the standard jNSM column naming scheme.
 
 \verb{newhall_prism_subset():} Used to create a subset of the PRISM data corresponding to the extent of an input spatial object \code{x}.
+
+\code{newhall_nad83_template()}: Empty \code{SpatRaster} corresponding to the lower 48 United States PRISM data/extent at the specified resolution.
+}
+\examples{
+
+newhall_nad83_template()
+
+newhall_nad83_template("4km")
 }
 \references{
 PRISM Climate Group, Oregon State University, \url{https://prism.oregonstate.edu}, data created 4 Feb 2014, accessed 22 Jul 2023.

@@ -8,11 +8,15 @@
 \usage{
 newhall_issr800_cache(
   ISSR800_PATH = file.path(newhall_data_dir("cache"), "SoilWeb", "800m"),
-  template = newhall_prism_rast(),
+  template = newhall_nad83_template(),
   overwrite = FALSE
 )
 
-newhall_issr800_subset(x)
+newhall_issr800_subset(
+  x,
+  template = newhall_nad83_template(),
+  ISSR800_PATH = file.path(newhall_data_dir("cache"), "SoilWeb", "800m")
+)
 
 newhall_issr800_rast(
   ISSR800_PATH = file.path(newhall_data_dir("cache"), "SoilWeb", "800m"),
@@ -22,7 +26,7 @@ newhall_issr800_rast(
 \arguments{
 \item{ISSR800_PATH}{Default: \code{file.path(newhall_data_dir("cache"), "SoilWeb", "800m")}}
 
-\item{template}{Template SpatRaster or target CRS specification for reprojection. Default: \code{newhall_prism_rast()}}
+\item{template}{Template \emph{SpatRaster} or target CRS specification for reprojection. Default: \code{newhall_nad83_template()}}
 
 \item{overwrite}{Force download of new cache files? Default: \code{FALSE}.}
 
