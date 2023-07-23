@@ -7,8 +7,10 @@
 #'
 #' @param .data a _data.frame_ or _character_ vector of paths to CSV files; or a SpatRaster or RasterStack containin the same data elements and names as included in the batch `data.frame`/CSV format
 #' @param unitSystem Default: `"metric"` OR `"mm"` OR `"cm"` use _millimeters_ of rainfall (default for the BASIC model); set to `unitSystem="english"` OR `unitSystem="in"` to transform English (inches of precipitation; degrees Fahrenheit) inputs to metric (millimeters of precipitation; degrees Celsius) before running simulation
-#' @param soilAirOffset air-soil temperature offset. Conventionally for jNSM: `2.5` for metric units (default); `4.5` for english units.
-#' @param amplitude difference in amplitude between soil and air temperature sine waves. Default `0.66`
+#' @param soilAirOffset air-soil temperature offset. Conventionally for jNSM: `2.5` for metric units (default); `4.5` for english units. Can optionally be specified as a layer in a raster input.
+#' @param amplitude difference in amplitude between soil and air temperature sine waves. Default `0.66`. Can optionally be specified as a layer in a raster input.
+#' @param hasOHorizon Used for cryic soil temperature regime criteria. Default: `FALSE`. Can optionally be specified as a layer in a raster input.
+#' @param isSaturated Used for cryic soil temperature regime and aquic soil moisture regime mask. Default: `FALSE`. Can optionally be specified as a layer in a raster input.
 #' @param verbose print message about number of simulations and elapsed time
 #' @param toString call `toString()` method on each _NewhallResults_ object and store in `output` column of result?
 #' @param checkargs _logical_; check argument length and data types for each run? Default: `TRUE`
@@ -84,6 +86,8 @@ newhall_batch.default <- function(.data = NULL,
                                   unitSystem = "metric",
                                   soilAirOffset = ifelse(unitSystem %in% c("in","english"), 4.5, 2.5),
                                   amplitude = 0.66,
+                                  hasOHorizon = FALSE,
+                                  isSaturated = FALSE,
                                   verbose = TRUE,
                                   toString = TRUE,
                                   checkargs = TRUE,
@@ -94,7 +98,18 @@ newhall_batch.default <- function(.data = NULL,
                                   overwrite = NULL) {
 
   # if newer JAR is available, use the fastest batch method
-  if (newhall_version() >= "1.6.3") {
+  if (newhall_version() >= "1.6.5") {
+    batch3(
+      .data,
+      unitSystem = unitSystem,
+      soilAirOffset = soilAirOffset,
+      amplitude = amplitude,
+      verbose = verbose,
+      toString = toString,
+      checkargs = checkargs
+    )
+  }
+  if (newhall_version() >= "1.6.3" && newhall_version() < "1.6.5") {
     batch2(
       .data,
       unitSystem = unitSystem,
@@ -330,7 +345,9 @@ batch2 <- function(.data,
     rJava::.jarray(rep(unitSystem == "cm", nrow(.data))),
     rJava::.jarray(as.double(.data$awc)),
     rJava::.jarray(rep(soilAirOffset, nrow(.data))),
-    rJava::.jarray(rep(amplitude, nrow(.data)))
+    rJava::.jarray(rep(amplitude, nrow(.data))),
+    rJava::.jarray(rep(FALSE, nrow(.data))), # O horizon
+    rJava::.jarray(rep(FALSE, nrow(.data)))  # saturation
   )
 
   b <- rJava::.jcast(res, "Lorg/psu/newhall/sim/NewhallBatchResults")
@@ -359,6 +376,144 @@ batch2 <- function(.data,
   )
   fieldsmatrix <- c("meanPotentialEvapotranspiration","temperatureCalendar", "moistureCalendar")
 
+  # convert to data frame
+  res <- lapply(fields, function(n) rJava::.jfield(b, name = n))
+  res <- lapply(res, function(x) {if (length(x) == 0) return(rep(NA, length(res[[1]]))); x})
+  res <- as.data.frame(res)
+  if (verbose) {
+    deltat <- signif(difftime(Sys.time(), t1, units = "auto"), digits = 2)
+    message(sprintf(
+      "newhall_batch: ran n=%s simulations in %s %s",
+      nrow(res), deltat, attr(deltat, 'units')
+    ))
+  }
+  colnames(res) <- fields #, fieldsmatrix
+  type.convert(res, as.is = TRUE)
+}
+
+# data.frame -> data.frame
+#'
+#' @importFrom utils type.convert
+batch3 <- function(.data,
+                   unitSystem = "metric",
+                   soilAirOffset = ifelse(unitSystem %in% 
+                                            c("in", "english"),
+                                          4.5, 2.5),
+                   amplitude = 0.66,
+                   hasOHorizon = FALSE,
+                   isSaturated = FALSE,
+                   verbose = TRUE,
+                   toString = TRUE,
+                   checkargs = TRUE) {
+  
+  t1 <- Sys.time()
+  x <- BASICSimulationModel()
+  
+  unitSystem <- match.arg(tolower(unitSystem),
+                          choices =  c("metric","mm","cm","in","english"))
+  
+  if (unitSystem %in% c("metric","mm")) {
+    # "cm" is the internal convention in the NewhallDatasetMetadata for _millimeters_ of rainfall, degrees Celsius
+    unitSystem <- "cm"
+  } else if (unitSystem == "english") {
+    # "in" is the internal convention in the NewhallDatasetMetadata for inches of rainfall, degrees Fahrenheit
+    unitSystem <- "in"
+  }
+  
+  # minimum dataset includes all of the codes specified in colnames of batch file template
+  mincols <- !(.colnamesNewhallBatch() %in% colnames(.data))
+  
+  if (sum(mincols) > 0) {
+    stop(sprintf(
+      "columns %s are required in the Newhall batch CSV input format",
+      paste0(.colnamesNewhallBatch()[mincols], collapse = ", ")
+    ), call. = FALSE)
+  }
+  
+  # convert deg F to deg C
+  .doUnitsTemp <- function(x) if (unitSystem == "in") return((x - 32) * 5 / 9) else x
+  
+  # convert inches to _millimeters_
+  .doUnitsLength <- function(x) if (unitSystem == "in") return(x * 25.4) else x
+  
+  .data <- data.frame(.data)
+  cnd <- colnames(.data)
+  .SD <- NULL
+  
+  # calculate hemisphere
+  hem <- rep(rJava::.jchar(strtoi(charToRaw('N'), 16L)), nrow(.data))
+  hem[.data$latDD < 0] <- rJava::.jchar(strtoi(charToRaw('S'), 16L))
+  
+  # handle arguments or gridded inputs for
+  #  - soil-air temperature offset
+  #  - soil temperature amplitude
+  #  - O horizon presence/absence
+  #  - saturation (50cm depth) presence/absence
+  
+  sao <- as.double(.data$soilAirOffset)
+  if (length(sao) == 0) {
+    sao <- rep(soilAirOffset, nrow(.data))
+  }
+  
+  amp <- as.double(.data$amplitude)
+  if (length(amp) == 0) {
+    amp <- rep(amplitude, nrow(.data))
+  }
+  
+  ohz <- as.logical(.data$hasOHorizon)
+  if (length(ohz) == 0) {
+    ohz <- rep(hasOHorizon, nrow(.data))
+  }
+  
+  isa <- as.logical(.data$isSaturated)
+  if (length(isa) == 0) {
+    isa <- rep(isSaturated, nrow(.data))
+  }
+  
+  res <- rJava::.jcall(x, "Lorg/psu/newhall/sim/NewhallBatchResults;", "runBatch2",
+                       # res <- x$runBatch2(
+                       rJava::.jarray(cbind(0.0, as.matrix(.data[, cnd[grep("^p[A-Z][a-z]{2}$", cnd)]])), dispatch = TRUE),
+                       rJava::.jarray(cbind(0.0, as.matrix(.data[, cnd[grep("^t[A-Z][a-z]{2}$", cnd)]])), dispatch = TRUE),
+                       rJava::.jarray(as.double(.data$latDD)),
+                       rJava::.jarray(as.double(.data$lonDD)),
+                       rJava::.jarray(rJava::.jchar(hem)),
+                       rJava::.jarray(as.double(.data$elev)),
+                       # rJava::.jarray(rJava::.jchar(c(rJava::.jchar(strtoi(charToRaw('N'), 16L)), rJava::.jchar(strtoi(charToRaw('S'), 16L))))[as.integer(.data$latDD < 0) + 1]),
+                       # rJava::.jarray(rJava::.jchar(c(rJava::.jchar(strtoi(charToRaw('E'), 16L)), rJava::.jchar(strtoi(charToRaw('W'), 16L))))[as.integer(.data$latDD > 0) + 1]),
+                       rJava::.jarray(rep(unitSystem == "cm", nrow(.data))),
+                       rJava::.jarray(as.double(.data$awc)),
+                       rJava::.jarray(sao),
+                       rJava::.jarray(amp),
+                       rJava::.jarray(ohz),
+                       rJava::.jarray(isa)
+  )
+  
+  b <- rJava::.jcast(res, "Lorg/psu/newhall/sim/NewhallBatchResults")
+  
+  #  store arrays of values as public fields of NewhallBatchResults
+  fields <- c(
+    "annualRainfall",
+    "waterHoldingCapacity",
+    "annualWaterBalance",
+    "annualPotentialEvapotranspiration",
+    "summerWaterBalance",
+    "dryDaysAfterSummerSolstice",
+    "moistDaysAfterWinterSolstice",
+    "numCumulativeDaysDry",
+    "numCumulativeDaysMoistDry",
+    "numCumulativeDaysMoist",
+    "numCumulativeDaysDryOver5C",
+    "numCumulativeDaysMoistDryOver5C",
+    "numCumulativeDaysMoistOver5C",
+    "numConsecutiveDaysMoistInSomeParts",
+    "numConsecutiveDaysMoistInSomePartsOver8C",
+    "temperatureRegime",
+    "moistureRegime",
+    "regimeSubdivision1",
+    "regimeSubdivision2"
+  )
+  fieldsmatrix <- c("meanPotentialEvapotranspiration","temperatureCalendar", "moistureCalendar")
+  
   # convert to data frame
   res <- lapply(fields, function(n) rJava::.jfield(b, name = n))
   res <- lapply(res, function(x) {if (length(x) == 0) return(rep(NA, length(res[[1]]))); x})
@@ -426,6 +581,8 @@ newhall_batch <- function(.data,
                           unitSystem = "metric",
                           soilAirOffset = ifelse(unitSystem %in% c("in", "english"), 4.5, 2.5),
                           amplitude = 0.66,
+                          hasOHorizon = FALSE,
+                          isSaturated = FALSE,
                           verbose = TRUE,
                           toString = TRUE,
                           checkargs = TRUE,
@@ -443,6 +600,8 @@ newhall_batch.character <- function(.data,
                                     unitSystem = "metric",
                                     soilAirOffset = ifelse(unitSystem %in% c("in", "english"), 4.5, 2.5),
                                     amplitude = 0.66,
+                                    hasOHorizon = FALSE,
+                                    isSaturated = FALSE,
                                     verbose = TRUE,
                                     toString = TRUE,
                                     checkargs = TRUE,
@@ -512,6 +671,8 @@ newhall_batch.SpatRaster <- function(.data,
                                      unitSystem = "metric",
                                      soilAirOffset = ifelse(unitSystem %in% c("in","english"), 4.5, 2.5),
                                      amplitude = 0.66,
+                                     hasOHorizon = FALSE,
+                                     isSaturated = FALSE,
                                      verbose = TRUE,
                                      toString = FALSE,
                                      checkargs = TRUE,
@@ -727,6 +888,8 @@ newhall_batch.RasterBrick <- function(.data,
                                       unitSystem = "metric",
                                       soilAirOffset = ifelse(unitSystem %in% c("in","english"), 4.5, 2.5),
                                       amplitude = 0.66,
+                                      hasOHorizon = FALSE,
+                                      isSaturated = FALSE,
                                       verbose = TRUE,
                                       toString = TRUE,
                                       checkargs = TRUE,
@@ -758,6 +921,8 @@ newhall_batch.RasterStack <- function(.data,
                                       unitSystem = "metric",
                                       soilAirOffset = ifelse(unitSystem %in% c("in","english"), 4.5, 2.5),
                                       amplitude = 0.66,
+                                      hasOHorizon = FALSE,
+                                      isSaturated = FALSE,
                                       verbose = TRUE,
                                       toString = TRUE,
                                       checkargs = TRUE,

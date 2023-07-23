@@ -53,4 +53,4 @@ newhall_version <- function() {
   ))
 }
 
-.get_default_suffix <- function() "-1.6.4-3"
+.get_default_suffix <- function() "-1.6.5"

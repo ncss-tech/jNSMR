@@ -14,6 +14,8 @@
   unitSystem = "metric",
   soilAirOffset = ifelse(unitSystem \%in\% c("in", "english"), 4.5, 2.5),
   amplitude = 0.66,
+  hasOHorizon = FALSE,
+  isSaturated = FALSE,
   verbose = TRUE,
   toString = TRUE,
   checkargs = TRUE,
@@ -29,6 +31,8 @@ newhall_batch(
   unitSystem = "metric",
   soilAirOffset = ifelse(unitSystem \%in\% c("in", "english"), 4.5, 2.5),
   amplitude = 0.66,
+  hasOHorizon = FALSE,
+  isSaturated = FALSE,
   verbose = TRUE,
   toString = TRUE,
   checkargs = TRUE,
@@ -44,6 +48,8 @@ newhall_batch(
   unitSystem = "metric",
   soilAirOffset = ifelse(unitSystem \%in\% c("in", "english"), 4.5, 2.5),
   amplitude = 0.66,
+  hasOHorizon = FALSE,
+  isSaturated = FALSE,
   verbose = TRUE,
   toString = TRUE,
   checkargs = TRUE,
@@ -59,6 +65,8 @@ newhall_batch(
   unitSystem = "metric",
   soilAirOffset = ifelse(unitSystem \%in\% c("in", "english"), 4.5, 2.5),
   amplitude = 0.66,
+  hasOHorizon = FALSE,
+  isSaturated = FALSE,
   verbose = TRUE,
   toString = FALSE,
   checkargs = TRUE,
@@ -75,6 +83,8 @@ newhall_batch(
   unitSystem = "metric",
   soilAirOffset = ifelse(unitSystem \%in\% c("in", "english"), 4.5, 2.5),
   amplitude = 0.66,
+  hasOHorizon = FALSE,
+  isSaturated = FALSE,
   verbose = TRUE,
   toString = TRUE,
   checkargs = TRUE,
@@ -91,6 +101,8 @@ newhall_batch(
   unitSystem = "metric",
   soilAirOffset = ifelse(unitSystem \%in\% c("in", "english"), 4.5, 2.5),
   amplitude = 0.66,
+  hasOHorizon = FALSE,
+  isSaturated = FALSE,
   verbose = TRUE,
   toString = TRUE,
   checkargs = TRUE,
@@ -107,9 +119,13 @@ newhall_batch(
 
 \item{unitSystem}{Default: \code{"metric"} OR \code{"mm"} OR \code{"cm"} use \emph{millimeters} of rainfall (default for the BASIC model); set to \code{unitSystem="english"} OR \code{unitSystem="in"} to transform English (inches of precipitation; degrees Fahrenheit) inputs to metric (millimeters of precipitation; degrees Celsius) before running simulation}
 
-\item{soilAirOffset}{air-soil temperature offset. Conventionally for jNSM: \code{2.5} for metric units (default); \code{4.5} for english units.}
+\item{soilAirOffset}{air-soil temperature offset. Conventionally for jNSM: \code{2.5} for metric units (default); \code{4.5} for english units. Can optionally be specified as a layer in a raster input.}
 
-\item{amplitude}{difference in amplitude between soil and air temperature sine waves. Default \code{0.66}}
+\item{amplitude}{difference in amplitude between soil and air temperature sine waves. Default \code{0.66}. Can optionally be specified as a layer in a raster input.}
+
+\item{hasOHorizon}{Used for cryic soil temperature regime criteria. Default: \code{FALSE}. Can optionally be specified as a layer in a raster input.}
+
+\item{isSaturated}{Used for cryic soil temperature regime and aquic soil moisture regime mask. Default: \code{FALSE}. Can optionally be specified as a layer in a raster input.}
 
 \item{verbose}{print message about number of simulations and elapsed time}
 

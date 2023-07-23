@@ -31,13 +31,14 @@
                 }
                 return new NewhallBatchResults(r);
              } 
-     public static NewhallBatchResults runBatch2(double[][] precipitation, double[][] temperature, double latitude[], double longitude[], char nsHemisphere[], double elevation[], boolean[] isMetric, double[] waterholdingCapacity, double[] fc, double[] fcd) {
+     public static NewhallBatchResults runBatch2(double[][] precipitation, double[][] temperature, double latitude[], double longitude[], char nsHemisphere[], double elevation[], boolean[] isMetric, double[] waterholdingCapacity, double[] fc, double[] fcd, boolean[] hasOHorizon, boolean[] isSaturated) {
                 NewhallResults[] r = new NewhallResults[latitude.length];
                 for (int i = 0; i <= (latitude.length - 1); i++) {
-                  r[i] = runSimulation(temperature[i], precipitation[i], latitude[i], longitude[i], elevation[i], nsHemisphere[i], isMetric[i], waterholdingCapacity[i], fc[i], fcd[i]);                                   
+                  r[i] = runSimulation(temperature[i], precipitation[i], latitude[i], longitude[i], elevation[i], nsHemisphere[i], isMetric[i], waterholdingCapacity[i], fc[i], fcd[i], hasOHorizon[i], isSaturated[i]);                                   
                 }
                 return new NewhallBatchResults(r);
              } 
+             
     public static NewhallResults runSimulation(double[] temperature, 
                                                double[] precip, 
                                                double latDD,
@@ -47,7 +48,9 @@
                                                boolean isMetric,
                                                double waterHoldingCapacity, 
                                                double fc, 
-                                               double fcd) {
+                                               double fcd,
+                                               boolean hasOHorizon,
+                                               boolean isSaturated) {
                                                    
     // This is a hack to prevent a problematic region of code from running
     // multiple times.  Problem datasets that test that this hack works
@@ -230,13 +233,25 @@
      * that is true indicates the temp regime.
      */
 
+    // properly handle cryic criteria
+    int cryic_ht = 15;
+    if (hasOHorizon) {
+        if(isSaturated) {
+            cryic_ht = 6;
+        } else {
+            cryic_ht = 8;
+        }
+    } else if (isSaturated) {
+        cryic_ht = 13;
+    }
+
     boolean[] cr = new boolean[13];
     boolean[] reg = new boolean[13];
     cr[1] = tma < 0;                      // Mean annual air temp (MAAT) < 0C.
     cr[2] = 0 <= tma && tma < 8;          // 0C <= MAAT <= 8C.
     // cr[3] = (st - cs) < 15;            // Summer temp ave minus (summer/winter difference * (1 - SOIL_AIR_REL) * 0.5) < 15C.
                                           // TODO: where did latter part ^^ (... - SWD...) of this come from? Misread cryic crit 1?
-    cr[3] = st >= 0 && st < 15;           // "non-saturated, organic surface, mean _summer_ soil temperature between 0 and 8C/15C
+    cr[3] = st >= 0 && st < cryic_ht;           // "non-saturated, organic surface, mean _summer_ soil temperature between 0 and 8C/15C
                                           // TODO: st upper limit depends on saturation, O horizon
     cr[7] = (dif * fcd) >= 6;             // Summer/winter difference * SOIL_AIR_REL >= 6 
                                           // NOTE: Taxonomy clearly states difference greater/equal than 6, not 5
