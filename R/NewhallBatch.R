@@ -380,7 +380,10 @@ batch2 <- function(.data,
 #' library(terra)
 #' 
 #' x <- terra::rast(system.file("extdata", "prism_issr800_sample.tif", package="jNSMR"))
-#' x <- c(newhall_prism_extent(ext(x) * 4), newhall_issr800_extent(ext(x) * 4))
+#' 
+#' ## optional: make larger extent (requires full cache)
+#' # x <- c(newhall_prism_extent(ext(x) * 4), newhall_issr800_extent(ext(x) * 4))
+#' 
 #' x$elev <- 0 # elevation is not currently used by the model directly
 #' 
 #' # reduce resolution (for fast example)
@@ -394,16 +397,17 @@ batch2 <- function(.data,
 #' x2$dif <- x2$msst - x2$mwst
 #' plot(x2$dif)
 #' 
-#' ## 1/10th resolution: ~3000 simulations in ~4 seconds
-#' y <- newhall_batch(x2) 
+#' ## 1/10th resolution
+#' system.time({ y <- newhall_batch(x2) })
 #' 
-#' ## ~1/3 resolution: ~30k simulations in ~40 seconds
-#' # y <- newhall_batch(aggregate(x, 3)) 
+#' ## ~1/3 resolution
+#' # system.time({  y <- newhall_batch(aggregate(x, 3)) })
 #' 
-#' ## full resolution: ~300k simulations in ~6 minutes
-#' # y <- newhall_batch(x)
+#' ## full resolution
+#' # system.time({  y <- newhall_batch(x) })
 #' 
 #' par(mfrow=c(2, 1))
+#' 
 #' terra::plot(y$annualWaterBalance, main = "Annual Water Balance (P-PET)")
 #' terra::plot(y$waterHoldingCapacity, main = "Water Holding Capacity")
 #' 
@@ -415,6 +419,7 @@ batch2 <- function(.data,
 #'             main = "# Cumulative Days Dry over 5 degrees C")
 #' terra::plot(y$numConsecutiveDaysMoistInSomePartsOver8C, cex.main=0.75,
 #'             main = "# Consecutive Days Moist\nin some parts over 8 degrees C")
+#'             
 #' par(mfrow=c(1,1))
 #' 
 newhall_batch <- function(.data,
