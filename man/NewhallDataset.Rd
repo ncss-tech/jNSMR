@@ -31,7 +31,7 @@ NewhallDataset(
 
 \item{allPrecipsDbl}{\emph{double}; length \code{12} precipitation, monthly (millimeters of water)}
 
-\item{allAirTempsDbl}{\emph{double}; length \code{12} air temperature, monthly (degrees celsius)}
+\item{allAirTempsDbl}{\emph{double}; length \code{12} air temperature, monthly (degrees Celsius)}
 
 \item{pdbegin}{\emph{integer}; beginning year}
 
