@@ -14,17 +14,25 @@ newhall_data_dir <- function(which = c("data", "config", "cache")) {
 
 #### Private general utilities ----
 
-.add_LL <- function(x) {
+.add_LL <- function(x, template = NULL) {
   # add longitude and latitude layers
+  if (is.null(template)) {
+    template <- "OGC:CRS84"
+  }
   
   if (!terra::is.lonlat(x)) {
-    x1 <- terra::project(x[[1]], "OGC:CRS84")
+    x1 <- terra::project(x[[1]], template)
+    if (!terra::is.lonlat(x1)) {
+      stop("`template` should be a longitude/latitude geographic coordinate system", 
+           call. = FALSE)
+    }
   } else {
     x1 <-  x[[1]]
   }
   
   cx <- terra::rast(list(x = terra::init(x1, "x"), 
                          y = terra::init(x1, "y")))
+  cx <- terra::project(cx, x)
   x$lonDD <- cx$x
   x$latDD <- cx$y
   x
@@ -99,7 +107,7 @@ newhall_prism_rast <- function(
   bil <- data.frame(bilfile_sub, do.call('rbind', bilmonth))
   
   if (nrow(bil) != 24) {
-    stop("One or more PRISM monthly grids is missing from ",
+    stop("One or more PRISM monthly grids are missing from ",
          file.path(PRISM_PATH, resolution),
          ".\n\tTry running `newhall_prism_cache()` to download.", call. = FALSE)
   }
@@ -107,7 +115,7 @@ newhall_prism_rast <- function(
   colnames(bil) <- c("bilfile", "variable", "product", "resolution", "month")
   f <- file.path(PRISM_PATH, resolution, bil$bilfile[which(bil$resolution == resolution)])
   if (length(f) != 24) {
-    stop("One or more PRISM monthly grids is missing from ",
+    stop("One or more PRISM monthly grids are missing from ",
          file.path(PRISM_PATH, resolution),
          ".\n\tTry running `newhall_prism_cache()` to download.", call. = FALSE)
   }
@@ -119,7 +127,9 @@ newhall_prism_rast <- function(
                                                     gsub("PRISM_(ppt|tmean)_.*[0-9]{2}_bil$", "\\1",
                                                          names(prism_rast)))),  
                               ifelse(is.na(monthnames), "", monthnames))
-  .add_LL(prism_rast)
+  
+  # use NAD83 longitude/latitude
+  .add_LL(prism_rast, newhall_nad83_template(resolution = resolution))
 }
 
 #' @description `newhall_prism_subset():` Used to create a subset of the PRISM data corresponding to the extent of an input spatial object `x`.
@@ -263,6 +273,7 @@ newhall_daymet_subset <- function(
   names(prc) <- paste0("p", month.abb)
   names(tmp) <- paste0("t", month.abb)
   
+  # use OGC:CRS84 longitude/latitude
   .add_LL(c(prc, tmp))
 }
 
@@ -306,7 +317,9 @@ newhall_daymet_subset <- function(
 
 #' Load SoilWeb "ISSR-800" at 800 meter Resolution
 #' 
-#' Currently the only ISSR-800 data are only available for the contiguous (lower 48) United States. The only property cached for use in the Newhall model is the "available water holding capacity" (sum of storage for the whole profile). For consistency with PRISM grid the values are reprojected from `"EPSG:5070"` to `"EPSG:4269"`.
+#' Currently the only ISSR-800 data are only available for the contiguous (lower 48) United States. The only property cached for use in the Newhall model is the "available water holding capacity" (sum of storage for the whole profile, in millimeters). For consistency with PRISM grid the values are reprojected from `"EPSG:5070"` to `"EPSG:4269"` (see `newhall_nad83_template()`)
+#' 
+#' @details The data are stored in centimeters on the SoilWeb server. When `newhall_issr800_cache()` saves the file the data are converted to millimeters, which is required for the Newhall model.
 #' 
 #' @param ISSR800_PATH Default: `file.path(newhall_data_dir("cache"), "SoilWeb", "800m")`
 #' @param template Template _SpatRaster_ or target CRS specification for reprojection. Default: `newhall_nad83_template()`
@@ -350,7 +363,7 @@ newhall_issr800_subset <- function(
     ISSR800_PATH = file.path(newhall_data_dir("cache"), "SoilWeb", "800m")
   ) {
   
-  issr <- newhall_issr800_rast(ISSR800_PATH)
+  issr <- newhall_issr800_rast(ISSR800_PATH = ISSR800_PATH)
   ex <- terra::project(terra::as.polygons(x, extent = TRUE), issr)
   res <- terra::crop(issr, ex)
     
