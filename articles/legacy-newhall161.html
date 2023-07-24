@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">jNSMR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
       </span>
     </div>
 
@@ -53,7 +53,7 @@
       <a href="../articles/legacy-newhall161.html">Using Legacy Newhall v1.6.1 Routines</a>
     </li>
     <li>
-      <a href="../articles/newhall-prism.html">Applying Newhall to PRISM (4km) 30-year Normals for Continental United States</a>
+      <a href="../articles/newhall-prism.html">Applying Newhall to PRISM 30-year Normals for Continental United States</a>
     </li>
   </ul>
 </li>
@@ -61,7 +61,14 @@
   <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right"></ul>
+<ul class="nav navbar-nav navbar-right">
+<li>
+  <a href="https://github.com/ncss-tech/jNSMR/" class="external-link">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
 </div>
 <!--/.nav-collapse -->
   </div>
@@ -71,41 +78,42 @@
 
       
 
-      </header><script src="legacy-newhall161_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Using Legacy Newhall v1.6.1 Routines</h1>
             
       
-      
+      <small class="dont-index">Source: <a href="https://github.com/ncss-tech/jNSMR/blob/HEAD/vignettes/legacy-newhall161.Rmd" class="external-link"><code>vignettes/legacy-newhall161.Rmd</code></a></small>
       <div class="hidden name"><code>legacy-newhall161.Rmd</code></div>
 
     </div>
 
     
     
-<p>This vignette demonstrates setting a custom <code>jNSMR.JAR_SUFFIX</code> to force use of the legacy Java Newhall Model version 1.6.1 (released 2016/02/10). See official download here: <a href="https://www.nrcs.usda.gov/wps/portal/nrcs/detail/?cid=nrcs142p2_053559" class="external-link uri">https://www.nrcs.usda.gov/wps/portal/nrcs/detail/?cid=nrcs142p2_053559</a>.</p>
-<div class="section level2">
-<h2 id="copyright-information">Copyright Information<a class="anchor" aria-label="anchor" href="#copyright-information"></a>
-</h2>
-<blockquote>
-<p>Newhall 1.6.1, Copyright (C) 2010-2011 United States Department of Agriculture - Natural Resources Conservation Service, Penn State University Center for Environmental Informatics All rights reserved.</p>
-</blockquote>
+<p>This vignette demonstrates setting a custom
+<code>jNSMR.JAR_SUFFIX</code> to force use of the legacy Java Newhall
+Model (version 1.6.1; released 2016/02/10). See official download here:
+<a href="https://www.nrcs.usda.gov/resources/education-and-teaching-materials/java-newhall-simulation-model-jnsm" class="external-link uri">https://www.nrcs.usda.gov/resources/education-and-teaching-materials/java-newhall-simulation-model-jnsm</a>.</p>
+<p>Before we load the library, set the <code>jNSMR.JAR_SUFFIX</code>
+option to indicate which JAR to load. The attach message indicates the
+JAR version loaded.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># before we load the library, set the JAR_SUFFIX option to indicate which JAR to load</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>jNSMR.JAR_SUFFIX <span class="op">=</span> <span class="st">"-1.6.1"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># onAttach message indicates JAR version loaded</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>jNSMR.JAR_SUFFIX <span class="op">=</span> <span class="st">"-1.6.1"</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ncss-tech.github.io/jNSMR">jNSMR</a></span><span class="op">)</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="run-the-basic-simulation-model">Run the BASIC simulation model<a class="anchor" aria-label="anchor" href="#run-the-basic-simulation-model"></a>
 </h3>
-<p>Create a <em>NewhallDataset</em> with <code><a href="../reference/NewhallDatasetFromPath.html">xml_NewhallDataset()</a></code> or <code><a href="../reference/NewhallDataset.html">NewhallDataset()</a></code> and associated <em>NewhallDatasetMetadata</em> with <code><a href="../reference/NewhallDatasetMetadata.html">NewhallDatasetMetadata()</a></code>.</p>
+<p>Create a <em>NewhallDataset</em> with
+<code><a href="../reference/NewhallDatasetFromPath.html">xml_NewhallDataset()</a></code> or <code><a href="../reference/NewhallDataset.html">NewhallDataset()</a></code> and
+associated <em>NewhallDatasetMetadata</em> with
+<code><a href="../reference/NewhallDatasetMetadata.html">NewhallDatasetMetadata()</a></code>.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ncss-tech.github.io/jNSMR">jNSMR</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># read single-station XML file (NewhallDataset + NewhallDatasetMetadata)</span></span>
-<span><span class="va">input_xml_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/WILLIAMSPORT_1930_1930_input.xml"</span>, package <span class="op">=</span> <span class="st">"jNSMR"</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span></span>
+<span><span class="va">input_xml_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/WILLIAMSPORT_1930_1930_input.xml"</span>, </span>
+<span>                              package <span class="op">=</span> <span class="st">"jNSMR"</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span></span>
 <span><span class="va">input_xml</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/NewhallDatasetFromPath.html">xml_NewhallDataset</a></span><span class="op">(</span><span class="va">input_xml_file</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># or specify inputs directly to the constructor</span></span>
@@ -138,57 +146,275 @@
 <div class="section level3">
 <h3 id="access-references-to-java-objects-containing-results">Access references to Java objects containing results<a class="anchor" aria-label="anchor" href="#access-references-to-java-objects-containing-results"></a>
 </h3>
-<p>Here we demonstrate how to use the <code>NewhallResults</code> object from <code><a href="../reference/newhall_simulation.html">newhall_simulation()</a></code> to get various formatted statistics, calendars and other output from a single run of the model.</p>
+<p>Here we demonstrate how to use the <code>NewhallResults</code> object
+from <code><a href="../reference/newhall_simulation.html">newhall_simulation()</a></code> to get various formatted
+statistics, calendars and other output from a single run of the
+model.</p>
 <div class="section level4">
 <h4 id="moisture-and-temperature-regime-statistics">Moisture and temperature regime statistics<a class="anchor" aria-label="anchor" href="#moisture-and-temperature-regime-statistics"></a>
 </h4>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="va">output</span><span class="op">$</span><span class="fu">getFormattedStatistics</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">#&gt; Number of Cumulative Days that the Moisture Control Section (MCS) is:</span></span>
+<span><span class="co">#&gt;   During one year is:</span></span>
+<span><span class="co">#&gt;     Dry: 67</span></span>
+<span><span class="co">#&gt;     MoistDry: 88</span></span>
+<span><span class="co">#&gt;     Moist: 205</span></span>
+<span><span class="co">#&gt;   When soil temp is above 5°C:</span></span>
+<span><span class="co">#&gt;     Dry: 48</span></span>
+<span><span class="co">#&gt;     MoistDry: 58</span></span>
+<span><span class="co">#&gt;     Moist: 118</span></span>
+<span><span class="co">#&gt; Highest number of consecutive days that the MCS is:</span></span>
+<span><span class="co">#&gt;   Moist in some parts:</span></span>
+<span><span class="co">#&gt;     Year: 293</span></span>
+<span><span class="co">#&gt;     Temp over 8°C: 166</span></span>
+<span><span class="co">#&gt;   Dry after summer solstice: 22</span></span>
+<span><span class="co">#&gt;   Moist after winter solstice: 105</span></span></code></pre>
 </div>
 <div class="section level4">
 <h4 id="moisture-calendar">Moisture calendar<a class="anchor" aria-label="anchor" href="#moisture-calendar"></a>
 </h4>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="va">output</span><span class="op">$</span><span class="fu">getFormattedMoistureCalendar</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">#&gt; 222222222222222333333333333333</span></span>
+<span><span class="co">#&gt; 333333333333333333333333333333</span></span>
+<span><span class="co">#&gt; 333333333333333333333333333333</span></span>
+<span><span class="co">#&gt; 333333333333333333333333333333</span></span>
+<span><span class="co">#&gt; 333333333333333333333333333333</span></span>
+<span><span class="co">#&gt; 333333333333333333333333333333</span></span>
+<span><span class="co">#&gt; 333333333333333333333333333333</span></span>
+<span><span class="co">#&gt; 333333333322222222222222222222</span></span>
+<span><span class="co">#&gt; 222222222222222222222222222222</span></span>
+<span><span class="co">#&gt; 222222221111111111111111111111</span></span>
+<span><span class="co">#&gt; 111111111111111111111111111111</span></span>
+<span><span class="co">#&gt; 111111111111111222222222222222</span></span></code></pre>
 </div>
 <div class="section level4">
 <h4 id="temperature-calendar">Temperature calendar<a class="anchor" aria-label="anchor" href="#temperature-calendar"></a>
 </h4>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="va">output</span><span class="op">$</span><span class="fu">getFormattedTemperatureCalendar</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">#&gt; ------------------------------</span></span>
+<span><span class="co">#&gt; ------------------------------</span></span>
+<span><span class="co">#&gt; ------------------------------</span></span>
+<span><span class="co">#&gt; ------------555555555588888888</span></span>
+<span><span class="co">#&gt; 888888888888888888888888888888</span></span>
+<span><span class="co">#&gt; 888888888888888888888888888888</span></span>
+<span><span class="co">#&gt; 888888888888888888888888888888</span></span>
+<span><span class="co">#&gt; 888888888888888888888888888888</span></span>
+<span><span class="co">#&gt; 888888888888888888888888888888</span></span>
+<span><span class="co">#&gt; 888888888888888888888888888888</span></span>
+<span><span class="co">#&gt; 88888888888888555555555555----</span></span>
+<span><span class="co">#&gt; ------------------------------</span></span></code></pre>
 </div>
 </div>
 <div class="section level3">
 <h3 id="support-for-newhall-xml-format-for-input-and-output">Support for Newhall XML format for input and output<a class="anchor" aria-label="anchor" href="#support-for-newhall-xml-format-for-input-and-output"></a>
 </h3>
-<p><code><a href="../reference/newhall_XMLStringResultsExporter.html">newhall_XMLStringResultsExporter()</a></code> returns a character vector with XML based on an input and an output object.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<p><code><a href="../reference/newhall_XMLStringResultsExporter.html">newhall_XMLStringResultsExporter()</a></code> returns a character
+vector with XML based on an input and an output object.</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># inspect XML result format</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="fu"><a href="../reference/newhall_XMLStringResultsExporter.html">newhall_XMLStringResultsExporter</a></span><span class="op">(</span><span class="va">input_xml</span>, <span class="va">output</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">#&gt; &lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span>
+<span><span class="co">#&gt; &lt;model&gt;</span></span>
+<span><span class="co">#&gt;   &lt;metadata&gt;</span></span>
+<span><span class="co">#&gt;     &lt;stninfo&gt;</span></span>
+<span><span class="co">#&gt;       &lt;nettype&gt;HCN&lt;/nettype&gt;</span></span>
+<span><span class="co">#&gt;       &lt;stnname&gt;WILLIAMSPORT&lt;/stnname&gt;</span></span>
+<span><span class="co">#&gt;       &lt;stnid /&gt;</span></span>
+<span><span class="co">#&gt;       &lt;stnelev&gt;158.0&lt;/stnelev&gt;</span></span>
+<span><span class="co">#&gt;       &lt;stateprov&gt;PA&lt;/stateprov&gt;</span></span>
+<span><span class="co">#&gt;       &lt;country&gt;US&lt;/country&gt;</span></span>
+<span><span class="co">#&gt;     &lt;/stninfo&gt;</span></span>
+<span><span class="co">#&gt;     &lt;mlra&gt;</span></span>
+<span><span class="co">#&gt;       &lt;mlraname /&gt;</span></span>
+<span><span class="co">#&gt;       &lt;mlraid&gt;0&lt;/mlraid&gt;</span></span>
+<span><span class="co">#&gt;     &lt;/mlra&gt;</span></span>
+<span><span class="co">#&gt;     &lt;cntinfo&gt;</span></span>
+<span><span class="co">#&gt;       &lt;cntper&gt;</span></span>
+<span><span class="co">#&gt;         &lt;firstname&gt;FirstName&lt;/firstname&gt;</span></span>
+<span><span class="co">#&gt;         &lt;lastname&gt;LastName&lt;/lastname&gt;</span></span>
+<span><span class="co">#&gt;         &lt;title&gt;Researcher&lt;/title&gt;</span></span>
+<span><span class="co">#&gt;       &lt;/cntper&gt;</span></span>
+<span><span class="co">#&gt;       &lt;cntorg&gt;My Organization&lt;/cntorg&gt;</span></span>
+<span><span class="co">#&gt;       &lt;cntaddr&gt;</span></span>
+<span><span class="co">#&gt;         &lt;address /&gt;</span></span>
+<span><span class="co">#&gt;         &lt;city /&gt;</span></span>
+<span><span class="co">#&gt;         &lt;stateprov /&gt;</span></span>
+<span><span class="co">#&gt;         &lt;postal /&gt;</span></span>
+<span><span class="co">#&gt;         &lt;country /&gt;</span></span>
+<span><span class="co">#&gt;       &lt;/cntaddr&gt;</span></span>
+<span><span class="co">#&gt;       &lt;cntemail /&gt;</span></span>
+<span><span class="co">#&gt;       &lt;cntphone /&gt;</span></span>
+<span><span class="co">#&gt;     &lt;/cntinfo&gt;</span></span>
+<span><span class="co">#&gt;     &lt;notes&gt;</span></span>
+<span><span class="co">#&gt;       &lt;note&gt;gaps filled by interpolation of neighboring stations&lt;/note&gt;</span></span>
+<span><span class="co">#&gt;     &lt;/notes&gt;</span></span>
+<span><span class="co">#&gt;     &lt;rundate&gt;20230723&lt;/rundate&gt;</span></span>
+<span><span class="co">#&gt;     &lt;nsmver&gt;1.6.1&lt;/nsmver&gt;</span></span>
+<span><span class="co">#&gt;     &lt;srcunitsys&gt;english&lt;/srcunitsys&gt;</span></span>
+<span><span class="co">#&gt;   &lt;/metadata&gt;</span></span>
+<span><span class="co">#&gt;   &lt;input&gt;</span></span>
+<span><span class="co">#&gt;     &lt;location&gt;</span></span>
+<span><span class="co">#&gt;       &lt;lat&gt;41.24&lt;/lat&gt;</span></span>
+<span><span class="co">#&gt;       &lt;lon&gt;-76.92&lt;/lon&gt;</span></span>
+<span><span class="co">#&gt;       &lt;usercoordfmt&gt;DD&lt;/usercoordfmt&gt;</span></span>
+<span><span class="co">#&gt;     &lt;/location&gt;</span></span>
+<span><span class="co">#&gt;     &lt;recordpd&gt;</span></span>
+<span><span class="co">#&gt;       &lt;pdtype&gt;normal&lt;/pdtype&gt;</span></span>
+<span><span class="co">#&gt;       &lt;pdbegin&gt;1930&lt;/pdbegin&gt;</span></span>
+<span><span class="co">#&gt;       &lt;pdend&gt;1930&lt;/pdend&gt;</span></span>
+<span><span class="co">#&gt;     &lt;/recordpd&gt;</span></span>
+<span><span class="co">#&gt;     &lt;precips&gt;</span></span>
+<span><span class="co">#&gt;       &lt;precip id="Jan"&gt;44.2&lt;/precip&gt;</span></span>
+<span><span class="co">#&gt;       &lt;precip id="Feb"&gt;40.39&lt;/precip&gt;</span></span>
+<span><span class="co">#&gt;       &lt;precip id="Mar"&gt;113.54&lt;/precip&gt;</span></span>
+<span><span class="co">#&gt;       &lt;precip id="Apr"&gt;96.77&lt;/precip&gt;</span></span>
+<span><span class="co">#&gt;       &lt;precip id="May"&gt;95.0&lt;/precip&gt;</span></span>
+<span><span class="co">#&gt;       &lt;precip id="Jun"&gt;98.55&lt;/precip&gt;</span></span>
+<span><span class="co">#&gt;       &lt;precip id="Jul"&gt;66.04&lt;/precip&gt;</span></span>
+<span><span class="co">#&gt;       &lt;precip id="Aug"&gt;13.46&lt;/precip&gt;</span></span>
+<span><span class="co">#&gt;       &lt;precip id="Sep"&gt;54.86&lt;/precip&gt;</span></span>
+<span><span class="co">#&gt;       &lt;precip id="Oct"&gt;6.35&lt;/precip&gt;</span></span>
+<span><span class="co">#&gt;       &lt;precip id="Nov"&gt;17.53&lt;/precip&gt;</span></span>
+<span><span class="co">#&gt;       &lt;precip id="Dec"&gt;56.39&lt;/precip&gt;</span></span>
+<span><span class="co">#&gt;     &lt;/precips&gt;</span></span>
+<span><span class="co">#&gt;     &lt;airtemps&gt;</span></span>
+<span><span class="co">#&gt;       &lt;airtemp id="Jan"&gt;-2.17&lt;/airtemp&gt;</span></span>
+<span><span class="co">#&gt;       &lt;airtemp id="Feb"&gt;0.89&lt;/airtemp&gt;</span></span>
+<span><span class="co">#&gt;       &lt;airtemp id="Mar"&gt;3.72&lt;/airtemp&gt;</span></span>
+<span><span class="co">#&gt;       &lt;airtemp id="Apr"&gt;9.11&lt;/airtemp&gt;</span></span>
+<span><span class="co">#&gt;       &lt;airtemp id="May"&gt;16.28&lt;/airtemp&gt;</span></span>
+<span><span class="co">#&gt;       &lt;airtemp id="Jun"&gt;21.11&lt;/airtemp&gt;</span></span>
+<span><span class="co">#&gt;       &lt;airtemp id="Jul"&gt;22.83&lt;/airtemp&gt;</span></span>
+<span><span class="co">#&gt;       &lt;airtemp id="Aug"&gt;21.94&lt;/airtemp&gt;</span></span>
+<span><span class="co">#&gt;       &lt;airtemp id="Sep"&gt;19.78&lt;/airtemp&gt;</span></span>
+<span><span class="co">#&gt;       &lt;airtemp id="Oct"&gt;10.5&lt;/airtemp&gt;</span></span>
+<span><span class="co">#&gt;       &lt;airtemp id="Nov"&gt;5.33&lt;/airtemp&gt;</span></span>
+<span><span class="co">#&gt;       &lt;airtemp id="Dec"&gt;-1.06&lt;/airtemp&gt;</span></span>
+<span><span class="co">#&gt;     &lt;/airtemps&gt;</span></span>
+<span><span class="co">#&gt;     &lt;smcsawc&gt;200.0&lt;/smcsawc&gt;</span></span>
+<span><span class="co">#&gt;     &lt;soilairrel&gt;</span></span>
+<span><span class="co">#&gt;       &lt;ampltd&gt;0.66&lt;/ampltd&gt;</span></span>
+<span><span class="co">#&gt;       &lt;maatmast&gt;1.2&lt;/maatmast&gt;</span></span>
+<span><span class="co">#&gt;     &lt;/soilairrel&gt;</span></span>
+<span><span class="co">#&gt;   &lt;/input&gt;</span></span>
+<span><span class="co">#&gt;   &lt;output&gt;</span></span>
+<span><span class="co">#&gt;     &lt;smrclass&gt;Ustic&lt;/smrclass&gt;</span></span>
+<span><span class="co">#&gt;     &lt;strclass&gt;Mesic&lt;/strclass&gt;</span></span>
+<span><span class="co">#&gt;     &lt;subgrpmod&gt;Wet Tempustic&lt;/subgrpmod&gt;</span></span>
+<span><span class="co">#&gt;     &lt;awb&gt;13.12&lt;/awb&gt;</span></span>
+<span><span class="co">#&gt;     &lt;swb&gt;-218.22&lt;/swb&gt;</span></span>
+<span><span class="co">#&gt;     &lt;smcstates&gt;</span></span>
+<span><span class="co">#&gt;       &lt;cumdays&gt;</span></span>
+<span><span class="co">#&gt;         &lt;yrdry&gt;67&lt;/yrdry&gt;</span></span>
+<span><span class="co">#&gt;         &lt;yrmd&gt;88&lt;/yrmd&gt;</span></span>
+<span><span class="co">#&gt;         &lt;yrmst&gt;205&lt;/yrmst&gt;</span></span>
+<span><span class="co">#&gt;         &lt;bio5dry&gt;48&lt;/bio5dry&gt;</span></span>
+<span><span class="co">#&gt;         &lt;bio5md&gt;58&lt;/bio5md&gt;</span></span>
+<span><span class="co">#&gt;         &lt;bio5mst&gt;118&lt;/bio5mst&gt;</span></span>
+<span><span class="co">#&gt;       &lt;/cumdays&gt;</span></span>
+<span><span class="co">#&gt;       &lt;consdays&gt;</span></span>
+<span><span class="co">#&gt;         &lt;yrmst&gt;293&lt;/yrmst&gt;</span></span>
+<span><span class="co">#&gt;         &lt;bio8mst&gt;166&lt;/bio8mst&gt;</span></span>
+<span><span class="co">#&gt;         &lt;smrdry&gt;22&lt;/smrdry&gt;</span></span>
+<span><span class="co">#&gt;         &lt;wtrmst&gt;105&lt;/wtrmst&gt;</span></span>
+<span><span class="co">#&gt;       &lt;/consdays&gt;</span></span>
+<span><span class="co">#&gt;     &lt;/smcstates&gt;</span></span>
+<span><span class="co">#&gt;     &lt;pets&gt;</span></span>
+<span><span class="co">#&gt;       &lt;pet id="Jan"&gt;0.0&lt;/pet&gt;</span></span>
+<span><span class="co">#&gt;       &lt;pet id="Feb"&gt;1.49&lt;/pet&gt;</span></span>
+<span><span class="co">#&gt;       &lt;pet id="Mar"&gt;11.44&lt;/pet&gt;</span></span>
+<span><span class="co">#&gt;       &lt;pet id="Apr"&gt;38.55&lt;/pet&gt;</span></span>
+<span><span class="co">#&gt;       &lt;pet id="May"&gt;90.93&lt;/pet&gt;</span></span>
+<span><span class="co">#&gt;       &lt;pet id="Jun"&gt;127.6&lt;/pet&gt;</span></span>
+<span><span class="co">#&gt;       &lt;pet id="Jul"&gt;142.1&lt;/pet&gt;</span></span>
+<span><span class="co">#&gt;       &lt;pet id="Aug"&gt;126.57&lt;/pet&gt;</span></span>
+<span><span class="co">#&gt;       &lt;pet id="Sep"&gt;96.94&lt;/pet&gt;</span></span>
+<span><span class="co">#&gt;       &lt;pet id="Oct"&gt;39.95&lt;/pet&gt;</span></span>
+<span><span class="co">#&gt;       &lt;pet id="Nov"&gt;14.39&lt;/pet&gt;</span></span>
+<span><span class="co">#&gt;       &lt;pet id="Dec"&gt;0.0&lt;/pet&gt;</span></span>
+<span><span class="co">#&gt;     &lt;/pets&gt;</span></span>
+<span><span class="co">#&gt;     &lt;calendars&gt;</span></span>
+<span><span class="co">#&gt;       &lt;tempcal&gt;</span></span>
+<span><span class="co">#&gt;         &lt;stlt5&gt;</span></span>
+<span><span class="co">#&gt;           &lt;beginday&gt;1&lt;/beginday&gt;</span></span>
+<span><span class="co">#&gt;           &lt;endday&gt;102&lt;/endday&gt;</span></span>
+<span><span class="co">#&gt;         &lt;/stlt5&gt;</span></span>
+<span><span class="co">#&gt;         &lt;st5to8&gt;</span></span>
+<span><span class="co">#&gt;           &lt;beginday&gt;103&lt;/beginday&gt;</span></span>
+<span><span class="co">#&gt;           &lt;endday&gt;112&lt;/endday&gt;</span></span>
+<span><span class="co">#&gt;         &lt;/st5to8&gt;</span></span>
+<span><span class="co">#&gt;         &lt;stgt8&gt;</span></span>
+<span><span class="co">#&gt;           &lt;beginday&gt;113&lt;/beginday&gt;</span></span>
+<span><span class="co">#&gt;           &lt;endday&gt;314&lt;/endday&gt;</span></span>
+<span><span class="co">#&gt;         &lt;/stgt8&gt;</span></span>
+<span><span class="co">#&gt;         &lt;st5to8&gt;</span></span>
+<span><span class="co">#&gt;           &lt;beginday&gt;315&lt;/beginday&gt;</span></span>
+<span><span class="co">#&gt;           &lt;endday&gt;326&lt;/endday&gt;</span></span>
+<span><span class="co">#&gt;         &lt;/st5to8&gt;</span></span>
+<span><span class="co">#&gt;         &lt;stlt5&gt;</span></span>
+<span><span class="co">#&gt;           &lt;beginday&gt;327&lt;/beginday&gt;</span></span>
+<span><span class="co">#&gt;           &lt;endday&gt;360&lt;/endday&gt;</span></span>
+<span><span class="co">#&gt;         &lt;/stlt5&gt;</span></span>
+<span><span class="co">#&gt;       &lt;/tempcal&gt;</span></span>
+<span><span class="co">#&gt;       &lt;moistcal&gt;</span></span>
+<span><span class="co">#&gt;         &lt;moistdry&gt;</span></span>
+<span><span class="co">#&gt;           &lt;beginday&gt;1&lt;/beginday&gt;</span></span>
+<span><span class="co">#&gt;           &lt;endday&gt;15&lt;/endday&gt;</span></span>
+<span><span class="co">#&gt;         &lt;/moistdry&gt;</span></span>
+<span><span class="co">#&gt;         &lt;moist&gt;</span></span>
+<span><span class="co">#&gt;           &lt;beginday&gt;16&lt;/beginday&gt;</span></span>
+<span><span class="co">#&gt;           &lt;endday&gt;220&lt;/endday&gt;</span></span>
+<span><span class="co">#&gt;         &lt;/moist&gt;</span></span>
+<span><span class="co">#&gt;         &lt;moistdry&gt;</span></span>
+<span><span class="co">#&gt;           &lt;beginday&gt;221&lt;/beginday&gt;</span></span>
+<span><span class="co">#&gt;           &lt;endday&gt;278&lt;/endday&gt;</span></span>
+<span><span class="co">#&gt;         &lt;/moistdry&gt;</span></span>
+<span><span class="co">#&gt;         &lt;dry&gt;</span></span>
+<span><span class="co">#&gt;           &lt;beginday&gt;279&lt;/beginday&gt;</span></span>
+<span><span class="co">#&gt;           &lt;endday&gt;345&lt;/endday&gt;</span></span>
+<span><span class="co">#&gt;         &lt;/dry&gt;</span></span>
+<span><span class="co">#&gt;         &lt;moistdry&gt;</span></span>
+<span><span class="co">#&gt;           &lt;beginday&gt;346&lt;/beginday&gt;</span></span>
+<span><span class="co">#&gt;           &lt;endday&gt;360&lt;/endday&gt;</span></span>
+<span><span class="co">#&gt;         &lt;/moistdry&gt;</span></span>
+<span><span class="co">#&gt;       &lt;/moistcal&gt;</span></span>
+<span><span class="co">#&gt;     &lt;/calendars&gt;</span></span>
+<span><span class="co">#&gt;   &lt;/output&gt;</span></span>
+<span><span class="co">#&gt; &lt;/model&gt;</span></span>
+<span><span class="co">#&gt; </span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="xml-file-output">XML File Output<a class="anchor" aria-label="anchor" href="#xml-file-output"></a>
 </h3>
-<p>This writes the “direct” input <em>NewhallDataset</em> (<code>input_direct</code>) and result <em>NewhallResult</em> (<code>output</code>) to an XML file with format as above.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<p>This writes the “direct” input <em>NewhallDataset</em>
+(<code>input_direct</code>) and result <em>NewhallResult</em>
+(<code>output</code>) to an XML file with format as above.</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># write XML results to file</span></span>
 <span><span class="fu"><a href="../reference/newhall_XMLResultsExporter.html">newhall_XMLResultsExporter</a></span><span class="op">(</span>dataset <span class="op">=</span> <span class="va">input_direct</span>,</span>
 <span>                           result <span class="op">=</span> <span class="va">output</span>,</span>
 <span>                           pathname <span class="op">=</span> <span class="st">"misc/WILLIAMSPORT_1930_1930_export.xml"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="graphical-user-interface-for-individual-runs-via-newhall-1-6-1-jar">Graphical User Interface for individual runs via <em>newhall-1.6.1.jar</em><a class="anchor" aria-label="anchor" href="#graphical-user-interface-for-individual-runs-via-newhall-1-6-1-jar"></a>
+<h3 id="graphical-user-interface-for-individual-runs-via-newhall-1-6-1-jar">Graphical User Interface for individual runs via
+<em>newhall-1.6.1.jar</em><a class="anchor" aria-label="anchor" href="#graphical-user-interface-for-individual-runs-via-newhall-1-6-1-jar"></a>
 </h3>
-<p><code><a href="../reference/newhall_GUI.html">newhall_GUI()</a></code> is convenience method to open the Newhall GUI (single runs in v1.6.1 only) with the R package.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<p><code><a href="../reference/newhall_GUI.html">newhall_GUI()</a></code> is convenience method to open the Newhall
+GUI (single runs in v1.6.1 only) with the R package.</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/newhall_GUI.html">newhall_GUI</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-</div>
 </div>
 <div class="section level2">
 <h2 id="detaching-the-package">Detaching the Package<a class="anchor" aria-label="anchor" href="#detaching-the-package"></a>
 </h2>
-<p>If you need to switch back and forth between different versions of the model JAR file within a single R session, you will need to <code><a href="https://rdrr.io/r/base/detach.html" class="external-link">detach()</a></code> the package and unset any options such as <code>jNSMR.JAR_SUFFIX</code> before reloading with a new JAR.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<p>If you need to switch back and forth between different versions of
+the model JAR file within a single R session, you will need to
+<code><a href="https://rdrr.io/r/base/detach.html" class="external-link">detach()</a></code> the package and unset any options such as
+<code>jNSMR.JAR_SUFFIX</code> before reloading with a new JAR.</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/detach.html" class="external-link">detach</a></span><span class="op">(</span><span class="st">"package:jNSMR"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>jNSMR.JAR_SUFFIX <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -211,7 +437,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>

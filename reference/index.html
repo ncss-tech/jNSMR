@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">jNSMR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
       </span>
     </div>
 
@@ -35,13 +35,19 @@
       <a href="../articles/legacy-newhall161.html">Using Legacy Newhall v1.6.1 Routines</a>
     </li>
     <li>
-      <a href="../articles/newhall-prism.html">Applying Newhall to PRISM (4km) 30-year Normals for Continental United States</a>
+      <a href="../articles/newhall-prism.html">Applying Newhall to PRISM 30-year Normals for Continental United States</a>
     </li>
   </ul></li>
 <li>
   <a href="../news/index.html">Changelog</a>
 </li>
-      </ul><ul class="nav navbar-nav navbar-right"></ul></div><!--/.nav-collapse -->
+      </ul><ul class="nav navbar-nav navbar-right"><li>
+  <a href="https://github.com/ncss-tech/jNSMR/" class="external-link">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul></div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
@@ -110,9 +116,25 @@
         </td>
         <td><p>Export Newhall Results, Data and Metadata to XML string with <em>XMLStringResultsExporter</em></p></td>
       </tr><tr><td>
-          <p><code><a href="newhall_batch.html">newhall_batch(<i>&lt;default&gt;</i>)</a></code> <code><a href="newhall_batch.html">newhall_batch(<i>&lt;character&gt;</i>)</a></code> <code><a href="newhall_batch.html">newhall_batch(<i>&lt;SpatRaster&gt;</i>)</a></code> <code><a href="newhall_batch.html">newhall_batch(<i>&lt;RasterBrick&gt;</i>)</a></code> <code><a href="newhall_batch.html">newhall_batch(<i>&lt;RasterStack&gt;</i>)</a></code> </p>
+          <p><code><a href="newhall_batch.html">newhall_batch()</a></code> </p>
         </td>
         <td><p>Run Newhall Soil Climate Simulations</p></td>
+      </tr><tr><td>
+          <p><code><a href="newhall_data_dir.html">newhall_data_dir()</a></code> </p>
+        </td>
+        <td><p>Newhall Data Directory</p></td>
+      </tr><tr><td>
+          <p><code><a href="newhall_daymet.html">newhall_daymet_subset()</a></code> </p>
+        </td>
+        <td><p>Load DAYMET Monthly Data at 1 kilometer Resolution</p></td>
+      </tr><tr><td>
+          <p><code><a href="newhall_issr800.html">newhall_issr800_cache()</a></code> <code><a href="newhall_issr800.html">newhall_issr800_subset()</a></code> <code><a href="newhall_issr800.html">newhall_issr800_rast()</a></code> </p>
+        </td>
+        <td><p>Load SoilWeb "ISSR-800" at 800 meter Resolution</p></td>
+      </tr><tr><td>
+          <p><code><a href="newhall_prism.html">newhall_prism_cache()</a></code> <code><a href="newhall_prism.html">newhall_prism_rast()</a></code> <code><a href="newhall_prism.html">newhall_prism_subset()</a></code> <code><a href="newhall_prism.html">newhall_nad83_template()</a></code> </p>
+        </td>
+        <td><p>Load PRISM Monthly "Normals" at 800 meter or 4 kilometer Resolution</p></td>
       </tr><tr><td>
           <p><code><a href="newhall_simulation.html">newhall_simulation()</a></code> </p>
         </td>
@@ -134,7 +156,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

@@ -22,7 +22,7 @@ newhall_batch(&amp;lt;RasterStack&amp;gt;)- a RasterStack object, containing the
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">jNSMR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
       </span>
     </div>
 
@@ -40,13 +40,19 @@ newhall_batch(&amp;lt;RasterStack&amp;gt;)- a RasterStack object, containing the
       <a href="../articles/legacy-newhall161.html">Using Legacy Newhall v1.6.1 Routines</a>
     </li>
     <li>
-      <a href="../articles/newhall-prism.html">Applying Newhall to PRISM (4km) 30-year Normals for Continental United States</a>
+      <a href="../articles/newhall-prism.html">Applying Newhall to PRISM 30-year Normals for Continental United States</a>
     </li>
   </ul></li>
 <li>
   <a href="../news/index.html">Changelog</a>
 </li>
-      </ul><ul class="nav navbar-nav navbar-right"></ul></div><!--/.nav-collapse -->
+      </ul><ul class="nav navbar-nav navbar-right"><li>
+  <a href="https://github.com/ncss-tech/jNSMR/" class="external-link">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul></div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
@@ -56,7 +62,7 @@ newhall_batch(&amp;lt;RasterStack&amp;gt;)- a RasterStack object, containing the
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Run Newhall Soil Climate Simulations</h1>
-    
+    <small class="dont-index">Source: <a href="https://github.com/ncss-tech/jNSMR/blob/HEAD/R/NewhallBatch.R" class="external-link"><code>R/NewhallBatch.R</code></a></small>
     <div class="hidden name"><code>newhall_batch.Rd</code></div>
     </div>
 
@@ -77,9 +83,25 @@ newhall_batch(&amp;lt;RasterStack&amp;gt;)- a RasterStack object, containing the
 <span>  toString <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  checkargs <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  cores <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  core_thresh <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  file <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  nrows <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  overwrite <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">newhall_batch</span><span class="op">(</span></span>
+<span>  <span class="va">.data</span>,</span>
+<span>  unitSystem <span class="op">=</span> <span class="st">"metric"</span>,</span>
+<span>  soilAirOffset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">unitSystem</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"in"</span>, <span class="st">"english"</span><span class="op">)</span>, <span class="fl">4.5</span>, <span class="fl">2.5</span><span class="op">)</span>,</span>
+<span>  amplitude <span class="op">=</span> <span class="fl">0.66</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  toString <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  checkargs <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  cores <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  core_thresh <span class="op">=</span> <span class="fl">25000L</span>,</span>
+<span>  file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">".tif"</span><span class="op">)</span>,</span>
+<span>  nrows <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">.data</span><span class="op">)</span>,</span>
+<span>  overwrite <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for character</span></span>
@@ -92,6 +114,7 @@ newhall_batch(&amp;lt;RasterStack&amp;gt;)- a RasterStack object, containing the
 <span>  toString <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  checkargs <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  cores <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  core_thresh <span class="op">=</span> <span class="fl">25000L</span>,</span>
 <span>  file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">".tif"</span><span class="op">)</span>,</span>
 <span>  nrows <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">.data</span><span class="op">)</span>,</span>
 <span>  overwrite <span class="op">=</span> <span class="cn">TRUE</span></span>
@@ -107,8 +130,10 @@ newhall_batch(&amp;lt;RasterStack&amp;gt;)- a RasterStack object, containing the
 <span>  toString <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  checkargs <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  cores <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  core_thresh <span class="op">=</span> <span class="fl">25000L</span>,</span>
 <span>  file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">".tif"</span><span class="op">)</span>,</span>
-<span>  nrows <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">.data</span><span class="op">)</span>,</span>
+<span>  nrows <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">.data</span><span class="op">)</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">.data</span><span class="op">)</span> <span class="op">&lt;</span> <span class="va">core_thresh</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">.data</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">floor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">.data</span><span class="op">)</span></span>
+<span>    <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">.data</span><span class="op">)</span><span class="op">/</span><span class="op">(</span><span class="va">core_thresh</span> <span class="op">*</span> <span class="va">cores</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  overwrite <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
@@ -122,8 +147,10 @@ newhall_batch(&amp;lt;RasterStack&amp;gt;)- a RasterStack object, containing the
 <span>  toString <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  checkargs <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  cores <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  core_thresh <span class="op">=</span> <span class="fl">25000L</span>,</span>
 <span>  file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">".tif"</span><span class="op">)</span>,</span>
-<span>  nrows <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">.data</span><span class="op">)</span>,</span>
+<span>  nrows <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">.data</span><span class="op">)</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">.data</span><span class="op">)</span> <span class="op">&lt;</span> <span class="va">core_thresh</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">.data</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">floor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">.data</span><span class="op">)</span></span>
+<span>    <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">.data</span><span class="op">)</span><span class="op">/</span><span class="op">(</span><span class="va">core_thresh</span> <span class="op">*</span> <span class="va">cores</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  overwrite <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
@@ -137,8 +164,10 @@ newhall_batch(&amp;lt;RasterStack&amp;gt;)- a RasterStack object, containing the
 <span>  toString <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  checkargs <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  cores <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  core_thresh <span class="op">=</span> <span class="fl">25000L</span>,</span>
 <span>  file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">".tif"</span><span class="op">)</span>,</span>
-<span>  nrows <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">.data</span><span class="op">)</span>,</span>
+<span>  nrows <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">.data</span><span class="op">)</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">.data</span><span class="op">)</span> <span class="op">&lt;</span> <span class="va">core_thresh</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">.data</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">floor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">.data</span><span class="op">)</span></span>
+<span>    <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">.data</span><span class="op">)</span><span class="op">/</span><span class="op">(</span><span class="va">core_thresh</span> <span class="op">*</span> <span class="va">cores</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  overwrite <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -146,7 +175,7 @@ newhall_batch(&amp;lt;RasterStack&amp;gt;)- a RasterStack object, containing the
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>.data</dt>
-<dd><p>a <em>data.frame</em> or <em>character</em> vector of paths to CSV files; or a SpatRaster or RasterStack containin the same data elements and names as included in the batch <code>data.frame</code>/CSV format</p></dd>
+<dd><p>a <em>data.frame</em> or <em>character</em> vector of paths to CSV files; or a SpatRaster or RasterStack containing the same data elements and names as included in the batch <code>data.frame</code>/CSV format</p></dd>
 
 
 <dt>unitSystem</dt>
@@ -174,19 +203,23 @@ newhall_batch(&amp;lt;RasterStack&amp;gt;)- a RasterStack object, containing the
 
 
 <dt>cores</dt>
-<dd><p>number of cores; used only for processing <em>SpatRaster</em> or <em>Raster*</em> input</p></dd>
+<dd><p>integer. Number of cores; used only for processing <em>SpatRaster</em> or <em>Raster*</em> input. Default: <code>1</code> processes batches sequentially.</p></dd>
+
+
+<dt>core_thresh</dt>
+<dd><p>integer. Approximate number of cells to target per core and batch; used to calculate default value for <code>nrows</code>. Default <code>25000</code> cells.</p></dd>
 
 
 <dt>file</dt>
-<dd><p>path to write incremental raster processing output for large inputs that do not fit in memory; passed to <code><a href="https://rdrr.io/pkg/terra/man/readwrite.html" class="external-link">terra::writeStart()</a></code> and used only for processing <em>SpatRaster</em> or <em>Raster*</em> input; defaults to a temporary file created by <code><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile()</a></code> if needed</p></dd>
+<dd><p>character. Path to write incremental raster processing output for large inputs that do not fit in memory; passed to <code><a href="https://rdrr.io/pkg/terra/man/readwrite.html" class="external-link">terra::writeStart()</a></code> and used only for processing <em>SpatRaster</em> or <em>Raster*</em> input; defaults to a temporary file created by <code><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile()</a></code> if needed</p></dd>
 
 
 <dt>nrows</dt>
-<dd><p>number of rows to use per block; passed to <code><a href="https://rdrr.io/pkg/terra/man/readwrite.html" class="external-link">terra::readValues()</a></code> <code><a href="https://rdrr.io/pkg/terra/man/readwrite.html" class="external-link">terra::writeValues()</a></code>; used only for processing <em>SpatRaster</em> or <em>Raster*</em> input; defaults to number of rows in dataset if needed</p></dd>
+<dd><p>integer. Number of rows to use per block; passed to <code><a href="https://rdrr.io/pkg/terra/man/readwrite.html" class="external-link">terra::readValues()</a></code> <code><a href="https://rdrr.io/pkg/terra/man/readwrite.html" class="external-link">terra::writeValues()</a></code>; used only for processing <em>SpatRaster</em> or <em>Raster*</em> input; defaults to number of rows in <code>.data</code> if it is small. If the number of cells in <code>.data</code> exceeds <code>core_thresh</code>, then the number of rows is calculated based on the number of cells in <code>.data</code>, <code>core_thresh</code> and <code>cores</code>.</p></dd>
 
 
 <dt>overwrite</dt>
-<dd><p>logical; overwrite <code>file</code>? passed to <code><a href="https://rdrr.io/pkg/terra/man/readwrite.html" class="external-link">terra::writeStart()</a></code>; defaults to <code>TRUE</code> if needed</p></dd>
+<dd><p>logical. Overwrite <code>file</code>? passed to <code><a href="https://rdrr.io/pkg/terra/man/readwrite.html" class="external-link">terra::writeStart()</a></code>; defaults to <code>TRUE</code> if needed</p></dd>
 
 </dl></div>
     <div id="value">
@@ -265,6 +298,63 @@ newhall_batch(&amp;lt;RasterStack&amp;gt;)- a RasterStack object, containing the
 </ul></div>
     </div>
 
+    <div id="ref-examples">
+    <h2>Examples</h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/" class="external-link">terra</a></span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> terra 1.7.39</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"prism_issr800_sample.tif"</span>, package<span class="op">=</span><span class="st">"jNSMR"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## optional: make larger extent (requires full cache)</span></span></span>
+<span class="r-in"><span><span class="co"># x &lt;- c(newhall_prism_extent(ext(x) * 4), newhall_issr800_extent(ext(x) * 4))</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">x</span><span class="op">$</span><span class="va">elev</span> <span class="op">&lt;-</span> <span class="fl">0</span> <span class="co"># elevation is not currently used by the model directly</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># reduce resolution (for fast example)</span></span></span>
+<span class="r-in"><span><span class="va">x2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/aggregate.html" class="external-link">aggregate</a></span><span class="op">(</span><span class="va">x</span>, <span class="fl">10</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># calculate winter, summer and annual average temperatures</span></span></span>
+<span class="r-in"><span><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">x2</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">x2</span><span class="op">$</span><span class="va">mwst</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowMeans</a></span><span class="op">(</span><span class="va">d</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"tDec"</span>,<span class="st">"tJan"</span>,<span class="st">"tFeb"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">x2</span><span class="op">$</span><span class="va">msst</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowMeans</a></span><span class="op">(</span><span class="va">d</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"tJun"</span>,<span class="st">"tJul"</span>,<span class="st">"tAug"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span> </span></span>
+<span class="r-in"><span><span class="va">x2</span><span class="op">$</span><span class="va">mast</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowMeans</a></span><span class="op">(</span><span class="va">d</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"t"</span>, <span class="va">month.abb</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">x2</span><span class="op">$</span><span class="va">dif</span> <span class="op">&lt;-</span> <span class="va">x2</span><span class="op">$</span><span class="va">msst</span> <span class="op">-</span> <span class="va">x2</span><span class="op">$</span><span class="va">mwst</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">x2</span><span class="op">$</span><span class="va">dif</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="newhall_batch-1.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## 1/10th resolution</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="op">{</span> <span class="va">y</span> <span class="op">&lt;-</span> <span class="fu">newhall_batch</span><span class="op">(</span><span class="va">x2</span><span class="op">)</span> <span class="op">}</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> newhall_batch: ran n=204 simulations in 0.41 secs</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    user  system elapsed </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.915   0.016   0.572 </span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## ~1/3 resolution</span></span></span>
+<span class="r-in"><span><span class="co"># system.time({  y &lt;- newhall_batch(aggregate(x, 3)) })</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## full resolution</span></span></span>
+<span class="r-in"><span><span class="co"># system.time({  y &lt;- newhall_batch(x) })</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">y</span><span class="op">$</span><span class="va">annualWaterBalance</span>, main <span class="op">=</span> <span class="st">"Annual Water Balance (P-PET)"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">y</span><span class="op">$</span><span class="va">waterHoldingCapacity</span>, main <span class="op">=</span> <span class="st">"Water Holding Capacity"</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="newhall_batch-2.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">y</span><span class="op">$</span><span class="va">temperatureRegime</span>, main <span class="op">=</span> <span class="st">"Temperature Regime"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">y</span><span class="op">$</span><span class="va">moistureRegime</span>, main <span class="op">=</span> <span class="st">"Moisture Regime"</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="newhall_batch-3.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">y</span><span class="op">$</span><span class="va">numCumulativeDaysDryOver5C</span>, cex.main<span class="op">=</span><span class="fl">0.75</span>,</span></span>
+<span class="r-in"><span>            main <span class="op">=</span> <span class="st">"# Cumulative Days Dry over 5 degrees C"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">y</span><span class="op">$</span><span class="va">numConsecutiveDaysMoistInSomePartsOver8C</span>, cex.main<span class="op">=</span><span class="fl">0.75</span>,</span></span>
+<span class="r-in"><span>            main <span class="op">=</span> <span class="st">"# Consecutive Days Moist\nin some parts over 8 degrees C"</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="newhall_batch-4.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span>            </span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>
@@ -277,7 +367,7 @@ newhall_batch(&amp;lt;RasterStack&amp;gt;)- a RasterStack object, containing the
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">jNSMR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
       </span>
     </div>
 
@@ -35,13 +35,19 @@
       <a href="../articles/legacy-newhall161.html">Using Legacy Newhall v1.6.1 Routines</a>
     </li>
     <li>
-      <a href="../articles/newhall-prism.html">Applying Newhall to PRISM (4km) 30-year Normals for Continental United States</a>
+      <a href="../articles/newhall-prism.html">Applying Newhall to PRISM 30-year Normals for Continental United States</a>
     </li>
   </ul></li>
 <li>
   <a href="../news/index.html">Changelog</a>
 </li>
-      </ul><ul class="nav navbar-nav navbar-right"></ul></div><!--/.nav-collapse -->
+      </ul><ul class="nav navbar-nav navbar-right"><li>
+  <a href="https://github.com/ncss-tech/jNSMR/" class="external-link">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul></div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
@@ -51,13 +57,30 @@
   <div class="col-md-9 contents">
     <div class="page-header">
       <h1 data-toc-skip>Changelog <small></small></h1>
-      
+      <small>Source: <a href="https://github.com/ncss-tech/jNSMR/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
     <div class="section level2">
+<h2 class="page-header" data-toc-text="0.2.0" id="jnsmr-020">jNSMR 0.2.0<a class="anchor" aria-label="anchor" href="#jnsmr-020"></a></h2>
+<ul><li>
+<p>Added helper functions for raster input data preparation. Initial sources include:</p>
+<ul><li>PRISM monthly climate “normals,” DAYMET monthly aggregated climate, SoilWeb ISSR800 (Available Water Storage Capacity)</li>
+</ul></li>
+<li><p>Added sample data (PRISM+ISSR800, DAYMET+ISSR800 in GeoTIFF format) to inst/extdata</p></li>
+<li><p>Added <code>core_thresh</code> argument to <code><a href="../reference/newhall_batch.html">newhall_batch()</a></code> and better heuristics for <code>nrows</code> with and without multiple <code>cores</code></p></li>
+<li><p>Recompiled JAR v1.6.4</p></li>
+<li><p>Abstracted out longitude/latitude grid calculation, use <code>"OGC:CRS84"</code> for consistent determinations globally</p></li>
+<li>
+<p>Add <code><a href="../reference/newhall_prism.html">newhall_prism_subset()</a></code> and <code>"extdata/prism_issr800_sample.tif"</code> <code><a href="../reference/newhall_daymet.html">newhall_daymet_subset()</a></code> and <code>"extdata/daymet_issr800_sample.tif"</code></p>
+<ul><li>GeoTIFF files use <code>"INT2S"</code> (signed, two byte integer) datatype with <code>"LZW"</code> compression and <code>"PREDICTOR=2"</code> for small file size</li>
+</ul></li>
+<li><p>Set minimum R version to 4.0.0 (for <code><a href="https://rdrr.io/r/tools/userdir.html" class="external-link">tools::R_user_dir()</a></code>)</p></li>
+</ul></div>
+    <div class="section level2">
 <h2 class="page-header" data-toc-text="0.1.1" id="jnsmr-011">jNSMR 0.1.1<a class="anchor" aria-label="anchor" href="#jnsmr-011"></a></h2>
-<ul><li><p>Several fixes related to “Undefined” factor levels for moisture regime and moisture regime subdivisions in the <code>newhall_batch(&lt;SpatRaster&gt;)</code> method (#8)</p></li>
+<ul><li><p>Several fixes related to “Undefined” factor levels for moisture regime and moisture regime subdivisions in the <code>newhall_batch(&lt;SpatRaster&gt;)</code> method (<a href="https://github.com/ncss-tech/jNSMR/issues/8" class="external-link">#8</a>)</p></li>
 <li><p>Fixed layer names for the categorical results in the <code>newhall_batch(&lt;SpatRaster&gt;)</code> method</p></li>
+<li><p>Set minimum R version to 3.6.0 (based on {rJava})</p></li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.1.0" id="jnsmr-010">jNSMR 0.1.0<a class="anchor" aria-label="anchor" href="#jnsmr-010"></a></h2>
@@ -66,7 +89,8 @@
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.0.0.9010" id="jnsmr-0009010">jNSMR 0.0.0.9010<a class="anchor" aria-label="anchor" href="#jnsmr-0009010"></a></h2>
-<ul><li>New JAR file v1.6.4: adds a new result <code>annualPotentialEvapotranspiration</code> (sum of mean monthly PET) to <em>NewhallBatchResults</em> class</li></ul></div>
+<ul><li>New JAR file v1.6.4: adds a new result <code>annualPotentialEvapotranspiration</code> (sum of mean monthly PET) to <em>NewhallBatchResults</em> class</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.0.0.9009" id="jnsmr-0009009">jNSMR 0.0.0.9009<a class="anchor" aria-label="anchor" href="#jnsmr-0009009"></a></h2>
 <ul><li><p>Fixed multicore support in <code>newhall_batch(&lt;SpatRaster&gt;)</code></p></li>
@@ -74,7 +98,8 @@
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.0.0.9008" id="jnsmr-0009008">jNSMR 0.0.0.9008<a class="anchor" aria-label="anchor" href="#jnsmr-0009008"></a></h2>
-<ul><li>New JAR file v1.6.3: optimizes interface for batching in Java using simpler data structures better suited to high throughput</li></ul></div>
+<ul><li>New JAR file v1.6.3: optimizes interface for batching in Java using simpler data structures better suited to high throughput</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.0.0.9007" id="jnsmr-0009007">jNSMR 0.0.0.9007<a class="anchor" aria-label="anchor" href="#jnsmr-0009007"></a></h2>
 <ul><li><p>Add SpatRaster and RasterBrick <code><a href="../reference/newhall_batch.html">newhall_batch()</a></code> methods for raster input</p></li>
@@ -83,7 +108,8 @@
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.0.0.9006" id="jnsmr-0009006">jNSMR 0.0.0.9006<a class="anchor" aria-label="anchor" href="#jnsmr-0009006"></a></h2>
 <ul><li>Added PRISM demo (using data.frame interface) for <code><a href="../reference/newhall_batch.html">newhall_batch()</a></code>
-</li></ul></div>
+</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.0.0.9005" id="jnsmr-0009005">jNSMR 0.0.0.9005<a class="anchor" aria-label="anchor" href="#jnsmr-0009005"></a></h2>
 <ul><li><p>Deprecated the JDOM API (JAR v1.6.1 provides legacy support for XML file formats etc.)</p></li>
@@ -98,13 +124,16 @@
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.0.0.9003" id="jnsmr-0009003">jNSMR 0.0.0.9003<a class="anchor" aria-label="anchor" href="#jnsmr-0009003"></a></h2>
-<ul><li>Optimization of <code><a href="../reference/newhall_batch.html">newhall_batch()</a></code> (converting everything to <code><a href="https://rdrr.io/pkg/rJava/man/jcall.html" class="external-link">rJava::.jcall()</a></code>)</li></ul></div>
+<ul><li>Optimization of <code><a href="../reference/newhall_batch.html">newhall_batch()</a></code> (converting everything to <code><a href="https://rdrr.io/pkg/rJava/man/jcall.html" class="external-link">rJava::.jcall()</a></code>)</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.0.0.9002" id="jnsmr-0009002">jNSMR 0.0.0.9002<a class="anchor" aria-label="anchor" href="#jnsmr-0009002"></a></h2>
-<ul><li>Added a <code>NEWS.md</code> file to track changes to the package.</li></ul></div>
+<ul><li>Added a <code>NEWS.md</code> file to track changes to the package.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.0.0.9001" id="jnsmr-0009001">jNSMR 0.0.0.9001<a class="anchor" aria-label="anchor" href="#jnsmr-0009001"></a></h2>
-<ul><li>jNSM source code and initial R package structure (d992732)</li></ul></div>
+<ul><li>jNSM source code and initial R package structure (d992732)</li>
+</ul></div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -119,7 +148,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>
