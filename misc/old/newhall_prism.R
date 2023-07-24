@@ -19,8 +19,8 @@ if (length(bilfile) == 0) {
 }
 
 # capture file name components
-monthly.pattern <- ".*PRISM_([a-z]+)_(30yr_normal)_(\\d+[a-z]+)M[23]_(\\d{2})_bil\\.bil"
-bilfile_sub <- bilfile[grep(monthly.pattern, bilfile)]
+monthly.pattern <- ".*PRISM_([a-z]+)_(30yr_normal)_(\\d+[a-z]+)M[1-9]_(\\d{2})_bil\\.bil"
+bilfile_sub <- bilfile[grep(monthly.pattern, basename(bilfile))]
 bilmonth <- strsplit(gsub(monthly.pattern,  "\\1;\\2;\\3;\\4", bilfile_sub), ";")
 bil <- data.frame(bilfile_sub, do.call('rbind', bilmonth))
 colnames(bil) <- c("bilfile","variable","product","resolution","month")
@@ -52,20 +52,20 @@ bdy <- soilDB::fetchSDA_spatial(#c("CA067", "CA620", "CA628",
 x <- terra::crop(prism_rast, terra::vect(bdy))
 
 # PRISM info
-x$stationName <- 1:ncell(x)
+# x$stationName <- 1:ncell(x)
 x$awc <- 200
-x$maatmast <- 1.2
-x$pdType <- "Normal"
-x$pdStartYr <- 1981
-x$pdEndYr <- 2010
-x$cntryCode <- "US"
+# x$maatmast <- 1.2
+# x$pdType <- "Normal"
+# x$pdStartYr <- 1981
+# x$pdEndYr <- 2010
+# x$cntryCode <- "US"
 
 # boilerplate minimum metadata -- these are not used by the algorithm
-x$netType <- ""
+# x$netType <- ""
 x$elev <- -9999
-x$stProvCode <- ""
-x$notes <- ""
-x$stationID <-1:ncell(x)
+# x$stProvCode <- ""
+# x$notes <- ""
+# x$stationID <-1:ncell(x)
 
 # .data <- x
 
@@ -74,7 +74,7 @@ x$stationID <-1:ncell(x)
 # d <- as.data.frame(x)
 # system.time(res <- jNSMR::newhall_batch(d))
 system.time(res <- jNSMR::newhall_batch(x))
-system.time(res <- jNSMR::newhall_batch(x, cores = 8, nrows = 75))
+# system.time(res <- jNSMR::newhall_batch(x, cores = 8, nrows = 75))
 
 # # plot(prism_rast)
 # plot(res$moistureRegime)
@@ -115,20 +115,20 @@ plot(sf::st_geometry(sapoly2), add=TRUE)
 plot(sapoly2['taxtempregime'])
 
 # PRISM info
-prism_rast$stationName <- 1:ncell(prism_rast)
-prism_rast$awc <- rep(200, ncell(prism_rast))
-prism_rast$maatmast <- rep(1.2, ncell(prism_rast))
-prism_rast$pdType <- rep("Normal", ncell(prism_rast))
-prism_rast$pdStartYr <- rep(1981, ncell(prism_rast))
-prism_rast$pdEndYr <- rep(2010, ncell(prism_rast))
-prism_rast$cntryCode <- rep("US", ncell(prism_rast))
-
-# boilerplate minimum metadata -- these are not used by the algorithm
-prism_rast$netType <- rep("", ncell(prism_rast))
-prism_rast$elev <- rep(-9999, ncell(prism_rast))
-prism_rast$stProvCode <- rep("", ncell(prism_rast))
-prism_rast$notes <- rep("", ncell(prism_rast))
-prism_rast$stationID <- 1:ncell(prism_rast)
+# prism_rast$stationName <- 1:ncell(prism_rast)
+# prism_rast$awc <- rep(200, ncell(prism_rast))
+# prism_rast$maatmast <- rep(1.2, ncell(prism_rast))
+# prism_rast$pdType <- rep("Normal", ncell(prism_rast))
+# prism_rast$pdStartYr <- rep(1981, ncell(prism_rast))
+# prism_rast$pdEndYr <- rep(2010, ncell(prism_rast))
+# prism_rast$cntryCode <- rep("US", ncell(prism_rast))
+# 
+# # boilerplate minimum metadata -- these are not used by the algorithm
+# prism_rast$netType <- rep("", ncell(prism_rast))
+# prism_rast$elev <- rep(-9999, ncell(prism_rast))
+# prism_rast$stProvCode <- rep("", ncell(prism_rast))
+# prism_rast$notes <- rep("", ncell(prism_rast))
+# prism_rast$stationID <- 1:ncell(prism_rast)
 
 # data.frame interface
 # prism_frame <- as.data.frame(terra::as.points(prism_rast))
@@ -138,15 +138,19 @@ prism_rast$stationID <- 1:ncell(prism_rast)
 
 # try this
 terra::writeRaster(prism_rast, "prism_in.tif", overwrite=TRUE)
-resbig <- newhall_batch(terra::rast("prism_in.tif"), cores = 3)
-terra::writeRaster(resbig,  "newhall_results_20211217.tif", overwrite=TRUE)
-
+x <- terra::rast("prism_in.tif")
+x$awc <- 200
+x$elev <- 0
+# x <- crop(x, ext(x) / 100)
+resbig <- newhall_batch(x, cores = 3)
+# terra::writeRaster(resbig,  "newhall_results_20211217.tif", 
+#                    overwrite = TRUE)
 plot(resbig)
 
 system.time(res <- jNSMR::newhall_batch(x))
 # write to file
 afile <- tempfile()
-write.csv(test_set, file = afile) #"misc/prism_monthly.csv")
+write.csv(as.data.frame(x), file = afile) #"misc/prism_monthly.csv")
 test_set <- read.csv(afile)#"misc/prism_monthly.csv")
 
 # read batch file(s), run simulations. 

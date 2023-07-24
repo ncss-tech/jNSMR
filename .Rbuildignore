@@ -8,6 +8,6 @@
 README.Rmd
 ^_pkgdown\.yml$
 ^pkgdown$
-\.tif$
 \.xml$
 \.zip$
+^data-raw$
