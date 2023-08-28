@@ -58,10 +58,10 @@ r2$stationName <- NULL; r2$stationID <- NULL; r2$notes <- NULL; r2$stProvCode <-
 
 #system.time(resbig <- newhall_batch(r2))
 system.time({resbig <- newhall_batch(r2, cores = 8, nrows = 6)})
-terra::writeRaster(resbig, filename = "newhall_conus_800m_AWS.tif")
-#
+x <- terra::writeRaster(resbig, filename = "newhall_conus_800m_AWS.tif")
+
 # x <- rast("newhall_conus_800m_200mm.tif")
-# x <- project(x, "EPSG:5070", filename = "newhall_conus_800m_200mm_epsg5070.tif")
+# x <- project(x, "EPSG:5070", filename = "newhall_conus_800m_AWS_epsg5070.tif")
 # plot(x$numCumulativeDaysMoistOver5C,
 #      col = rev(hcl.colors(360, palette = "cividis")),
 #      main = "# of Cumulative Days Moist Over 5 degrees C")

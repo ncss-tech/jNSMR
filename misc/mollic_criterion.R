@@ -2,7 +2,9 @@ library(jNSMR)
 library(terra)
 data("us_states", package="spData")
 
-x <- rast("newhall_conus_800m_200mm_epsg5070.tif")
+# x <- rast("newhall_conus_800m_200mm_epsg5070.tif")
+
+x <- rast("newhall_conus_800m_AWS_epsg5070.tif")
 v <- project(vect(us_states), x)
 
 plot(x$numCumulativeDaysMoistOver5C,
@@ -15,11 +17,11 @@ plot(x$numCumulativeDaysMoistOver5C < 90,
 
 plot(x$numConsecutiveDaysMoistInSomePartsOver8C,
      col = rev(hcl.colors(360, palette = "cividis")),
-     main = "# of Cumulative Days Moist (in some parts) Over 8 degrees C")
+     main = "# of Consecutive Days Moist (in some parts) Over 8 degrees C")
 plot(as.lines(v), col = "brown", add = TRUE)
 plot(x$numConsecutiveDaysMoistInSomePartsOver8C < 90,
      col = rev(hcl.colors(2)),
-     main = "<90 Cumulative Days Moist (in some parts) Over 8 degrees C")
+     main = "<90 Consecutive Days Moist (in some parts) Over 8 degrees C")
 
 m0 <- x$numCumulativeDaysDryOver5C / (x$numCumulativeDaysDryOver5C + x$numCumulativeDaysMoistDryOver5C + x$numCumulativeDaysMoistOver5C)
 m <-  m0 > 0.5 & x$numCumulativeDaysMoistOver5C > 90 & x$numConsecutiveDaysMoistInSomePartsOver8C < 90
