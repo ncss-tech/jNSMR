@@ -7,6 +7,15 @@ output: md_document
 [![html-docs](https://camo.githubusercontent.com/f7ba98e46ecd14313e0e8a05bec3f92ca125b8f36302a5b1679d4a949bccbe31/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f646f63732d48544d4c2d696e666f726d6174696f6e616c)](https://ncss-tech.github.io/jNSMR/)
 <!-- badges: end -->
 
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
 # {jNSMR}
 
 R wrapper for Java Newhall Simulation Model (jNSM) -- "A Traditional Soil Climate Simulation Model"
@@ -28,10 +37,72 @@ The jNSM has a defined CSV (comma-separated value) batch file format. Examples o
 
 `newhall_batch()` takes either a character vector of CSV batch file paths, a data.frame, a SpatRaster or RasterStack/Brick object as input. 
 
+### GeoTIFF/SpatRaster Input
+
+```{r, spatraster-ex}
+library(jNSMR)
+library(terra)
+
+x <- terra::rast(system.file("extdata", "prism_issr800_sample.tif",
+                             package = "jNSMR"))
+x$elev <- 0 # elevation is not currently used by the model directly
+
+y <- newhall_batch(x) ## full resolution
+
+par(mfrow = c(1, 2))
+
+terra::plot(y$annualWaterBalance, 
+            cex.main = 0.9, main = "Annual Water Balance (P-PET)")
+terra::plot(y$waterHoldingCapacity, 
+            cex.main = 0.9, main = "Water Holding Capacity")
+
+terra::plot(y$temperatureRegime, main = "Temperature Regime")
+terra::plot(y$moistureRegime, main = "Moisture Regime")
+
+terra::plot(y$numCumulativeDaysDryOver5C,
+            cex.main = 0.75, main = "# Cumulative Days Dry over 5 degrees C")
+terra::plot(y$numConsecutiveDaysMoistInSomePartsOver8C,
+            cex.main = 0.75, main = "# Consecutive Days Moist\nin some parts over 8 degrees C")
+
+par(mfrow = c(1, 1))
+```
+
+Now let's try again with 'Daymet' monthly climate data at 1 km resolution. 'Daymet' takes a different approach to prediction of temperature and precipitation so we may expect to see some differences--but ideally we have good general agreement between the two models.
+
+```{r, spatraster-ex-daymet}
+library(jNSMR)
+library(terra)
+
+x2 <- terra::rast(system.file("extdata", "daymet_issr800_sample.tif",
+                             package = "jNSMR"))
+x2$elev <- 0 # elevation is not currently used by the model directly
+
+y2 <- newhall_batch(x2) ## full resolution
+
+par(mfrow = c(1, 2))
+
+terra::plot(y2$annualWaterBalance, range = c(-750, 1500),
+            cex.main = 0.9, main = "Annual Water Balance (P-PET)")
+terra::plot(y2$waterHoldingCapacity, 
+            cex.main = 0.9, main = "Water Holding Capacity")
+
+terra::plot(y2$temperatureRegime, main = "Temperature Regime")
+terra::plot(y2$moistureRegime, main = "Moisture Regime")
+
+terra::plot(y2$numCumulativeDaysDryOver5C,
+            cex.main = 0.75, main = "# Cumulative Days Dry over 5 degrees C")
+terra::plot(y2$numConsecutiveDaysMoistInSomePartsOver8C,
+            cex.main = 0.75, main = "# Consecutive Days Moist\nin some parts over 8 degrees C")
+
+par(mfrow = c(1, 1))
+```
+
+
+### CSV File Input
+
 Selected example input files have been included in `inst/extdata` directory of this package.
 
 ```{r}
-library(jNSMR)
 pathname <- system.file("extdata/All_PA_jNSM_Example_Batch_Metric.csv", package = "jNSMR")[1]
 
 res <- data.table::data.table(newhall_batch(pathname, toString = FALSE, verbose = FALSE))

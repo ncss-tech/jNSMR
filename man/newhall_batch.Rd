@@ -18,9 +18,25 @@
   toString = TRUE,
   checkargs = TRUE,
   cores = NULL,
+  core_thresh = NULL,
   file = NULL,
   nrows = NULL,
   overwrite = NULL
+)
+
+newhall_batch(
+  .data,
+  unitSystem = "metric",
+  soilAirOffset = ifelse(unitSystem \%in\% c("in", "english"), 4.5, 2.5),
+  amplitude = 0.66,
+  verbose = TRUE,
+  toString = TRUE,
+  checkargs = TRUE,
+  cores = 1,
+  core_thresh = 25000L,
+  file = paste0(tempfile(), ".tif"),
+  nrows = nrow(.data),
+  overwrite = TRUE
 )
 
 \method{newhall_batch}{character}(
@@ -32,6 +48,7 @@
   toString = TRUE,
   checkargs = TRUE,
   cores = 1,
+  core_thresh = 25000L,
   file = paste0(tempfile(), ".tif"),
   nrows = nrow(.data),
   overwrite = TRUE
@@ -46,8 +63,10 @@
   toString = FALSE,
   checkargs = TRUE,
   cores = 1,
+  core_thresh = 25000L,
   file = paste0(tempfile(), ".tif"),
-  nrows = nrow(.data),
+  nrows = ifelse(ncol(.data) * nrow(.data) < core_thresh, nrow(.data), floor(ncol(.data)
+    * nrow(.data)/(core_thresh * cores))),
   overwrite = TRUE
 )
 
@@ -60,8 +79,10 @@
   toString = TRUE,
   checkargs = TRUE,
   cores = 1,
+  core_thresh = 25000L,
   file = paste0(tempfile(), ".tif"),
-  nrows = nrow(.data),
+  nrows = ifelse(ncol(.data) * nrow(.data) < core_thresh, nrow(.data), floor(ncol(.data)
+    * nrow(.data)/(core_thresh * cores))),
   overwrite = TRUE
 )
 
@@ -74,13 +95,15 @@
   toString = TRUE,
   checkargs = TRUE,
   cores = 1,
+  core_thresh = 25000L,
   file = paste0(tempfile(), ".tif"),
-  nrows = nrow(.data),
+  nrows = ifelse(ncol(.data) * nrow(.data) < core_thresh, nrow(.data), floor(ncol(.data)
+    * nrow(.data)/(core_thresh * cores))),
   overwrite = TRUE
 )
 }
 \arguments{
-\item{.data}{a \emph{data.frame} or \emph{character} vector of paths to CSV files; or a SpatRaster or RasterStack containin the same data elements and names as included in the batch \code{data.frame}/CSV format}
+\item{.data}{a \emph{data.frame} or \emph{character} vector of paths to CSV files; or a SpatRaster or RasterStack containing the same data elements and names as included in the batch \code{data.frame}/CSV format}
 
 \item{unitSystem}{Default: \code{"metric"} OR \code{"mm"} OR \code{"cm"} use \emph{millimeters} of rainfall (default for the BASIC model); set to \code{unitSystem="english"} OR \code{unitSystem="in"} to transform English (inches of precipitation; degrees Fahrenheit) inputs to metric (millimeters of precipitation; degrees Celsius) before running simulation}
 
@@ -94,13 +117,15 @@
 
 \item{checkargs}{\emph{logical}; check argument length and data types for each run? Default: \code{TRUE}}
 
-\item{cores}{number of cores; used only for processing \emph{SpatRaster} or \emph{Raster*} input}
+\item{cores}{integer. Number of cores; used only for processing \emph{SpatRaster} or \emph{Raster*} input. Default: \code{1} processes batches sequentially.}
 
-\item{file}{path to write incremental raster processing output for large inputs that do not fit in memory; passed to \code{terra::writeStart()} and used only for processing \emph{SpatRaster} or \emph{Raster*} input; defaults to a temporary file created by \code{tempfile()} if needed}
+\item{core_thresh}{integer. Approximate number of cells to target per core and batch; used to calculate default value for \code{nrows}. Default \code{25000} cells.}
 
-\item{nrows}{number of rows to use per block; passed to \code{terra::readValues()} \code{terra::writeValues()}; used only for processing \emph{SpatRaster} or \emph{Raster*} input; defaults to number of rows in dataset if needed}
+\item{file}{character. Path to write incremental raster processing output for large inputs that do not fit in memory; passed to \code{terra::writeStart()} and used only for processing \emph{SpatRaster} or \emph{Raster*} input; defaults to a temporary file created by \code{tempfile()} if needed}
 
-\item{overwrite}{logical; overwrite \code{file}? passed to \code{terra::writeStart()}; defaults to \code{TRUE} if needed}
+\item{nrows}{integer. Number of rows to use per block; passed to \code{terra::readValues()} \code{terra::writeValues()}; used only for processing \emph{SpatRaster} or \emph{Raster*} input; defaults to number of rows in \code{.data} if it is small. If the number of cells in \code{.data} exceeds \code{core_thresh}, then the number of rows is calculated based on the number of cells in \code{.data}, \code{core_thresh} and \code{cores}.}
+
+\item{overwrite}{logical. Overwrite \code{file}? passed to \code{terra::writeStart()}; defaults to \code{TRUE} if needed}
 }
 \value{
 When input is a \emph{data.frame} or \emph{character} vector of paths to CSV files, result is a a \emph{data.frame} with key model outputs (see details) containing list columns with Java Objects for \emph{NewhallDataset}, \emph{NewhallResults}.  If \code{toString=TRUE} the column \code{output} is a \emph{character} containing the \code{toString()} output from \emph{NewhallResults}
@@ -169,6 +194,53 @@ The following elements have a many:1 relationship with model runs and are not (y
 \item \code{"moistureCalendar"} - compressed (360 day) grid "calendar" showing "moist", "moist/dry" and "dry" days.
 }
 }
+}
+\examples{
+
+library(terra)
+
+x <- terra::rast(system.file("extdata", "prism_issr800_sample.tif", package="jNSMR"))
+
+## optional: make larger extent (requires full cache)
+# x <- c(newhall_prism_extent(ext(x) * 4), newhall_issr800_extent(ext(x) * 4))
+
+x$elev <- 0 # elevation is not currently used by the model directly
+
+# reduce resolution (for fast example)
+x2 <- aggregate(x, 10, na.rm = TRUE)
+
+# calculate winter, summer and annual average temperatures
+d <- as.data.frame(x2)
+x2$mwst <- rowMeans(d[, c("tDec","tJan","tFeb")])
+x2$msst <- rowMeans(d[, c("tJun","tJul","tAug")]) 
+x2$mast <- rowMeans(d[, paste0("t", month.abb)])
+x2$dif <- x2$msst - x2$mwst
+plot(x2$dif)
+
+## 1/10th resolution
+system.time({ y <- newhall_batch(x2) })
+
+## ~1/3 resolution
+# system.time({  y <- newhall_batch(aggregate(x, 3)) })
+
+## full resolution
+# system.time({  y <- newhall_batch(x) })
+
+par(mfrow=c(2, 1))
+
+terra::plot(y$annualWaterBalance, main = "Annual Water Balance (P-PET)")
+terra::plot(y$waterHoldingCapacity, main = "Water Holding Capacity")
+
+terra::plot(y$temperatureRegime, main = "Temperature Regime")
+terra::plot(y$moistureRegime, main = "Moisture Regime")
+
+terra::plot(y$numCumulativeDaysDryOver5C, cex.main=0.75,
+            main = "# Cumulative Days Dry over 5 degrees C")
+terra::plot(y$numConsecutiveDaysMoistInSomePartsOver8C, cex.main=0.75,
+            main = "# Consecutive Days Moist\nin some parts over 8 degrees C")
+            
+par(mfrow=c(1,1))
+
 }
 \references{
 van Wambeke, A. and Newhall, F. and United States Soil Management Support Services (1981) Calculated Soil Moisture and Temperature Regimes of South America: A Compilation of Soil Climatic Regimes calculated by using a mathematical model developed by F. Newhall (Soil Conservation Service, USDA, 1972). SMSS : Technical Monograph : Soil management support services. New York State College of Agriculture and Life Sciences, Cornell University, Department of Agronomy. Available online: \url{https://books.google.com/books?id=jwtIAAAAYAAJ}

@@ -25,6 +25,9 @@ dir.create(PRISM_PATH, recursive = TRUE)
 prism_set_dl_dir(PRISM_PATH)
 res <- lapply(1:12, .download_month, resolution="800m")
 
+PRISM_PATH <- "~/Geodata/PRISM/4km"
+dir.create(PRISM_PATH, recursive = TRUE)
+prism_set_dl_dir(PRISM_PATH)
 prism::prism_get_dl_dir()
 res <- lapply(1:12, .download_month, resolution="4km")
 
