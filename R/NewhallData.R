@@ -61,7 +61,7 @@ newhall_prism_cache <- function(resolution = "800m", overwrite = FALSE,
 #' @export
 #' @rdname newhall_prism
 newhall_prism_rast <- function(resolution = "800m",
-                               PRISM_PATH = newhall_data_dir("cache"),
+                               PRISM_PATH = file.path(newhall_data_dir("cache"), "PRISM"),
                                bilfile = list.files(file.path(PRISM_PATH, resolution),
                                                     "\\.bil$", recursive = TRUE)) {
   

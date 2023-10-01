@@ -73,8 +73,7 @@ newhall_batch(
   cores = 1,
   core_thresh = 25000L,
   file = paste0(tempfile(), ".tif"),
-  nrows = ifelse(ncol(.data) * nrow(.data) < core_thresh, nrow(.data), floor(ncol(.data)
-    * nrow(.data)/(core_thresh * cores))),
+  nrows = nrow(.data)/(terra::ncell(.data)/core_thresh),
   overwrite = TRUE
 )
 

@@ -103,18 +103,21 @@ newhall_batch.default <- function(.data = NULL,
       .data,
       unitSystem = unitSystem,
       soilAirOffset = soilAirOffset,
+      hasOHorizon = hasOHorizon,
+      isSaturated = isSaturated,
       amplitude = amplitude,
       verbose = verbose,
       toString = toString,
       checkargs = checkargs
     )
-  }
-  if (newhall_version() >= "1.6.3" && newhall_version() < "1.6.5") {
+  } else if (newhall_version() >= "1.6.3" && newhall_version() < "1.6.5") {
     batch2(
       .data,
       unitSystem = unitSystem,
       soilAirOffset = soilAirOffset,
       amplitude = amplitude,
+      # hasOHorizon = hasOHorizon, # not supported on <1.6.5
+      # isSaturated = isSaturated,
       verbose = verbose,
       toString = toString,
       checkargs = checkargs
@@ -627,6 +630,8 @@ newhall_batch.character <- function(.data,
                         unitSystem = unitSystem,
                         soilAirOffset = soilAirOffset,
                         amplitude = amplitude,
+                        hasOHorizon = hasOHorizon,
+                        isSaturated = isSaturated,
                         verbose = verbose,
                         toString = toString,
                         checkargs = checkargs)
@@ -665,7 +670,7 @@ newhall_batch.character <- function(.data,
 #' @export
 #' @rdname newhall_batch
 #' @return For `SpatRaster` input returns a `SpatRaster` containing numeric and categorical model outputs. `RasterBrick` inputs are first converted to `SpatRaster`, and a `SpatRaster` is returned
-#' @importFrom terra rast readStart writeStart readValues writeValues writeStop readStop `nlyr<-` set.cats
+#' @importFrom terra rast readStart writeStart readValues writeValues writeStop readStop `nlyr<-` set.cats ncell
 #' @importFrom parallel makeCluster stopCluster clusterApply
 newhall_batch.SpatRaster <- function(.data,
                                      unitSystem = "metric",
@@ -679,9 +684,7 @@ newhall_batch.SpatRaster <- function(.data,
                                      cores = 1,
                                      core_thresh = 25000L,
                                      file = paste0(tempfile(), ".tif"),
-                                     nrows = ifelse(ncol(.data) * nrow(.data) < core_thresh, 
-                                                    nrow(.data), 
-                                                    floor(ncol(.data) * nrow(.data) / (core_thresh * cores))),
+                                     nrows = nrow(.data) / (terra::ncell(.data) / core_thresh),
                                      overwrite = TRUE) {
   stopifnot(requireNamespace("terra"))
   suppressWarnings(terra::readStart(.data))
@@ -721,7 +724,7 @@ newhall_batch.SpatRaster <- function(.data,
 
   out_info <- terra::writeStart(out, filename = file, overwrite = overwrite, progress = 0)
   outrows <- c(out_info$row, nrow(out))
-  start_row <- lapply(1:out_info$n, function(i) out_info$row[i] + c(0, (seq_len((out_info$nrows[i]) / nrows) * nrows)))
+  start_row <- lapply(1:out_info$n, function(i) out_info$row[i] + c(0, (seq_len(floor((out_info$nrows[i]) / nrows)) * nrows)))
   n_row <- lapply(seq_along(start_row), function(i) diff(c(start_row[[i]] - 1, outrows[i + 1])))
   n_set <- sum(sapply(start_row, length))
 
@@ -755,14 +758,18 @@ newhall_batch.SpatRaster <- function(.data,
             r <- data.table::rbindlist(parallel::clusterApply(cls, X, function(x, unitSystem,
                                                                                soilAirOffset,
                                                                                amplitude,
+                                                                               hasOHorizon,
+                                                                               isSaturated,
                                                                                verbose,
                                                                                toString,
                                                                                checkargs) {
-                batch2(
+                batch3(
                   .data = x,
                   unitSystem = unitSystem,
                   soilAirOffset = soilAirOffset,
                   amplitude = amplitude,
+                  hasOHorizon = hasOHorizon,
+                  isSaturated = isSaturated,
                   verbose = verbose,
                   toString = toString,
                   checkargs = checkargs
@@ -770,6 +777,8 @@ newhall_batch.SpatRaster <- function(.data,
               }, unitSystem = unitSystem,
                  soilAirOffset = soilAirOffset,
                  amplitude = amplitude,
+                 hasOHorizon = hasOHorizon,
+                 isSaturated = isSaturated,
                  verbose = verbose,
                  toString = toString,
                  checkargs = checkargs), use.names = TRUE, fill = TRUE)
@@ -834,6 +843,8 @@ newhall_batch.SpatRaster <- function(.data,
             unitSystem = unitSystem,
             soilAirOffset = soilAirOffset,
             amplitude = amplitude,
+            hasOHorizon = hasOHorizon,
+            isSaturated = isSaturated,
             verbose = verbose,
             toString = toString,
             checkargs = checkargs
@@ -904,6 +915,8 @@ newhall_batch.RasterBrick <- function(.data,
                             unitSystem = unitSystem,
                             soilAirOffset = soilAirOffset,
                             amplitude = amplitude,
+                            hasOHorizon = hasOHorizon,
+                            isSaturated = isSaturated,
                             verbose = verbose,
                             toString = toString,
                             checkargs = checkargs,
@@ -938,6 +951,8 @@ newhall_batch.RasterStack <- function(.data,
                            unitSystem = unitSystem,
                            soilAirOffset = soilAirOffset,
                            amplitude = amplitude,
+                           hasOHorizon = hasOHorizon,
+                           isSaturated = isSaturated,
                            verbose = verbose,
                            toString = toString,
                            checkargs = checkargs,

@@ -14,7 +14,7 @@ newhall_prism_cache(
 
 newhall_prism_rast(
   resolution = "800m",
-  PRISM_PATH = newhall_data_dir("cache"),
+  PRISM_PATH = file.path(newhall_data_dir("cache"), "PRISM"),
   bilfile = list.files(file.path(PRISM_PATH, resolution), "\\\\.bil$", recursive = TRUE)
 )
 
