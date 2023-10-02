@@ -1,16 +1,17 @@
 ---
-title: "Applying Newhall to PRISM (4km) 30-year Normals for Continental United States"
+title: "Applying Newhall to PRISM 30-year Normals for Continental United States"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Applying Newhall to PRISM (4km) 30-year Normals for Continental United States}
+  %\VignetteIndexEntry{Applying Newhall to PRISM 30-year Normals for Continental United States}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
-  eval = FALSE,
+  eval = TRUE,
   collapse = TRUE,
+  fig.width = 8,
   comment = "#>"
 )
 ```
@@ -19,167 +20,94 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(jNSMR)
-library(prism)
 library(terra)
 
-# run jNSMR on prism monthly 30yr normals
-
-# path to PRISM data
-PRISM_PATH <- tempdir() # "~/Geodata/PRISM"
-prism::prism_set_dl_dir(PRISM_PATH)
-
-# PRISM resolution; either 4km or 800m
-RESOLUTION <- "4km"
-```
-
-Download PRISM data (if needed)
-
-```{r}
-# download 4km or 800m data
-.download_month <- function(i, resolution = c("4km","800m"), annual = FALSE, keepZip = TRUE) {
-  resolution <- match.arg(resolution, c("4km","800m"))
-  if(i == 1)
-    annual = TRUE
-  prism::get_prism_normals(mon = i, type = "ppt",
-                    resolution = resolution,
-                    annual = annual, keepZip = keepZip)
-  prism::get_prism_normals(mon = i, type = "tmean",
-                    resolution = resolution,
-                    annual = annual, keepZip = keepZip)
-  TRUE
-}
-```
-
-```{r, echo=FALSE}
-bilfile <- list.files(PRISM_PATH, "\\.bil$", recursive = TRUE)
-
-# only download the PRISM data if it can't be found in PRISM_PATH
-if (length(bilfile) == 0) {
-  
-  # download by month (suppress txtProgressBar by capturing output)
-  capture.output({
-    res <- lapply(1:12, .download_month, resolution = RESOLUTION)
-  })
-  # get the monthly files only (hardcoded for 30yr normals for now)
-  bilfile <- list.files(PRISM_PATH, "\\.txt$|\\.bil$", recursive = TRUE)
-}
-```
-
-```{r}
-# capture file name components
-monthly.pattern <- ".*PRISM_([a-z]+)_(30yr_normal)_(\\d+[a-z]+)M[23]_(\\d{2})_bil\\.(bil|txt)"
-bilfile_sub <- bilfile[grep(monthly.pattern, bilfile)]
-bilmonth <- strsplit(gsub(monthly.pattern,  "\\1;\\2;\\3;\\4", bilfile_sub), ";")
-bil <- data.frame(bilfile_sub, do.call('rbind', bilmonth))
-colnames(bil) <- c("bilfile","variable","product","resolution","month")
-bilsub <- subset(bil, resolution == RESOLUTION)
-```
-
-Create PRISM raster stack and extract POINT (longlat) locations of cells
-
-```{r}
-# stack rasters, create matrix of values and XY (longlat) locations as data.frame
-prism_stack <- terra::rast(file.path(PRISM_PATH, bilsub$bilfile))
-names(prism_stack) <- paste0(bilsub$variable, bilsub$month)
-cx <- terra::xyFromCell(prism_stack, 1:ncell(prism_stack))
-prism_stack$lonDD <- cx[,1]
-prism_stack$latDD <- cx[,2]
-prism_frame <- as.data.frame(terra::as.points(prism_stack))
-```
-
-Prepare jNSM batch input (CSV) file
-
-```{r}
-# fix column names for jNSM style batch input format
-monthnames <- month.abb[sapply(names(prism_frame), function(x) as.integer(gsub("([a-z])", "", x)))]
-newnames <- gsub("tmean", "t", names(prism_frame))
-newnames <- gsub("ppt", "p", newnames)
-newnames <- gsub("\\d", "", newnames)
-newnames <- paste0(newnames, ifelse(is.na(monthnames), "", monthnames))
-names(prism_frame) <- newnames
-
-# PRISM info
-prism_frame$stationName <- 1:nrow(prism_frame)
-prism_frame$awc <- 200
-prism_frame$maatmast <- 1.2
-prism_frame$pdType <- "Normal"
-prism_frame$pdStartYr <- 1981
-prism_frame$pdEndYr <- 2010
-prism_frame$cntryCode <- "US"
-
-# boilerplate minimum metadata -- these are not used by the algorithm
-prism_frame$netType <- ""
-prism_frame$elev <- -9999
-prism_frame$stProvCode <- ""
-prism_frame$notes <- ""
-prism_frame$stationID <- 1:nrow(prism_frame)
-
-# make test batch of prism point data values
-test_set <- prism_frame[round(runif(20000, 1, nrow(prism_frame))),]
+x <- terra::rast(system.file("extdata", "prism_issr800_sample.tif", package = "jNSMR"))
+x$elev <- 0 # elevation is not currently used by the model directly
 ```
 
 ## Run simulations
 
+`newhall_batch()` allows us to provide data in _SpatRaster_ format, and return gridded model results.
+
 ```{r}
 # run simulations
-res <- jNSMR::newhall_batch(test_set) 
+y <- newhall_batch(x) ## full resolution
 ```
 
 ## Results
 
-Create {terra} `SpatVector` containing points and results
-
-```{r}
-newsp <- terra::vect(cbind(test_set[,c('lonDD','latDD')], res), geom = c("lonDD","latDD"), crs="EPSG:4326")
-```
+Several categorical quantities are returned related to temperature and moisture regimes, as are a variety of numerical quantities relevant to taxonomic limits and regime criteria.
 
 ### Temperature Regimes
 
 ```{r}
-plot(newsp, col=factor(newsp$temperatureRegime))
+plot(y$temperatureRegime)
 ```
 
 ### Moisture Regimes
 
 ```{r}
-plot(newsp, col=factor(newsp$moistureRegime))
+plot(y$moistureRegime)
 ```
 
 #### Moisture Regime Subdivision 1
 
 ```{r}
-plot(newsp, col=factor(newsp$regimeSubdivision1))
+plot(y$regimeSubdivision1)
 ```
 
 #### Moisture Regime Subdivision 2
 
 ```{r}
-plot(newsp, col=factor(newsp$regimeSubdivision2))
+plot(y$regimeSubdivision2)
 ```
 
-#### Moisture regimes (focus on Xeric, Aridic, Ustic, Udic)
+#### Taxonomic Quantities
 
 ```{r}
-newspsub <- subset(newsp, newsp$moistureRegime %in% c("Aridic","Udic","Ustic","Xeric"))
-legnames <- factor(paste(newspsub$moistureRegime))
-nlegnames <- unique(levels(legnames))
-nlegcolors <- c("RED","BLUE","ORANGE","YELLOW")
-plot(newspsub, col = nlegcolors[match(legnames, nlegnames)], pch=".", cex=5)
-legend("topright", legend = nlegnames, pch=".", fill = nlegcolors)
+panel(y[[c("dryDaysAfterSummerSolstice", "numConsecutiveDaysMoistInSomePartsOver8C")]],
+     cex.main = 0.85)
 ```
 
-#### Moisture regime subdivisions (within Aridic and Xeric)
+### PRISM Data for Custom Extent
 
-```{r}
-table(newspsub$regimeSubdivision1)
-newspsub2 <- subset(newsp, newsp$moistureRegime %in% c("Aridic","Xeric"))
-legnames <- factor(paste(newspsub2$regimeSubdivision1, newspsub2$moistureRegime))
-nlegnames <- unique(levels(legnames))
-nlegcolors <- c("ORANGE","RED","TAN","YELLOW","SALMON")
-plot(newspsub2, col = nlegcolors[match(legnames, nlegnames)], pch=".", cex=5)
-legend("bottomleft", legend = nlegnames, pch=".", fill = nlegcolors)
+The above sample dataset can be easily re-created for arbitrary extents.
+
+First, run the following commands to cache United States (lower 48) PRISM and soil water storage capacity data at 800 meter resolution. In the future there will be options for downloading Alaska, Pacific Islands, Puerto Rico, or any other PRISM data sets.
+
+```{r, eval=FALSE}
+newhall_prism_cache()
+newhall_issr800_cache()
 ```
 
-```{r, echo=FALSE}
-unlink(PRISM_PATH, recursive = TRUE)
+After the above two data sets have been downloaded, combine them and add any other required fields and crop to an extent of interest. 
+
+For example, here we use a larger extent aggregated to 8000m resolution to depict a broad transition between the "mesic" and "thermic" temperature regimes. 
+
+```{r, eval=!inherits(try(newhall_prism_rast(), silent=TRUE), 'try-error')}
+conus <- c(newhall_prism_rast(), newhall_issr800_rast())
+conus$elev <- 0 # elevation is not currently used by the model directly
+my_extent <- crop(conus, ext(-91, -88, 37.5, 41.5))
+
+## the above operation can also be achieved with newhall_*_subset() methods
+# my_extent <- newhall_prism_subset(ext(-91, -88, 37.5, 41.5))
+# my_extent$awc <- newhall_issr800_subset(ext(-91, -88, 37.5, 41.5))
+# my_extent$elev <- 0
+
+res <- newhall_batch(aggregate(my_extent, 10, na.rm = TRUE))
+
+par(mfrow = c(1, 2))
+plot(res$numConsecutiveDaysMoistInSomePartsOver8C, 
+     main = "numConsecutiveDaysMoistInSomePartsOver8C",
+     cex.main = 0.75)
+plot(res$temperatureRegime, 
+     main = "temperatureRegime",
+     cex.main = 0.7)
 ```
+
+By default the PRISM 800m grid template is used (`newhall_nad83_template()`) as a consistent basis for the ISSR800 data. You can specify alternate templates using the `template` argument to the `newhall_*_subset()` methods.
+
+### Other Data Sources
+
+In the future there may vignettes created for DAYMET data. In the meantime, see the `newhall_daymet_subset()` function.

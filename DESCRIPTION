@@ -1,6 +1,6 @@
 Package: jNSMR
 Title: Wrapper for Java Newhall Simulation Model (jNSM) "A Traditional Soil Climate Simulation Model" 
-Version: 0.2.0.9002
+Version: 0.3.0
 Authors@R: 
     person(given = "Andrew",
            family = "Brown",
@@ -24,7 +24,8 @@ Suggests:
     knitr,
     testthat (>= 3.0.0),
     rmarkdown,
-    prism
+    prism, 
+    daymetr
 Language: en-US
 URL: https://ncss-tech.github.io/jNSMR, https://github.com/ncss-tech/jNSMR
 VignetteBuilder: knitr

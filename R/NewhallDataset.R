@@ -61,7 +61,7 @@ csv_NewhallDataset <- function(pathname) {
 #' @param lonDD _double_; longitude decimal degrees
 #' @param elev _double_; station elevation
 #' @param allPrecipsDbl _double_; length `12` precipitation, monthly (millimeters of water)
-#' @param allAirTempsDbl _double_; length `12` air temperature, monthly (degrees celsius)
+#' @param allAirTempsDbl _double_; length `12` air temperature, monthly (degrees Celsius)
 #' @param pdbegin _integer_; beginning year
 #' @param pdend _integer_; ending year
 #' @param smcsawc _double_; soil moisture control section available water capacity (millimeters)

@@ -5,7 +5,7 @@
 #'   - `newhall_batch(<SpatRaster>)` - a `SpatRaster` object, containing the required column names as layers
 #'   - `newhall_batch(<RasterStack>)`- a `RasterStack` object, containing the required column names as layers
 #'
-#' @param .data a _data.frame_ or _character_ vector of paths to CSV files; or a SpatRaster or RasterStack containin the same data elements and names as included in the batch `data.frame`/CSV format
+#' @param .data a _data.frame_ or _character_ vector of paths to CSV files; or a SpatRaster or RasterStack containing the same data elements and names as included in the batch `data.frame`/CSV format
 #' @param unitSystem Default: `"metric"` OR `"mm"` OR `"cm"` use _millimeters_ of rainfall (default for the BASIC model); set to `unitSystem="english"` OR `unitSystem="in"` to transform English (inches of precipitation; degrees Fahrenheit) inputs to metric (millimeters of precipitation; degrees Celsius) before running simulation
 #' @param soilAirOffset air-soil temperature offset. Conventionally for jNSM: `2.5` for metric units (default); `4.5` for english units. Can optionally be specified as a layer in a raster input.
 #' @param amplitude difference in amplitude between soil and air temperature sine waves. Default `0.66`. Can optionally be specified as a layer in a raster input.

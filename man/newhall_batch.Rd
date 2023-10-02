@@ -114,7 +114,7 @@ newhall_batch(
 )
 }
 \arguments{
-\item{.data}{a \emph{data.frame} or \emph{character} vector of paths to CSV files; or a SpatRaster or RasterStack containin the same data elements and names as included in the batch \code{data.frame}/CSV format}
+\item{.data}{a \emph{data.frame} or \emph{character} vector of paths to CSV files; or a SpatRaster or RasterStack containing the same data elements and names as included in the batch \code{data.frame}/CSV format}
 
 \item{unitSystem}{Default: \code{"metric"} OR \code{"mm"} OR \code{"cm"} use \emph{millimeters} of rainfall (default for the BASIC model); set to \code{unitSystem="english"} OR \code{unitSystem="in"} to transform English (inches of precipitation; degrees Fahrenheit) inputs to metric (millimeters of precipitation; degrees Celsius) before running simulation}
 

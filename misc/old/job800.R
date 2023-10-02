@@ -37,20 +37,37 @@ plot(r$awc)
 
 # test extent
 if(test) r2 <- crop(r, ext(r) / 40) else r2 <- r
-r2 <- crop(r, vect("D:/CA732/Geodata/CA732_Derived.sqlite", "ca732_wbdhu12"))
+# bdy <- vect("D:/CA732/Geodata/CA732_Derived.sqlite", "ca732_b")
+# r2 <- crop(r, vect("D:/CA732/Geodata/CA732_Derived.sqlite", "ca732_wbdhu12"))
+bdy <- project(as.polygons(ext(c(xmin = 1129000, xmax = 1135000, ymin = 1403000, ymax = 1411000)), crs = "EPSG:5070"), r)
+r2 <- r#crop(r, ext(bdy)*10)
 plot(r2$awc)
 
-plot(vect("D:/CA732/Geodata/CA732_Derived.sqlite", "ca732_b"), add = T)
+plot(bdy, add = T)
 plot(density(values(r2$awc), na.rm = TRUE))
 quantile(values(r2$awc), na.rm = TRUE)
 
+# r2$awc <- mask(r2$awc, bdy)
+
 r2$stationName <- NULL; r2$stationID <- NULL; r2$notes <- NULL; r2$stProvCode <- NULL; r2$netType <- NULL; r2$cntryCode <- NULL; r2$pdEndYr <- NULL; r2$pdStartYr <- NULL; r2$pdType <- NULL; r2$maatmast <- NULL
 
+# resample to ~80m for testing
+# r2tmp <- rast(r2)
+# res(r2tmp) <- res(r2) / 10
+# r2 <- resample(r2, r2tmp, filename="coweetagrid.tif", overwrite=TRUE)
+
 #system.time(resbig <- newhall_batch(r2))
-system.time(resbig <-  newhall_batch(r2,
-                                     cores = 6,
-                                     nrows = ifelse(ncell(r2) > 100000, 16, 40)))
-terra::writeRaster(resbig, filename = "newhall_ca732_800m_200mm.tif", overwrite = TRUE)
+system.time({resbig <- newhall_batch(r2, cores = 8, nrows = 6)})
+x <- terra::writeRaster(resbig, filename = "newhall_conus_800m_AWS.tif")
+
+# x <- rast("newhall_conus_800m_200mm.tif")
+# x <- project(x, "EPSG:5070", filename = "newhall_conus_800m_AWS_epsg5070.tif")
+# plot(x$numCumulativeDaysMoistOver5C,
+#      col = rev(hcl.colors(360, palette = "cividis")),
+#      main = "# of Cumulative Days Moist Over 5 degrees C")
+# plot(x$numCumulativeDaysMoistOver5C > 90,
+#      col = hcl.colors(2),
+#      main = ">90 Cumulative Days Moist Over 5 degrees C")
 
 # 44% of the full raster is NA
 # sum(is.na(values(r$pJan))) / ncell(r)
