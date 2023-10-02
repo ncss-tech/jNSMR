@@ -3,7 +3,7 @@ library(soilDB)
 library(terra)
 library(rgeedim)
 
-x <- fetchSDA_spatial(c("CA067", "CA628", "CA731", "CA729"), 
+x <- fetchSDA_spatial(c("CA067", "CA628", "CA731", "CA729", "CA732"), 
                       by.col = "areasymbol",
                       geom.src = "sapolygon")
 
@@ -42,7 +42,7 @@ e <- rast("elev.tif")
 predictors$elev <- project(e, predictors)
 
 # run batches of models on gridded data
-res <- newhall_batch(predictors, soilAirOffset = 1)
+res <- newhall_batch(predictors, soilAirOffset = 2, core_thresh = 1e4, cores = 8)
 
 y <- fetchSDA_spatial(SDA_spatialQuery(predictors, "areasymbol")$areasymbol, 
                       by.col = "areasymbol", 
