@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">jNSMR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0</span>
       </span>
     </div>
 
@@ -97,10 +97,10 @@ Continental United States</h1>
 </h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ncss-tech.github.io/jNSMR">jNSMR</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; jNSMR (0.2.0) -- R interface to the classic Newhall Simulation Model</span></span>
-<span><span class="co">#&gt; Added JAR file (newhall-1.6.4.jar) to Java class path.</span></span>
+<span><span class="co">#&gt; jNSMR (0.3.0) -- R interface to the classic Newhall Simulation Model</span></span>
+<span><span class="co">#&gt; Added JAR file (newhall-1.6.5.jar) to Java class path.</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/" class="external-link">terra</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; terra 1.7.39</span></span>
+<span><span class="co">#&gt; terra 1.7.46</span></span>
 <span></span>
 <span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"prism_issr800_sample.tif"</span>, package <span class="op">=</span> <span class="st">"jNSMR"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">x</span><span class="op">$</span><span class="va">elev</span> <span class="op">&lt;-</span> <span class="fl">0</span> <span class="co"># elevation is not currently used by the model directly</span></span></code></pre></div>
@@ -113,7 +113,7 @@ Continental United States</h1>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># run simulations</span></span>
 <span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/newhall_batch.html">newhall_batch</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="co">## full resolution</span></span>
-<span><span class="co">#&gt; newhall_batch: ran n=18790 simulations in 27 secs</span></span></code></pre></div>
+<span><span class="co">#&gt; newhall_batch: ran n=18790 simulations in 36 secs</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="results">Results<a class="anchor" aria-label="anchor" href="#results"></a>

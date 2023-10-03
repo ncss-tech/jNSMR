@@ -22,7 +22,7 @@ newhall_batch(&amp;lt;RasterStack&amp;gt;)- a RasterStack object, containing the
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">jNSMR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0</span>
       </span>
     </div>
 
@@ -79,6 +79,8 @@ newhall_batch(&amp;lt;RasterStack&amp;gt;)- a RasterStack object, containing the
 <span>  unitSystem <span class="op">=</span> <span class="st">"metric"</span>,</span>
 <span>  soilAirOffset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">unitSystem</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"in"</span>, <span class="st">"english"</span><span class="op">)</span>, <span class="fl">4.5</span>, <span class="fl">2.5</span><span class="op">)</span>,</span>
 <span>  amplitude <span class="op">=</span> <span class="fl">0.66</span>,</span>
+<span>  hasOHorizon <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  isSaturated <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  toString <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  checkargs <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -94,6 +96,8 @@ newhall_batch(&amp;lt;RasterStack&amp;gt;)- a RasterStack object, containing the
 <span>  unitSystem <span class="op">=</span> <span class="st">"metric"</span>,</span>
 <span>  soilAirOffset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">unitSystem</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"in"</span>, <span class="st">"english"</span><span class="op">)</span>, <span class="fl">4.5</span>, <span class="fl">2.5</span><span class="op">)</span>,</span>
 <span>  amplitude <span class="op">=</span> <span class="fl">0.66</span>,</span>
+<span>  hasOHorizon <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  isSaturated <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  toString <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  checkargs <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -110,6 +114,8 @@ newhall_batch(&amp;lt;RasterStack&amp;gt;)- a RasterStack object, containing the
 <span>  unitSystem <span class="op">=</span> <span class="st">"metric"</span>,</span>
 <span>  soilAirOffset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">unitSystem</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"in"</span>, <span class="st">"english"</span><span class="op">)</span>, <span class="fl">4.5</span>, <span class="fl">2.5</span><span class="op">)</span>,</span>
 <span>  amplitude <span class="op">=</span> <span class="fl">0.66</span>,</span>
+<span>  hasOHorizon <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  isSaturated <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  toString <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  checkargs <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -126,14 +132,15 @@ newhall_batch(&amp;lt;RasterStack&amp;gt;)- a RasterStack object, containing the
 <span>  unitSystem <span class="op">=</span> <span class="st">"metric"</span>,</span>
 <span>  soilAirOffset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">unitSystem</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"in"</span>, <span class="st">"english"</span><span class="op">)</span>, <span class="fl">4.5</span>, <span class="fl">2.5</span><span class="op">)</span>,</span>
 <span>  amplitude <span class="op">=</span> <span class="fl">0.66</span>,</span>
+<span>  hasOHorizon <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  isSaturated <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  toString <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  checkargs <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  cores <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  core_thresh <span class="op">=</span> <span class="fl">25000L</span>,</span>
 <span>  file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">".tif"</span><span class="op">)</span>,</span>
-<span>  nrows <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">.data</span><span class="op">)</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">.data</span><span class="op">)</span> <span class="op">&lt;</span> <span class="va">core_thresh</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">.data</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">floor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">.data</span><span class="op">)</span></span>
-<span>    <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">.data</span><span class="op">)</span><span class="op">/</span><span class="op">(</span><span class="va">core_thresh</span> <span class="op">*</span> <span class="va">cores</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  nrows <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">.data</span><span class="op">)</span><span class="op">/</span><span class="op">(</span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/dimensions.html" class="external-link">ncell</a></span><span class="op">(</span><span class="va">.data</span><span class="op">)</span><span class="op">/</span><span class="va">core_thresh</span><span class="op">)</span>,</span>
 <span>  overwrite <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
@@ -143,6 +150,8 @@ newhall_batch(&amp;lt;RasterStack&amp;gt;)- a RasterStack object, containing the
 <span>  unitSystem <span class="op">=</span> <span class="st">"metric"</span>,</span>
 <span>  soilAirOffset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">unitSystem</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"in"</span>, <span class="st">"english"</span><span class="op">)</span>, <span class="fl">4.5</span>, <span class="fl">2.5</span><span class="op">)</span>,</span>
 <span>  amplitude <span class="op">=</span> <span class="fl">0.66</span>,</span>
+<span>  hasOHorizon <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  isSaturated <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  toString <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  checkargs <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -160,6 +169,8 @@ newhall_batch(&amp;lt;RasterStack&amp;gt;)- a RasterStack object, containing the
 <span>  unitSystem <span class="op">=</span> <span class="st">"metric"</span>,</span>
 <span>  soilAirOffset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">unitSystem</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"in"</span>, <span class="st">"english"</span><span class="op">)</span>, <span class="fl">4.5</span>, <span class="fl">2.5</span><span class="op">)</span>,</span>
 <span>  amplitude <span class="op">=</span> <span class="fl">0.66</span>,</span>
+<span>  hasOHorizon <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  isSaturated <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  toString <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  checkargs <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -183,11 +194,19 @@ newhall_batch(&amp;lt;RasterStack&amp;gt;)- a RasterStack object, containing the
 
 
 <dt>soilAirOffset</dt>
-<dd><p>air-soil temperature offset. Conventionally for jNSM: <code>2.5</code> for metric units (default); <code>4.5</code> for english units.</p></dd>
+<dd><p>air-soil temperature offset. Conventionally for jNSM: <code>2.5</code> for metric units (default); <code>4.5</code> for english units. Can optionally be specified as a layer in a raster input.</p></dd>
 
 
 <dt>amplitude</dt>
-<dd><p>difference in amplitude between soil and air temperature sine waves. Default <code>0.66</code></p></dd>
+<dd><p>difference in amplitude between soil and air temperature sine waves. Default <code>0.66</code>. Can optionally be specified as a layer in a raster input.</p></dd>
+
+
+<dt>hasOHorizon</dt>
+<dd><p>Used for cryic soil temperature regime criteria. Default: <code>FALSE</code>. Can optionally be specified as a layer in a raster input.</p></dd>
+
+
+<dt>isSaturated</dt>
+<dd><p>Used for cryic soil temperature regime and aquic soil moisture regime mask. Default: <code>FALSE</code>. Can optionally be specified as a layer in a raster input.</p></dd>
 
 
 <dt>verbose</dt>
@@ -302,7 +321,7 @@ newhall_batch(&amp;lt;RasterStack&amp;gt;)- a RasterStack object, containing the
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/" class="external-link">terra</a></span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> terra 1.7.39</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> terra 1.7.46</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"prism_issr800_sample.tif"</span>, package<span class="op">=</span><span class="st">"jNSMR"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
@@ -325,9 +344,9 @@ newhall_batch(&amp;lt;RasterStack&amp;gt;)- a RasterStack object, containing the
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## 1/10th resolution</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="op">{</span> <span class="va">y</span> <span class="op">&lt;-</span> <span class="fu">newhall_batch</span><span class="op">(</span><span class="va">x2</span><span class="op">)</span> <span class="op">}</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> newhall_batch: ran n=204 simulations in 0.41 secs</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> newhall_batch: ran n=204 simulations in 0.52 secs</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    user  system elapsed </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   0.915   0.016   0.572 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   1.024   0.044   0.713 </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## ~1/3 resolution</span></span></span>
 <span class="r-in"><span><span class="co"># system.time({  y &lt;- newhall_batch(aggregate(x, 3)) })</span></span></span>
@@ -342,6 +361,7 @@ newhall_batch(&amp;lt;RasterStack&amp;gt;)- a RasterStack object, containing the
 <span class="r-plt img"><img src="newhall_batch-2.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">y</span><span class="op">$</span><span class="va">temperatureRegime</span>, main <span class="op">=</span> <span class="st">"Temperature Regime"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">y</span><span class="op">$</span><span class="va">moistureRegime</span>, main <span class="op">=</span> <span class="st">"Moisture Regime"</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="newhall_batch-3.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
