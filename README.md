@@ -36,10 +36,10 @@ paths, a data.frame, a SpatRaster or RasterStack/Brick object as input.
 ### GeoTIFF/SpatRaster Input
 
     library(jNSMR)
-    #> jNSMR (0.2.0) -- R interface to the classic Newhall Simulation Model
-    #> Added JAR file (newhall-1.6.4.jar) to Java class path.
+    #> jNSMR (0.3.0) -- R interface to the classic Newhall Simulation Model
+    #> Added JAR file (newhall-1.6.5.jar) to Java class path.
     library(terra)
-    #> terra 1.7.39
+    #> terra 1.7.49
 
     x <- terra::rast(system.file("extdata", "prism_issr800_sample.tif",
                                  package = "jNSMR"))
@@ -88,7 +88,7 @@ models.
     x2$elev <- 0 # elevation is not currently used by the model directly
 
     y2 <- newhall_batch(x2) ## full resolution
-    #> newhall_batch: ran n=18790 simulations in 22 secs
+    #> newhall_batch: ran n=18790 simulations in 20 secs
 
     par(mfrow = c(1, 2))
 
@@ -180,16 +180,11 @@ directory of this package.
 
 **This package uses a modified version of the Newhall model v1.6.1
 (released 2016/02/10) of the jNSM (official download here:
-<https://www.nrcs.usda.gov/wps/portal/nrcs/detail/?cid=nrcs142p2_053559>)**.
+<https://www.nrcs.usda.gov/resources/education-and-teaching-materials/java-newhall-simulation-model-jnsm>)**.
 The compiled JAR and source code are distributed in this R package under
 the “New” (3-Clause) BSD License. See *LICENSE* for more information.
-Modifications to the JAR relative to legacy version are only to
-facilitate higher throughput batching and access to additional data
-elements.
-
-> Newhall 1.6.1, Copyright (C) 2010-2011 United States Department of
-> Agriculture - Natural Resources Conservation Service, Penn State
-> University Center for Environmental Informatics All rights reserved.
+Modifications to the JAR relative to legacy version facilitate higher
+throughput and access to additional data elements.
 
 ## System requirements
 

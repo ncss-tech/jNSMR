@@ -1,3 +1,12 @@
+# jNSMR 0.3.0
+
+- Newhall model gains support for additional spatially explicit inputs:
+  - O horizon (presence/absence)
+  - Saturation (presence/absence)
+  - soilAirOffset (degrees C or degrees F)
+
+- Cryic Soil Temperature Regime criteria now properly incorporate O horizon and saturation into thresholds
+
 # jNSMR 0.2.0
 
 - Added helper functions for raster input data preparation. Initial sources include:

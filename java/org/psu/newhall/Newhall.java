@@ -4,7 +4,7 @@ import org.psu.newhall.sim.*;
 import org.psu.newhall.util.*;
 
  public class Newhall {
-   public static String NSM_VERSION = "1.6.4";
+   public static String NSM_VERSION = "1.6.5";
 
    public static void main(String[] args) {
 

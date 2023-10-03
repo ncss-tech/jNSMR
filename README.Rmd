@@ -112,12 +112,7 @@ head(res)
 
 ## License information
 
-**This package uses a modified version of the Newhall model v1.6.1 (released 2016/02/10) of the jNSM (official download here: https://www.nrcs.usda.gov/wps/portal/nrcs/detail/?cid=nrcs142p2_053559)**. The compiled JAR and source code are distributed in this R package under the "New" (3-Clause) BSD License. See _LICENSE_ for more information. Modifications to the JAR relative to legacy version are only to facilitate higher throughput batching and access to additional data elements.
-
-> Newhall 1.6.1, Copyright (C) 2010-2011 
-> United States Department of Agriculture - Natural Resources Conservation Service, 
-> Penn State University Center for Environmental Informatics
-> All rights reserved.
+**This package uses a modified version of the Newhall model v1.6.1 (released 2016/02/10) of the jNSM (official download here: https://www.nrcs.usda.gov/resources/education-and-teaching-materials/java-newhall-simulation-model-jnsm)**. The compiled JAR and source code are distributed in this R package under the "New" (3-Clause) BSD License. See _LICENSE_ for more information. Modifications to the JAR relative to legacy version facilitate higher throughput and access to additional data elements.
 
 ## System requirements
 

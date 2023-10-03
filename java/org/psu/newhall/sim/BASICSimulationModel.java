@@ -31,13 +31,14 @@
                 }
                 return new NewhallBatchResults(r);
              } 
-     public static NewhallBatchResults runBatch2(double[][] precipitation, double[][] temperature, double latitude[], double longitude[], char nsHemisphere[], double elevation[], boolean[] isMetric, double[] waterholdingCapacity, double[] fc, double[] fcd) {
+     public static NewhallBatchResults runBatch2(double[][] precipitation, double[][] temperature, double latitude[], double longitude[], char nsHemisphere[], double elevation[], boolean[] isMetric, double[] waterholdingCapacity, double[] fc, double[] fcd, boolean[] hasOHorizon, boolean[] isSaturated) {
                 NewhallResults[] r = new NewhallResults[latitude.length];
                 for (int i = 0; i <= (latitude.length - 1); i++) {
-                  r[i] = runSimulation(temperature[i], precipitation[i], latitude[i], longitude[i], elevation[i], nsHemisphere[i], isMetric[i], waterholdingCapacity[i], fc[i], fcd[i]);                                   
+                  r[i] = runSimulation(temperature[i], precipitation[i], latitude[i], longitude[i], elevation[i], nsHemisphere[i], isMetric[i], waterholdingCapacity[i], fc[i], fcd[i], hasOHorizon[i], isSaturated[i]);                                   
                 }
                 return new NewhallBatchResults(r);
              } 
+             
     public static NewhallResults runSimulation(double[] temperature, 
                                                double[] precip, 
                                                double latDD,
@@ -47,7 +48,9 @@
                                                boolean isMetric,
                                                double waterHoldingCapacity, 
                                                double fc, 
-                                               double fcd) {
+                                               double fcd,
+                                               boolean hasOHorizon,
+                                               boolean isSaturated) {
                                                    
     // This is a hack to prevent a problematic region of code from running
     // multiple times.  Problem datasets that test that this hack works
@@ -221,25 +224,43 @@
      }
 
      double dif = Math.abs(at1 - at2);
-     double cs = dif * (1.0D - fcd) / 2.0D;
-/**
-     * The cr[] arrays hold critera to determine temperature regime.  Then
+     // double cs = dif * (1.0D - fcd) / 2.0D; 
+     // TODO: check (1.0D - fcd) v.s. fcd v.s. cr[7] expression
+     
+    /**
+     * The cr[] arrays hold criteria to determine temperature regime.  Then
      * the reg[] array holds the flags for each regime.  The last-most flag
      * that is true indicates the temp regime.
      */
+
+    // properly handle cryic criteria
+    int cryic_ht = 15;
+    if (hasOHorizon) {
+        if(isSaturated) {
+            cryic_ht = 6;
+        } else {
+            cryic_ht = 8;
+        }
+    } else if (isSaturated) {
+        cryic_ht = 13;
+    }
 
     boolean[] cr = new boolean[13];
     boolean[] reg = new boolean[13];
     cr[1] = tma < 0;                      // Mean annual air temp (MAAT) < 0C.
     cr[2] = 0 <= tma && tma < 8;          // 0C <= MAAT <= 8C.
-    cr[3] = (st - cs) < 15;               // Summer temp ave minus (summer/winter difference * (1 - SOIL_AIR_REL) * 0.5) < 15C.
-    cr[7] = (dif * fcd) > 5;              // Summer/winter difference * SOIL_AIR_REL > 5.  Change to 6?
+    // cr[3] = (st - cs) < 15;            // Summer temp ave minus (summer/winter difference * (1 - SOIL_AIR_REL) * 0.5) < 15C.
+                                          // TODO: where did latter part ^^ (... - SWD...) of this come from? Misread cryic crit 1?
+    cr[3] = st >= 0 && st < cryic_ht;           // "non-saturated, organic surface, mean _summer_ soil temperature between 0 and 8C/15C
+                                          // TODO: st upper limit depends on saturation, O horizon
+    cr[7] = (dif * fcd) >= 6;             // Summer/winter difference * SOIL_AIR_REL >= 6 
+                                          // NOTE: Taxonomy clearly states difference greater/equal than 6, not 5
     cr[8] = (tma >= 8) && (tma < 15);     // 8C <= MAAT < 15C.
     cr[9] = (tma >= 15) && (tma < 22);    // 15C <= MAAT < 22C.
     cr[10] = tma >= 22;                   // 22C <= MAAT.
     cr[11] = tma < 8;                     // MAAT < 8C.
     reg[1] = cr[1];                       // PERGELIC
-    reg[2] = cr[2] && cr[3];              // CRYIC
+    reg[2] = cr[2] && cr[3];              // CRYIC 
     reg[3] = cr[11] && !cr[3] && cr[7];   // FRIGID
     reg[4] = cr[8] && cr[7];              // MESIC
     reg[5] = cr[9] && cr[7];              // THERMIC
@@ -249,8 +270,8 @@
     reg[9] = cr[9] && !cr[7];             // ISOTHERMIC
     reg[10] = cr[10] && !cr[7];           // ISOHYPERTHERMIC
 
-     st -= cs;
-     wt += cs;
+     //st -= cs;
+     //wt += cs;
      dif = st - wt;
 
      String trr = "";
@@ -3349,7 +3370,7 @@
      boolean[] reg = new boolean[13];
      cr[1] = (tma < 0.0D);
      cr[2] = (0.0D <= tma && tma < 8.0D);
-     cr[3] = (st - cs < 15.0D);
+     cr[3] = (st * (1 - fcd) < 15.0D);
 /*  230 */     cr[7] = (dif * fcd > 5.0D);
      cr[8] = (tma >= 8.0D && tma < 15.0D);
      cr[9] = (tma >= 15.0D && tma < 22.0D);
