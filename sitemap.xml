@@ -73,6 +73,9 @@
     <loc>https://ncss-tech.github.io/jNSMR/reference/newhall_batch.html</loc>
   </url>
   <url>
+    <loc>https://ncss-tech.github.io/jNSMR/reference/newhall_cmip6.html</loc>
+  </url>
+  <url>
     <loc>https://ncss-tech.github.io/jNSMR/reference/newhall_data_dir.html</loc>
   </url>
   <url>
@@ -89,5 +92,8 @@
   </url>
   <url>
     <loc>https://ncss-tech.github.io/jNSMR/reference/newhall_version.html</loc>
+  </url>
+  <url>
+    <loc>https://ncss-tech.github.io/jNSMR/reference/newhall_worldclim.html</loc>
   </url>
 </urlset>

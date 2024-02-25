@@ -20,7 +20,7 @@ newhall_nad83_template(): Empty SpatRaster corresponding to the lower 48 United 
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">jNSMR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.1</span>
       </span>
     </div>
 
@@ -113,7 +113,7 @@ newhall_nad83_template(): Empty SpatRaster corresponding to the lower 48 United 
 
 
 <dt>x</dt>
-<dd><p>A <em>SpatVector</em>, <em>SpatRaster</em>, <em>SpatExtent</em>, or any other object type suitable to use with <code><a href="https://rdrr.io/pkg/terra/man/crop.html" class="external-link">terra::crop()</a></code>.</p></dd>
+<dd><p>A <em>SpatVector</em>, <em>SpatRaster</em>, <em>SpatExtent</em>, or any other object type suitable to use with <code><a href="https://rspatial.github.io/terra/reference/crop.html" class="external-link">terra::crop()</a></code>.</p></dd>
 
 
 <dt>template</dt>
@@ -126,13 +126,18 @@ newhall_nad83_template(): Empty SpatRaster corresponding to the lower 48 United 
 
 <p>character. Vector of file paths (to PRISM .BIL files).</p>
     </div>
+    <div id="details">
+    <h2>Details</h2>
+    <p>Currently used only for matching the ISSR800 source to PRISM.</p>
+    </div>
     <div id="references">
     <h2>References</h2>
     <p>PRISM Climate Group, Oregon State University, <a href="https://prism.oregonstate.edu" class="external-link">https://prism.oregonstate.edu</a>, data created 4 Feb 2014, accessed 22 Jul 2023.</p>
     </div>
     <div id="see-also">
     <h2>See also</h2>
-    <div class="dont-index"><p><code><a href="newhall_data_dir.html">newhall_data_dir()</a></code></p></div>
+    <div class="dont-index"><p><code><a href="newhall_data_dir.html">newhall_data_dir()</a></code></p>
+<p><code><a href="newhall_issr800.html">newhall_issr800_cache()</a></code> <code><a href="newhall_issr800.html">newhall_issr800_rast()</a></code> <code><a href="newhall_issr800.html">newhall_issr800_rast()</a></code></p></div>
     </div>
 
     <div id="ref-examples">
@@ -161,7 +166,7 @@ newhall_nad83_template(): Empty SpatRaster corresponding to the lower 48 United 
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Andrew Brown.</p>
+  <p></p><p>Developed by Andrew G. Brown.</p>
 </div>
 
 <div class="pkgdown">

@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">jNSMR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.1</span>
       </span>
     </div>
 
@@ -97,12 +97,12 @@ Continental United States</h1>
 </h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ncss-tech.github.io/jNSMR">jNSMR</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; jNSMR (0.3.0) -- R interface to the classic Newhall Simulation Model</span></span>
+<span><span class="co">#&gt; jNSMR (0.3.1) -- R interface to the classic Newhall Simulation Model</span></span>
 <span><span class="co">#&gt; Added JAR file (newhall-1.6.5.jar) to Java class path.</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/" class="external-link">terra</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; terra 1.7.46</span></span>
+<span><span class="co">#&gt; terra 1.7.71</span></span>
 <span></span>
-<span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"prism_issr800_sample.tif"</span>, package <span class="op">=</span> <span class="st">"jNSMR"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"prism_issr800_sample.tif"</span>, package <span class="op">=</span> <span class="st">"jNSMR"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">x</span><span class="op">$</span><span class="va">elev</span> <span class="op">&lt;-</span> <span class="fl">0</span> <span class="co"># elevation is not currently used by the model directly</span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -113,7 +113,7 @@ Continental United States</h1>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># run simulations</span></span>
 <span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/newhall_batch.html">newhall_batch</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="co">## full resolution</span></span>
-<span><span class="co">#&gt; newhall_batch: ran n=18790 simulations in 36 secs</span></span></code></pre></div>
+<span><span class="co">#&gt; newhall_batch: ran n=18790 simulations in 18 secs</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="results">Results<a class="anchor" aria-label="anchor" href="#results"></a>
@@ -125,34 +125,34 @@ to taxonomic limits and regime criteria.</p>
 <h3 id="temperature-regimes">Temperature Regimes<a class="anchor" aria-label="anchor" href="#temperature-regimes"></a>
 </h3>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">y</span><span class="op">$</span><span class="va">temperatureRegime</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">y</span><span class="op">$</span><span class="va">temperatureRegime</span><span class="op">)</span></span></code></pre></div>
 <p><img src="newhall-prism_files/figure-html/unnamed-chunk-3-1.png" width="768"></p>
 </div>
 <div class="section level3">
 <h3 id="moisture-regimes">Moisture Regimes<a class="anchor" aria-label="anchor" href="#moisture-regimes"></a>
 </h3>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">y</span><span class="op">$</span><span class="va">moistureRegime</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">y</span><span class="op">$</span><span class="va">moistureRegime</span><span class="op">)</span></span></code></pre></div>
 <p><img src="newhall-prism_files/figure-html/unnamed-chunk-4-1.png" width="768"></p>
 <div class="section level4">
 <h4 id="moisture-regime-subdivision-1">Moisture Regime Subdivision 1<a class="anchor" aria-label="anchor" href="#moisture-regime-subdivision-1"></a>
 </h4>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">y</span><span class="op">$</span><span class="va">regimeSubdivision1</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">y</span><span class="op">$</span><span class="va">regimeSubdivision1</span><span class="op">)</span></span></code></pre></div>
 <p><img src="newhall-prism_files/figure-html/unnamed-chunk-5-1.png" width="768"></p>
 </div>
 <div class="section level4">
 <h4 id="moisture-regime-subdivision-2">Moisture Regime Subdivision 2<a class="anchor" aria-label="anchor" href="#moisture-regime-subdivision-2"></a>
 </h4>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">y</span><span class="op">$</span><span class="va">regimeSubdivision2</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">y</span><span class="op">$</span><span class="va">regimeSubdivision2</span><span class="op">)</span></span></code></pre></div>
 <p><img src="newhall-prism_files/figure-html/unnamed-chunk-6-1.png" width="768"></p>
 </div>
 <div class="section level4">
 <h4 id="taxonomic-quantities">Taxonomic Quantities<a class="anchor" aria-label="anchor" href="#taxonomic-quantities"></a>
 </h4>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/panel.html" class="external-link">panel</a></span><span class="op">(</span><span class="va">y</span><span class="op">[[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"dryDaysAfterSummerSolstice"</span>, <span class="st">"numConsecutiveDaysMoistInSomePartsOver8C"</span><span class="op">)</span><span class="op">]</span><span class="op">]</span>,</span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/panel.html" class="external-link">panel</a></span><span class="op">(</span><span class="va">y</span><span class="op">[[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"dryDaysAfterSummerSolstice"</span>, <span class="st">"numConsecutiveDaysMoistInSomePartsOver8C"</span><span class="op">)</span><span class="op">]</span><span class="op">]</span>,</span>
 <span>     cex.main <span class="op">=</span> <span class="fl">0.85</span><span class="op">)</span></span></code></pre></div>
 <p><img src="newhall-prism_files/figure-html/unnamed-chunk-7-1.png" width="768"></p>
 </div>
@@ -177,20 +177,20 @@ resolution to depict a broad transition between the “mesic” and
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">conus</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="../reference/newhall_prism.html">newhall_prism_rast</a></span><span class="op">(</span><span class="op">)</span>, <span class="fu"><a href="../reference/newhall_issr800.html">newhall_issr800_rast</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">conus</span><span class="op">$</span><span class="va">elev</span> <span class="op">&lt;-</span> <span class="fl">0</span> <span class="co"># elevation is not currently used by the model directly</span></span>
-<span><span class="va">my_extent</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/crop.html" class="external-link">crop</a></span><span class="op">(</span><span class="va">conus</span>, <span class="fu"><a href="https://rdrr.io/pkg/terra/man/ext.html" class="external-link">ext</a></span><span class="op">(</span><span class="op">-</span><span class="fl">91</span>, <span class="op">-</span><span class="fl">88</span>, <span class="fl">37.5</span>, <span class="fl">41.5</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">my_extent</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/crop.html" class="external-link">crop</a></span><span class="op">(</span><span class="va">conus</span>, <span class="fu"><a href="https://rspatial.github.io/terra/reference/ext.html" class="external-link">ext</a></span><span class="op">(</span><span class="op">-</span><span class="fl">91</span>, <span class="op">-</span><span class="fl">88</span>, <span class="fl">37.5</span>, <span class="fl">41.5</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## the above operation can also be achieved with newhall_*_subset() methods</span></span>
 <span><span class="co"># my_extent &lt;- newhall_prism_subset(ext(-91, -88, 37.5, 41.5))</span></span>
 <span><span class="co"># my_extent$awc &lt;- newhall_issr800_subset(ext(-91, -88, 37.5, 41.5))</span></span>
 <span><span class="co"># my_extent$elev &lt;- 0</span></span>
 <span></span>
-<span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/newhall_batch.html">newhall_batch</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/aggregate.html" class="external-link">aggregate</a></span><span class="op">(</span><span class="va">my_extent</span>, <span class="fl">10</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/newhall_batch.html">newhall_batch</a></span><span class="op">(</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/aggregate.html" class="external-link">aggregate</a></span><span class="op">(</span><span class="va">my_extent</span>, <span class="fl">10</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">res</span><span class="op">$</span><span class="va">numConsecutiveDaysMoistInSomePartsOver8C</span>, </span>
+<span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">res</span><span class="op">$</span><span class="va">numConsecutiveDaysMoistInSomePartsOver8C</span>, </span>
 <span>     main <span class="op">=</span> <span class="st">"numConsecutiveDaysMoistInSomePartsOver8C"</span>,</span>
 <span>     cex.main <span class="op">=</span> <span class="fl">0.75</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">res</span><span class="op">$</span><span class="va">temperatureRegime</span>, </span>
+<span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">res</span><span class="op">$</span><span class="va">temperatureRegime</span>, </span>
 <span>     main <span class="op">=</span> <span class="st">"temperatureRegime"</span>,</span>
 <span>     cex.main <span class="op">=</span> <span class="fl">0.7</span><span class="op">)</span></span></code></pre></div>
 <p>By default the PRISM 800m grid template is used
@@ -220,7 +220,7 @@ meantime, see the <code><a href="../reference/newhall_daymet.html">newhall_dayme
 
       <footer><div class="copyright">
   <p></p>
-<p>Developed by Andrew Brown.</p>
+<p>Developed by Andrew G. Brown.</p>
 </div>
 
 <div class="pkgdown">
