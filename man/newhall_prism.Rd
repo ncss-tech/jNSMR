@@ -53,6 +53,9 @@ character. Vector of file paths (to PRISM .BIL files).
 
 \code{newhall_nad83_template()}: Empty \code{SpatRaster} corresponding to the lower 48 United States PRISM data/extent at the specified resolution.
 }
+\details{
+Currently used only for matching the ISSR800 source to PRISM.
+}
 \examples{
 
 newhall_nad83_template()
@@ -64,4 +67,6 @@ PRISM Climate Group, Oregon State University, \url{https://prism.oregonstate.edu
 }
 \seealso{
 \code{\link[=newhall_data_dir]{newhall_data_dir()}}
+
+\code{\link[=newhall_issr800_cache]{newhall_issr800_cache()}} \code{\link[=newhall_issr800_rast]{newhall_issr800_rast()}} \code{\link[=newhall_issr800_rast]{newhall_issr800_rast()}}
 }

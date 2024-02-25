@@ -129,7 +129,7 @@ newhall_prism_rast <- function(
                               ifelse(is.na(monthnames), "", monthnames))
   
   # use NAD83 longitude/latitude
-  .add_LL(prism_rast, newhall_nad83_template(resolution = resolution))
+  .add_LL(prism_rast, "EPSG:4269")
 }
 
 #' @description `newhall_prism_subset():` Used to create a subset of the PRISM data corresponding to the extent of an input spatial object `x`.
@@ -158,6 +158,9 @@ newhall_prism_subset <- function(
 #' 
 #' 
 #' @description `newhall_nad83_template()`: Empty `SpatRaster` corresponding to the lower 48 United States PRISM data/extent at the specified resolution.
+#' @details
+#' Currently used only for matching the ISSR800 source to PRISM.
+#' @seealso [newhall_issr800_cache()] [newhall_issr800_rast()] [newhall_issr800_rast()]
 #' @rdname newhall_prism
 #' @export 
 #' @examples
@@ -385,5 +388,122 @@ newhall_issr800_rast <- function(
   
   res <- terra::rast(tiffile)
   names(res) <- "awc"
+  res
+}
+
+#### WorldClim Monthly Average ----
+
+#' Load WorldClim Monthly Averages
+#' 
+#' @description `newhall_worldclim_cache()`: Uses the [geodata](https://cran.r-project.org/package=geodata) package to download and cache data at the specified resolution. 
+#' 
+#' @param resolution character. Either `"10m"`, `"5m"`, `"2.5m"` or `"30s"`. In minutes (or seconds) of degrees (`"EPSG:4326"`).
+#' @param version character. Version number. Default: `"2.1"`. See `geodata::worldclim_global()` for details.
+#' @param overwrite Force download of new cache files? Default: `FALSE`.
+#' @param WORLDCLIM_PATH Default: `file.path(newhall_data_dir("cache"), "WorldClim")`
+#' 
+#' @references Fick, S.E. and R.J. Hijmans, 2017. WorldClim 2: new 1km spatial resolution climate surfaces for global land areas. International Journal of Climatology 37 (12): 4302-4315. <https://www.worldclim.org/data/worldclim21.html>
+#' 
+#' @seealso [newhall_data_dir()]
+#'
+#' @return character. Vector of file paths (to WorldClim .TIF files).
+#' @rdname newhall_worldclim
+#' @export
+newhall_worldclim_cache <- function(
+    resolution = "10m",
+    version = "2.1",
+    overwrite = FALSE,
+    WORLDCLIM_PATH = file.path(newhall_data_dir("cache"), "WorldClim")
+  ) {
+  
+  if (!requireNamespace("geodata")) {
+    stop("package 'geodata' is required to download global worldclim climate data", call. = FALSE)
+  }
+  
+  terra::sources(terra::rast(sapply(
+    c("tavg", "prec"), function(v)
+    geodata::worldclim_global(
+      var = v,
+      res = resolution,
+      version = version,
+      path = WORLDCLIM_PATH
+    )
+  )))
+}
+
+
+#' @description `newhall_worldclim_rast()`: Create a _SpatRaster_ object. This object contains temperature and precipitation data for the specified data set, at the specified resolution, using the standard jNSM column naming scheme. 
+#' @param tiffile Optional: custom vector of paths to files to use to build raster. Defaults to all .TIF files in the specified cache directory and resolution.
+#'
+#' @export
+#' @rdname newhall_worldclim
+newhall_worldclim_rast <- function(resolution = "10m",
+                                   version = "2.1",
+                                   WORLDCLIM_PATH = file.path(newhall_data_dir("cache"), "WorldClim"), 
+                                   tiffile = list.files(file.path(WORLDCLIM_PATH, 
+                                                                  paste0("wc", version, "_", resolution)),
+                                                        pattern = "\\.tif$", 
+                                                        recursive = TRUE)) {
+  
+  # in minutes or seconds of a degree
+  resolution <- match.arg(resolution, c("10m", "5m", "2.5m", "30s"))
+  
+  # capture file name components
+  mp <- paste0(".*wc(", version, ")_(", resolution, ")_(prec|tavg)_(\\d+)\\.tif$")
+  tiffile_sub <- tiffile[grep(mp, basename(tiffile))]
+  tifmonth <- strsplit(gsub(mp,  "\\1;\\2;\\3;\\4;", tiffile_sub), ";")
+  tif <- data.frame(tiffile_sub, do.call('rbind', tifmonth))
+  
+  if (nrow(tif) != 24) {
+    stop("One or more WorldClim monthly grids are missing from ",
+         file.path(WORLDCLIM_PATH, resolution),
+         ".\n\tTry running `newhall_worldclim_cache()` to download.", call. = FALSE)
+  }
+  
+  colnames(tif) <- c("tiffile", "version", "resolution", "variable",  "month")
+  f <- file.path(WORLDCLIM_PATH, paste0("wc", version, "_", resolution),
+                 tif$tiffile[which(tif$resolution == resolution)])
+  if (length(f) != 24) {
+    stop("One or more WorldCLim monthly grids are missing from ",
+         file.path(WORLDCLIM_PATH, resolution),
+         ".\n\tTry running `newhall_prism_cache()` to download.", call. = FALSE)
+  }
+  worldclim_rast <- terra::rast(f)
+  
+  # fix column names for jNSM style batch input format
+  monthnames <- month.abb[as.integer(tif$month)]
+  names(worldclim_rast) <- paste0(gsub("prec", "p", 
+                                  gsub("tavg","t", 
+                                       gsub(paste0("wc", version, "_", resolution, 
+                                                   "_(prec|tavg)_\\d{2}$"), "\\1",
+                                            names(worldclim_rast)))), 
+                                  ifelse(is.na(monthnames), "", monthnames))
+  
+  # use EPSG:4326 longitude/latitude
+  .add_LL(worldclim_rast)
+}
+
+
+#' @description `newhall_worldclim_subset():` Used to create a subset of the WorldClim data corresponding to the extent of an input spatial object `x`.
+#' 
+#' @param x A _SpatVector_, _SpatRaster_, _SpatExtent_, or any other object type suitable to use with `terra::crop()`.
+#' @param template Template _SpatRaster_ or target CRS specification for re-projection. Default: `"EPSG:4326`
+#' @export
+#' @rdname newhall_worldclim
+newhall_worldclim_subset <- function(
+    x,
+    resolution = "10m",
+    template = "EPSG:4326",
+    WORLDCLIM_PATH = file.path(newhall_data_dir("cache"), "WorldClim")
+) {
+  if (inherits(x, 'sf')) {
+    x <- terra::vect(x)
+  }
+  worl <- newhall_worldclim_rast(WORLDCLIM_PATH = WORLDCLIM_PATH, resolution = resolution)
+  ex <- terra::project(terra::as.polygons(x, extent = TRUE), worl)
+  res <- terra::crop(worl, ex)
+  if (!terra::same.crs(res, template)) {
+    res <- terra::project(res, template)
+  }
   res
 }

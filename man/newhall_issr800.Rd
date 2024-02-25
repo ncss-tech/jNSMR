@@ -38,11 +38,14 @@ newhall_issr800_rast(
 character. Path to cached water storage GeoTIFF.
 }
 \description{
-Currently the only ISSR-800 data are only available for the contiguous (lower 48) United States. The only property cached for use in the Newhall model is the "available water holding capacity" (sum of storage for the whole profile). For consistency with PRISM grid the values are reprojected from \code{"EPSG:5070"} to \code{"EPSG:4269"}.
+Currently the only ISSR-800 data are only available for the contiguous (lower 48) United States. The only property cached for use in the Newhall model is the "available water holding capacity" (sum of storage for the whole profile, in millimeters). For consistency with PRISM grid the values are reprojected from \code{"EPSG:5070"} to \code{"EPSG:4269"} (see \code{newhall_nad83_template()})
 
 \verb{newhall_issr800_subset():} Used to create a subset of the ISSR-800 soil available water storage data corresponding to the extent of an input spatial object \code{x}.
 
 \code{newhall_issr800_rast()}: Create a \emph{SpatRaster} object. This object contains Available Water Capacity (Storage) for at 800 meter resolution using the standard jNSM column naming scheme.
+}
+\details{
+The data are stored in centimeters on the SoilWeb server. When \code{newhall_issr800_cache()} saves the file the data are converted to millimeters, which is required for the Newhall model.
 }
 \references{
 Walkinshaw, Mike, A.T. O'Geen, D.E. Beaudette. "Soil Properties." California Soil Resource Lab, 1 Oct. 2022, \url{https://casoilresource.lawr.ucdavis.edu/soil-properties/}.
