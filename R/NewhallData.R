@@ -145,6 +145,10 @@ newhall_prism_subset <- function(
     PRISM_PATH = file.path(newhall_data_dir("cache"), "PRISM")
   ) {
   
+  if (inherits(x, 'sf')) {
+    x <- terra::vect(x)
+  }
+  
   pris <- newhall_prism_rast(PRISM_PATH = PRISM_PATH, resolution = resolution)
   ex <- terra::project(terra::as.polygons(x, extent = TRUE), pris)
   res <- terra::crop(pris, ex)
@@ -365,6 +369,10 @@ newhall_issr800_subset <- function(
     template = newhall_nad83_template(),
     ISSR800_PATH = file.path(newhall_data_dir("cache"), "SoilWeb", "800m")
   ) {
+  
+  if (inherits(x, 'sf')) {
+    x <- terra::vect(x)
+  }
   
   issr <- newhall_issr800_rast(ISSR800_PATH = ISSR800_PATH)
   ex <- terra::project(terra::as.polygons(x, extent = TRUE), issr)

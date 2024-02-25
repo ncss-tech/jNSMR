@@ -22,7 +22,7 @@ par(mfrow = c(2, 1))
 plot(res$temperatureRegime, col = hcl.colors(10),
      main = "EC-Earth3-Veg (2.5 minute); SSP: 585; 2061-2080")
 
-y <- newhall_prism_subset(terra::vect(b), "4km")
+y <- newhall_prism_subset(b, "4km")
 y$elev <- 0
 y$awc <- 200
 res2 <- newhall_batch(y)
