@@ -22,8 +22,4 @@ Useful links:
 }
 
 }
-\author{
-\strong{Maintainer}: Andrew Brown \email{andrew.g.brown@usda.gov}
-
-}
 \keyword{internal}

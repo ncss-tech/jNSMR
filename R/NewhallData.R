@@ -419,7 +419,10 @@ newhall_worldclim_cache <- function(
   if (!requireNamespace("geodata")) {
     stop("package 'geodata' is required to download global worldclim climate data", call. = FALSE)
   }
-  
+  resolution <- gsub("m", "", resolution, fixed = TRUE)
+  if (resolution == "30s") {
+    resolution <- 0.5
+  }
   terra::sources(terra::rast(sapply(
     c("tavg", "prec"), function(v)
     geodata::worldclim_global(
@@ -466,7 +469,7 @@ newhall_worldclim_rast <- function(resolution = "10m",
   if (length(f) != 24) {
     stop("One or more WorldCLim monthly grids are missing from ",
          file.path(WORLDCLIM_PATH, resolution),
-         ".\n\tTry running `newhall_prism_cache()` to download.", call. = FALSE)
+         ".\n\tTry running `newhall_worldclim_cache()` to download.", call. = FALSE)
   }
   worldclim_rast <- terra::rast(f)
   
@@ -500,6 +503,147 @@ newhall_worldclim_subset <- function(
     x <- terra::vect(x)
   }
   worl <- newhall_worldclim_rast(WORLDCLIM_PATH = WORLDCLIM_PATH, resolution = resolution)
+  ex <- terra::project(terra::as.polygons(x, extent = TRUE), worl)
+  res <- terra::crop(worl, ex)
+  if (!terra::same.crs(res, template)) {
+    res <- terra::project(res, template)
+  }
+  res
+}
+
+## CMIP6 Projected Monthly Average ----
+
+#' Load CMIP6 Downscaled Future Climate Projections
+#' 
+#' @description `newhall_cmip6_cache()`: Uses the [geodata](https://cran.r-project.org/package=geodata) package to download and cache data at the specified resolution. 
+#' 
+#' @param model _character_. Climate model abbrevation. One of "ACCESS-CM2", "ACCESS-ESM1-5", "AWI-CM-1-1-MR", "BCC-CSM2-MR", "CanESM5", "CanESM5-CanOE", "CMCC-ESM2", "CNRM-CM6-1", "CNRM-CM6-1-HR", "CNRM-ESM2-1", "EC-Earth3-Veg", "EC-Earth3-Veg-LR", "FIO-ESM-2-0", "GFDL-ESM4", "GISS-E2-1-G", "GISS-E2-1-H", "HadGEM3-GC31-LL", "INM-CM4-8", "INM-CM5-0", "IPSL-CM6A-LR", "MIROC-ES2L", "MIROC6", "MPI-ESM1-2-HR", "MPI-ESM1-2-LR", "MRI-ESM2-0", "UKESM1-0-LL"
+#' @param ssp _character_. A valid Shared Socio-economic Pathway code: "126", "245", "370" or "585"
+#' @param time _character_. A valid time period. One of "2021-2040", "2041-2060", or "2061-2080"
+#' @param resolution character. Either `"10m"`, `"5m"`, `"2.5m"` or `"30s"`. In minutes (or seconds) of degrees (`"EPSG:4326"`).
+#' @param version character. Version number. Default: `"2.1"`. See `geodata::worldclim_global()` for details.
+#' @param overwrite Force download of new cache files? Default: `FALSE`.
+#' @param CMIP6_PATH Default: `file.path(newhall_data_dir("cache"), "CMIP6")`
+#'
+#' @references 
+#'  - Eyring, V., Bony, S., Meehl, G. A., Senior, C. A., Stevens, B., Stouffer, R. J., and Taylor, K. E.: Overview of the Coupled Model Intercomparison Project Phase 6 (CMIP6) experimental design and organization, Geosci. Model Dev., 9, 1937-1958, doi:10.5194/gmd-9-1937-2016, 2016.
+#'  - Detailed and up-to-date description of the CMIP6 experiments protocol: https://search.es-doc.org/?project=cmip6& 
+#' 
+#' @seealso [newhall_data_dir()]
+#'
+#' @return character. Vector of file paths (to CMIP6 .TIF files).
+#' @rdname newhall_cmip6
+#' @export
+newhall_cmip6_cache <- function(
+    model, 
+    ssp,
+    time,
+    resolution = "10m",
+    version = "2.1",
+    overwrite = FALSE,
+    CMIP6_PATH = file.path(newhall_data_dir("cache"), "CMIP6")
+) {
+  
+  if (!requireNamespace("geodata")) {
+    stop("package 'geodata' is required to download global CMIP6 climate data", call. = FALSE)
+  }
+  
+  resolution <- gsub("m", "", resolution, fixed = TRUE)
+  if (resolution == "30s") {
+    resolution <- 0.5
+  }
+  
+  terra::sources(terra::rast(sapply(
+    c("tmin", "tmax", "prec"), function(v)
+      geodata::cmip6_world(
+        model = model,
+        ssp = ssp,
+        time = time,
+        var = v,
+        res = resolution,
+        path = CMIP6_PATH
+      )
+  )))
+}
+
+
+#' @description `newhall_cmip6_rast()`: Create a _SpatRaster_ object. This object contains temperature and precipitation data for the specified data set, at the specified resolution, using the standard jNSM column naming scheme. 
+#' @param tiffile Optional: custom vector of paths to files to use to build raster. Defaults to all .TIF files in the specified cache directory and resolution.
+#'
+#' @export
+#' @rdname newhall_cmip6
+newhall_cmip6_rast <- function(model,
+                               ssp,
+                               time,
+                               resolution = "10m",
+                               version = "2.1",
+                               CMIP6_PATH = file.path(newhall_data_dir("cache"), "CMIP6"),
+                               tiffile = list.files(file.path(CMIP6_PATH, "climate",
+                                                              paste0("wc", version, "_", resolution)),
+                                                    pattern = "\\.tif$",
+                                                    recursive = TRUE)) {
+  
+  # in minutes or seconds of a degree
+  resolution <- match.arg(resolution, c("10m", "5m", "2.5m", "30s"))
+  
+  # capture file name components
+  mp <- paste0(".*wc(", version, ")_(", resolution, ")_(prec|tmin|tmax)_(", model, ")_(ssp",ssp,")_(",time,")\\.tif$")
+  tiffile_sub <- tiffile[grep(mp, basename(tiffile))]
+  tifmonth <- strsplit(gsub(mp,  "\\1;\\2;\\3;\\4;\\5;\\6;", tiffile_sub), ";")
+  tif <- data.frame(tiffile_sub, do.call('rbind', tifmonth))
+  
+  if (nrow(tif) != 3) {
+    stop("One or more CMIP6 monthly grids are missing from ",
+         file.path(CMIP6_PATH, resolution),
+         ".\n\tTry running `newhall_cmip6_cache()` to download.", call. = FALSE)
+  }
+  
+  colnames(tif) <- c("tiffile", "version", "resolution", "variable", "model", "ssp", "month")
+  f <- file.path(CMIP6_PATH, "climate", paste0("wc", version, "_", resolution),
+                 tif$tiffile[which(tif$resolution == resolution)])
+  if (length(f) != 3) {
+    stop("One or more CMIP6 monthly grids are missing from ",
+         file.path(CMIP6_PATH, resolution),
+         ".\n\tTry running `newhall_cmip6_cache()` to download.", call. = FALSE)
+  }
+  cmip6_rast <- terra::rast(f)
+  cmip6_prec <- cmip6_rast[[1:12]]
+  names(cmip6_prec) <- gsub(paste0("wc", version, "_", resolution, "_"), "", names(cmip6_prec))
+  cmip6_tavg <- rast(lapply(13:24, function(i) (cmip6_rast[[i]] + cmip6_rast[[i + 12]]) / 2))
+  cmip6_avg <- c(cmip6_prec, cmip6_tavg)
+  
+  # fix column names for jNSM style batch input format
+  monthnames <- month.abb[as.integer(gsub(".*(\\d{2})$", "\\1", names(cmip6_avg)))]
+  names(cmip6_avg) <- paste0(gsub("prec", "p", 
+                                       gsub("tmax","t", 
+                                            gsub(paste0(".*(prec|tmax)_*\\d{2}$"), "\\1",
+                                                 names(cmip6_avg)))), 
+                                  ifelse(is.na(monthnames), "", monthnames))
+  
+  # use EPSG:4326 longitude/latitude
+  .add_LL(cmip6_avg)
+}
+
+
+#' @description `newhall_cmip6_subset():` Used to create a subset of the CMIP6 data corresponding to the extent of an input spatial object `x`.
+#' 
+#' @param x A _SpatVector_, _SpatRaster_, _SpatExtent_, or any other object type suitable to use with `terra::crop()`.
+#' @param template Template _SpatRaster_ or target CRS specification for re-projection. Default: `"EPSG:4326`
+#' @export
+#' @rdname newhall_cmip6
+newhall_cmip6_subset <- function(
+    x, 
+    model,
+    ssp,
+    time,
+    resolution = "10m",
+    template = "EPSG:4326",
+    CMIP6_PATH = file.path(newhall_data_dir("cache"), "CMIP6")
+) {
+  if (inherits(x, 'sf')) {
+    x <- terra::vect(x)
+  }
+  worl <- newhall_cmip6_rast(model, ssp, time, CMIP6_PATH = CMIP6_PATH, resolution = resolution)
   ex <- terra::project(terra::as.polygons(x, extent = TRUE), worl)
   res <- terra::crop(worl, ex)
   if (!terra::same.crs(res, template)) {
