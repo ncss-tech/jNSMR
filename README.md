@@ -3,13 +3,13 @@
 [![R-CMD-check](https://github.com/ncss-tech/jNSMR/workflows/R-CMD-check/badge.svg)](https://github.com/ncss-tech/jNSMR/actions)
 [![Codecov test
 coverage](https://codecov.io/gh/ncss-tech/jNSMR/branch/main/graph/badge.svg)](https://codecov.io/gh/ncss-tech/jNSMR?branch=main)
-[![html-docs](https://camo.githubusercontent.com/f7ba98e46ecd14313e0e8a05bec3f92ca125b8f36302a5b1679d4a949bccbe31/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f646f63732d48544d4c2d696e666f726d6174696f6e616c)](https://ncss-tech.github.io/jNSMR/)
+[![html-docs](https://img.shields.io/badge/docs-HTML-informational)](https://ncss-tech.github.io/jNSMR/)
 <!-- badges: end -->
 
 # {jNSMR}
 
-R wrapper for Java Newhall Simulation Model (jNSM) – “A Traditional Soil
-Climate Simulation Model”
+R interface for the ‘Java Newhall Simulation Model’ (jNSM) – “A
+Traditional Soil Climate Simulation Model”
 
 Provides methods to create input, read output, and run the routines from
 the legacy Java Newhall Simulation Model (jNSM).
@@ -26,9 +26,10 @@ folder of your package library).
 ## Run batches of models
 
 The jNSM has a defined CSV (comma-separated value) batch file format.
-Examples of batch inputs are included in the official download. The
-batching in the {jNSMR} package is handled by R code, not Java. The main
-interface to batching is `newhall_batch()`.
+Examples of batch inputs are included in the [official
+download](https://www.nrcs.usda.gov/resources/education-and-teaching-materials/java-newhall-simulation-model-jnsm).
+The main function for running multiple instances of the model is
+`newhall_batch()`.
 
 `newhall_batch()` takes either a character vector of CSV batch file
 paths, a data.frame, a SpatRaster or RasterStack/Brick object as input.
@@ -36,17 +37,17 @@ paths, a data.frame, a SpatRaster or RasterStack/Brick object as input.
 ### GeoTIFF/SpatRaster Input
 
     library(jNSMR)
-    #> jNSMR (0.3.0) -- R interface to the classic Newhall Simulation Model
+    #> jNSMR (0.3.1) -- R interface to the classic Newhall Simulation Model
     #> Added JAR file (newhall-1.6.5.jar) to Java class path.
     library(terra)
-    #> terra 1.7.49
+    #> terra 1.7.73
 
     x <- terra::rast(system.file("extdata", "prism_issr800_sample.tif",
                                  package = "jNSMR"))
     x$elev <- 0 # elevation is not currently used by the model directly
 
     y <- newhall_batch(x) ## full resolution
-    #> newhall_batch: ran n=18790 simulations in 21 secs
+    #> newhall_batch: ran n=18790 simulations in 20 secs
 
     par(mfrow = c(1, 2))
 
@@ -127,6 +128,7 @@ directory of this package.
 
     head(res)
     #>    annualRainfall waterHoldingCapacity annualWaterBalance
+    #>             <num>                <int>              <num>
     #> 1:        1147.33                  200           474.2701
     #> 2:         932.69                  200           270.1988
     #> 3:        1084.32                  200           427.3922
@@ -134,6 +136,7 @@ directory of this package.
     #> 5:        1262.39                  200           629.7745
     #> 6:        1118.09                  200           452.0308
     #>    annualPotentialEvapotranspiration summerWaterBalance
+    #>                                <num>              <num>
     #> 1:                          673.0599          -69.77925
     #> 2:                          662.4912         -112.88055
     #> 3:                          656.9278          -79.13638
@@ -141,6 +144,7 @@ directory of this package.
     #> 5:                          632.6155          -15.91051
     #> 6:                          666.0592         -107.59863
     #>    dryDaysAfterSummerSolstice moistDaysAfterWinterSolstice numCumulativeDaysDry
+    #>                         <int>                        <int>                <int>
     #> 1:                          0                          120                    0
     #> 2:                          0                          120                    0
     #> 3:                          0                          120                    0
@@ -148,6 +152,7 @@ directory of this package.
     #> 5:                          0                          120                    0
     #> 6:                          0                          120                    0
     #>    numCumulativeDaysMoistDry numCumulativeDaysMoist numCumulativeDaysDryOver5C
+    #>                        <int>                  <int>                      <int>
     #> 1:                         0                    360                          0
     #> 2:                         0                    360                          0
     #> 3:                         0                    360                          0
@@ -155,6 +160,7 @@ directory of this package.
     #> 5:                         0                    360                          0
     #> 6:                         0                    360                          0
     #>    numCumulativeDaysMoistDryOver5C numCumulativeDaysMoistOver5C
+    #>                              <int>                        <int>
     #> 1:                               0                          227
     #> 2:                               0                          226
     #> 3:                               0                          224
@@ -162,6 +168,7 @@ directory of this package.
     #> 5:                               0                          212
     #> 6:                               0                          223
     #>    numConsecutiveDaysMoistInSomeParts numConsecutiveDaysMoistInSomePartsOver8C
+    #>                                 <int>                                    <int>
     #> 1:                                360                                      205
     #> 2:                                360                                      206
     #> 3:                                360                                      204
@@ -169,6 +176,7 @@ directory of this package.
     #> 5:                                360                                      193
     #> 6:                                360                                      203
     #>    temperatureRegime moistureRegime regimeSubdivision1 regimeSubdivision2
+    #>               <char>         <char>             <char>             <char>
     #> 1:             Mesic           Udic              Typic               Udic
     #> 2:             Mesic           Udic              Typic               Udic
     #> 3:             Mesic           Udic              Typic               Udic
