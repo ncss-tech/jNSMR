@@ -1,6 +1,6 @@
 bibentry(
   bibtype = "Manual",
-  title = "Interface to the 'Java Newhall Simulation Model' (jNSM) -- A Traditional Soil Climate Simulation Model",
+  title = "Interface to the Java Newhall Simulation Model (jNSM) -- A Traditional Soil Climate Simulation Model",
   author = "Soil and Plant Science Division Staff, USDA-NRCS",
   note = "R package version 0.3.1",
   url = "https://github.com/ncss-tech/jNSMR/",
