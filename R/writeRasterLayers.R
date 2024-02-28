@@ -11,9 +11,13 @@
 #' @export
 #'
 #' @examples
+#' library(terra)
+#' 
 #' x <- writeRaster(rast(list(a = rast(matrix(1)), 
 #'                            b = rast(matrix(2)))), "test.tif")
+#' 
 #' writeRasterLayers("test.tif", "test")
+#' 
 #' unlink(c("test.tif", "test"), recursive=TRUE)
 writeRasterLayers <- function(x, output_dir = NULL, ...) {
   stopifnot(is.character(x))
