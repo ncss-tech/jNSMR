@@ -5,5 +5,5 @@ bibentry(
   note = "R package version 0.3.1",
   url = "https://github.com/ncss-tech/jNSMR/",
   year = "2024",
-  textVersion = "Soil and Plant Science Division Staff, USDA-NRCS (2024). Interface to the 'Java Newhall Simulation Model' (jNSM) "A Traditional Soil Climate Simulation Model.  R package version 0.3.1. <https://github.com/ncss-tech/jNSMR/>"
+  textVersion = "Soil and Plant Science Division Staff, USDA-NRCS (2024). Interface to the 'Java Newhall Simulation Model' (jNSM) -- 'A Traditional Soil Climate Simulation Model'.  R package version 0.3.1. <https://github.com/ncss-tech/jNSMR/>"
 )
