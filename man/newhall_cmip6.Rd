@@ -23,8 +23,8 @@ newhall_cmip6_rast(
   resolution = "10m",
   version = "2.1",
   CMIP6_PATH = file.path(newhall_data_dir("cache"), "CMIP6"),
-  tiffile = list.files(file.path(CMIP6_PATH, "climate", paste0("wc", version, "_",
-    resolution)), pattern = "\\\\.tif$", recursive = TRUE)
+  tiffile = list.files(file.path(CMIP6_PATH, paste0("wc", version, "_", resolution)),
+    pattern = "\\\\.tif$", recursive = TRUE)
 )
 
 newhall_cmip6_subset(

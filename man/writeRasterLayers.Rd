@@ -21,8 +21,12 @@ This function is a simple wrapper around \code{terra:writeRaster()} that makes i
 to separate the individual layers of an input or output grid as separate files.
 }
 \examples{
+library(terra)
+
 x <- writeRaster(rast(list(a = rast(matrix(1)), 
                            b = rast(matrix(2)))), "test.tif")
+
 writeRasterLayers("test.tif", "test")
+
 unlink(c("test.tif", "test"), recursive=TRUE)
 }

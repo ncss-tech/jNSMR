@@ -586,8 +586,7 @@ newhall_cmip6_rast <- function(model,
                                resolution = "10m",
                                version = "2.1",
                                CMIP6_PATH = file.path(newhall_data_dir("cache"), "CMIP6"),
-                               tiffile = list.files(file.path(CMIP6_PATH, "climate",
-                                                              paste0("wc", version, "_", resolution)),
+                               tiffile = list.files(file.path(CMIP6_PATH, paste0("wc", version, "_", resolution)),
                                                     pattern = "\\.tif$",
                                                     recursive = TRUE)) {
   
@@ -607,7 +606,7 @@ newhall_cmip6_rast <- function(model,
   }
   
   colnames(tif) <- c("tiffile", "version", "resolution", "variable", "model", "ssp", "month")
-  f <- file.path(CMIP6_PATH, "climate", paste0("wc", version, "_", resolution),
+  f <- file.path(CMIP6_PATH, paste0("wc", version, "_", resolution),
                  tif$tiffile[which(tif$resolution == resolution)])
   if (length(f) != 3) {
     stop("One or more CMIP6 monthly grids are missing from ",
