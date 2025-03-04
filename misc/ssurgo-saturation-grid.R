@@ -1,8 +1,8 @@
 library(soilDB)
 library(terra)
 library(jNSMR)
-## SSURGO O horizon map
 
+# ssurgo saturation grid
 q <- "SELECT
     mapunit.mukey, SUM(comppct_r) AS pct
     FROM legend
@@ -10,14 +10,14 @@ q <- "SELECT
     INNER JOIN component ON component.mukey = mapunit.mukey
     INNER JOIN (
       SELECT DISTINCT component.cokey
-      FROM 
-      component INNER JOIN chorizon ON component.cokey = chorizon.cokey
-      WHERE hzname LIKE 'O%'
-    ) AS hz ON component.cokey = hz.cokey
+      FROM component 
+      INNER JOIN comonth ON component.cokey = comonth.cokey
+      INNER JOIN cosoilmoist ON comonth.comonthkey = cosoilmoist.comonthkey
+      WHERE soimoiststat LIKE 'Wet' AND soimoistdept_r <= 50
+    ) AS cm ON component.cokey = cm.cokey
     WHERE legend.areasymbol != 'US' 
-    GROUP BY mapunit.mukey ;"
-
-x <- SDA_query(q)
+    GROUP BY mapunit.mukey"
+x <- soilDB:::.SDA_query_FOR_JSON_AUTO(q)
 
 # CONUS gNATSGO 30m grid
 g <- rast('D:/Geodata/gNATSGO/gNATSGO_mukey_grid/gNATSGO-mukey.tif')
@@ -33,17 +33,11 @@ g <- rast('D:/Geodata/gNATSGO/gNATSGO_mukey_grid/gNATSGO-mukey.tif')
 system.time(r <- app(g, fun = function(i, ff) ff(i), 
                      cores = 1,
                      ff = .f,
-                     filename = 'O-horizon-pct_testBYTE.tif', 
+                     filename = 'saturation-pct.tif', 
                      overwrite = TRUE, 
                      wopt = list(datatype = "INT1U")))
 
-## slower:
-# system.time(r2 <- classify(g, as.matrix(x), filename = "O-horizon-pct2.tif", overwrite = TRUE))
-# 
-# g2 <- g
-# levels(g2) <- x
-# system.time(r3 <- catalyze(g2, filename = 'O-horizon-pct3.tif', overwrite = TRUE))
-            
 # project/scale to match PRISM 800m grid
 rt <- newhall_prism_rast()
-system.time(a <- project(r, rt, filename = "misc/O-horizon-pct-prism800m.tif"))
+system.time(a <- project(r, rt, filename="saturation-pct-prism800m.tif"))
+

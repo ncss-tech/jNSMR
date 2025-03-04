@@ -12,11 +12,11 @@ np <- newhall_prism_rast()
 gd_image_from_id('users/nlang/ETH_GlobalCanopyHeight_2020_10m_v1') |>
   gd_download(region = as.polygons(np, ext = TRUE),
               bands = list("b1"),
-              filename = "canopy_height_conus_800m.tif",
+              filename = "misc/canopy_height_conus_800m.tif",
               scale = 800)
 
-h <- classify(rast("canopy_height_conus_800m.tif"), cbind(NA, 0))
-h <- project(h, np, filename = "canopy_height_conus_800m.tif", overwrite = TRUE)
+h <- classify(rast("misc/canopy_height_conus_800m.tif"), cbind(NA, 0))
+h <- project(h, np, filename = "misc/canopy_height_conus_800m.tif", overwrite = TRUE)
 plot(h > 4)
 
 x <- fetchSDA_spatial(c("CA077", "CA067", "CA628",

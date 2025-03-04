@@ -6,10 +6,10 @@ library(ROCR)
 SSURGO_COMPPCT_THRESHOLD <- 50
 N_EXHAUSTIVE_SAMPLES <- 1e5
 
-h <- rast("canopy_height_conus_800m.tif")
+h <- rast("misc/canopy_height_conus_800m.tif")
 names(h) <- "canopy_height_m"
 
-o <- rast("O-horizon-pct-prism800m.tif")
+o <- rast("misc/O-horizon-pct-prism800m.tif")
 names(o) <- "o_horizon_comppct"
 
 s <- spatSample(c(h, o), N_EXHAUSTIVE_SAMPLES)
@@ -75,13 +75,13 @@ auc
 plot(ROCPer, colorize = TRUE,
      print.cutoffs.at = seq(0.1, by = 0.25),
      main = "ROC CURVE")
-abline(a = 0, b = 1)
 auc <- round(auc, 4)
 legend(.6, .4, auc, title = "AUC", cex = 1)
 
 o_horizon_modeled <- predict(h, m1) > 0.5
 o_horizon_ssurgo <- o > SSURGO_COMPPCT_THRESHOLD
 o_horizon_ssurgo[is.na(o)] <- 0
+
 
 plot(o_horizon_ssurgo) # SSURGO O horizons (many holes)
 plot(floor(h) >= 19) # canopy height threshold
@@ -101,8 +101,8 @@ par(mfrow = c(1, 2))
 plot(setNames(crop(o_horizon_modeled, ssa), 
               "o_horizon_modeled"), 
      main = "o_horizon_modeled")
-plot(ssa, add = TRUE)
+plot(as.lines(ssa), add = TRUE, col="white")
 plot(crop(o_horizon_ssurgo, ssa), 
      main = "o_horizon_ssurgo")
-plot(ssa, add = TRUE)
+plot(as.lines(ssa), add = TRUE, col="white")
 par(mfrow = c(1, 1))
